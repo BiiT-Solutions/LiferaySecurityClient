@@ -6,6 +6,8 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.axis.encoding.Base64;
 
+import com.biit.liferay.security.exceptions.InvalidCredentialsException;
+
 public class BasicSecurityMethod implements SecurityMethod {
 	private static final String DEFAULT_ALGORITHM = "SHA";
 	private static final String ENCODING = "UTF-8";
@@ -29,4 +31,12 @@ public class BasicSecurityMethod implements SecurityMethod {
 		return null;
 	}
 
+	@Override
+	public void validatePassword(String plainTextPassword, String userEncodedPassword)
+			throws InvalidCredentialsException {
+		String currentEncryptedPassword = encryptPassword(plainTextPassword);
+		if (!currentEncryptedPassword.equals(userEncodedPassword)) {
+			throw new InvalidCredentialsException("Password does not match.");
+		}
+	}
 }

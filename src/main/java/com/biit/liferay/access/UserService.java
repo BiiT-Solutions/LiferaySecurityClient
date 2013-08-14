@@ -6,6 +6,7 @@ import javax.xml.rpc.ServiceException;
 
 import com.liferay.portal.model.CompanySoap;
 import com.liferay.portal.model.UserSoap;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.http.UserServiceSoap;
 import com.liferay.portal.service.http.UserServiceSoapServiceLocator;
 
@@ -19,7 +20,8 @@ public class UserService {
 	public UserService(String loginUser, String password) throws ServiceException {
 		// Locate the User service
 		UserServiceSoapServiceLocator locatorUser = new UserServiceSoapServiceLocator();
-		userServiceSoap = locatorUser.getPortal_UserService(AccessUtils.getLiferayUrl(loginUser, password, SERVICE_USER_NAME));
+		userServiceSoap = locatorUser.getPortal_UserService(AccessUtils.getLiferayUrl(loginUser, password,
+				SERVICE_USER_NAME));
 	}
 
 	/**
@@ -64,6 +66,55 @@ public class UserService {
 	 */
 	public UserSoap getUserByScreenName(CompanySoap companySoap, String screenName) throws RemoteException {
 		return userServiceSoap.getUserByScreenName(companySoap.getCompanyId(), screenName);
+	}
+
+	/**
+	 * Adds an user to liferay portal.
+	 * 
+	 * @param companySoap
+	 * @param user
+	 * @throws RemoteException
+	 */
+	public void addUser(CompanySoap companySoap, UserSoap user) throws RemoteException {
+		addUser(companySoap, user.getPassword(), user.getScreenName(), user.getEmailAddress(), user.getFacebookId(),
+				user.getOpenId(), user.getTimeZoneId(), user.getFirstName(), user.getMiddleName(), user.getLastName());
+
+	}
+
+	/**
+	 * Creates an user into liferay portal. If password and/or screenname are
+	 * not set, they will be auto-generated.
+	 * 
+	 * @param companySoap
+	 * @param password
+	 * @param screenName
+	 * @param emailAddress
+	 * @param facebookId
+	 * @param openId
+	 * @param locale
+	 * @param firstName
+	 * @param middleName
+	 * @param lastName
+	 * @throws RemoteException
+	 */
+	public void addUser(CompanySoap companySoap, String password, String screenName, String emailAddress,
+			long facebookId, String openId, String locale, String firstName, String middleName, String lastName)
+			throws RemoteException {
+		boolean autoPassword = false;
+		boolean autoScreenName = false;
+		if (password == null || password.length() == 0) {
+			autoPassword = true;
+		}
+		if (screenName == null || screenName.length() == 0) {
+			autoScreenName = true;
+		}
+		userServiceSoap.addUser(companySoap.getCompanyId(), autoPassword, password, password, autoScreenName,
+				screenName, emailAddress, facebookId, openId, locale, firstName, middleName, lastName, 0, 0, false, 1,
+				1, 1970, "", null, null, null, null, false, new ServiceContext());
+	}
+
+	public void deleteUser(UserSoap user) throws RemoteException {
+		userServiceSoap.deleteUser(user.getUserId());
 	}
 
 }
