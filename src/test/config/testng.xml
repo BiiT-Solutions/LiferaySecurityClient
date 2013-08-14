@@ -3,10 +3,14 @@
 	<test name="AppfoundationTest" enabled="true" preserve-order="true">
 		<groups>
 			<run>
+				<include name="connection" />
+				<include name="companyAccess" />
+				<include name="userAccess" />
 				<include name="basicSecurityMethodTest" />
 			</run>
 		</groups>
 		<classes>
+			<class name="com.biit.liferay.access.AccessTest" />
 			<class name="com.biit.liferaysecurity.BasicSecurityMethodTest" />
 		</classes>
 	</test>
