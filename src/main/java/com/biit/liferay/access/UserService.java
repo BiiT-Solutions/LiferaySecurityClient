@@ -19,7 +19,7 @@ public class UserService {
 	public UserService(String loginUser, String password) throws ServiceException {
 		// Locate the User service
 		UserServiceSoapServiceLocator locatorUser = new UserServiceSoapServiceLocator();
-		userServiceSoap = locatorUser.getPortal_UserService(AccessUtils.getURL(loginUser, password, SERVICE_USER_NAME));
+		userServiceSoap = locatorUser.getPortal_UserService(AccessUtils.getLiferayUrl(loginUser, password, SERVICE_USER_NAME));
 	}
 
 	/**

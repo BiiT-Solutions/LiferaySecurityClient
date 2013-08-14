@@ -17,7 +17,7 @@ public class CompanyService {
 
 	public CompanyService(String loginUser, String password) throws ServiceException {
 		CompanyServiceSoapServiceLocator locatorCompany = new CompanyServiceSoapServiceLocator();
-		soapCompany = locatorCompany.getPortal_CompanyService(AccessUtils.getURL(loginUser, password,
+		soapCompany = locatorCompany.getPortal_CompanyService(AccessUtils.getLiferayUrl(loginUser, password,
 				SERVICE_COMPANY_NAME));
 	}
 

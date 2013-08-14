@@ -22,7 +22,7 @@ public class AccessUtils {
 	 *            name of the webservice.
 	 * @return
 	 */
-	protected static URL getURL(String remoteUser, String password, String serviceName) {
+	protected static URL getLiferayUrl(String remoteUser, String password, String serviceName) {
 		try {
 			return new URL(LIFERAY_PROTOCOL + URLEncoder.encode(remoteUser, "UTF-8") + ":"
 					+ URLEncoder.encode(password, "UTF-8") + "@" + LIFERAY_FQDN + ":" + LIFERAY_TCP_PORT
