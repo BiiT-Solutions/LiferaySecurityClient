@@ -9,7 +9,7 @@ import com.liferay.portal.service.http.CompanyServiceSoap;
 import com.liferay.portal.service.http.CompanyServiceSoapServiceLocator;
 
 /**
- * This class represent a liferay portal instance.
+ * This class allows to obtain a liferay portal instance.
  */
 public class CompanyService {
 	private final static String SERVICE_COMPANY_NAME = "Portal_UserService";
