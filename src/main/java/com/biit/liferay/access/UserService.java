@@ -15,21 +15,15 @@ import com.liferay.portal.service.http.UserServiceSoapServiceLocator;
 /**
  * This class represent allows to obtain a user from a liferay portal.
  */
-public class UserService {
+public class UserService implements LiferayService {
 	private final static String SERVICE_USER_NAME = "Portal_UserService";
 	private UserServiceSoap userServiceSoap = null;
 	private final static UserService instance = new UserService();
 
-	public UserService() {
+	private UserService() {
 	}
 
-	/**
-	 * Connects to Liferay webservice using the provided user and password.
-	 * 
-	 * @param loginUser
-	 * @param password
-	 * @throws ServiceException
-	 */
+	@Override
 	public void connectToWebService(String loginUser, String password) throws ServiceException {
 		// Locate the User service
 		UserServiceSoapServiceLocator locatorUser = new UserServiceSoapServiceLocator();
@@ -37,13 +31,7 @@ public class UserService {
 				SERVICE_USER_NAME));
 	}
 
-	/**
-	 * Connects to Liferay webservice using the liferay.conf file.
-	 * 
-	 * @param loginUser
-	 * @param password
-	 * @throws ServiceException
-	 */
+	@Override
 	public void connectToWebService() throws ServiceException {
 		// Read user and password.
 		String loginUser = ConfigurationReader.getInstance().getUser();
@@ -58,15 +46,12 @@ public class UserService {
 		return instance;
 	}
 
-	/**
-	 * Tells if the user and password has been successfully inserted before.
-	 * 
-	 * @return
-	 */
+	@Override
 	public boolean isNotConnected() {
 		return userServiceSoap == null;
 	}
 
+	@Override
 	public void checkConnection() throws NotConnectedToWebServiceException {
 		if (isNotConnected()) {
 			throw new NotConnectedToWebServiceException(

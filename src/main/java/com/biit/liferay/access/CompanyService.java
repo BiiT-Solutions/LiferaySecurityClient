@@ -4,6 +4,8 @@ import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
 
+import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.configuration.ConfigurationReader;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.service.http.CompanyServiceSoap;
 import com.liferay.portal.service.http.CompanyServiceSoapServiceLocator;
@@ -11,14 +13,49 @@ import com.liferay.portal.service.http.CompanyServiceSoapServiceLocator;
 /**
  * This class allows to obtain a liferay portal instance.
  */
-public class CompanyService {
+public class CompanyService implements LiferayService {
 	private final static String SERVICE_COMPANY_NAME = "Portal_CompanyService";
-	private CompanyServiceSoap soapCompany;
+	private CompanyServiceSoap companyServiceSoap = null;
+	private final static CompanyService instance = new CompanyService();
 
-	public CompanyService(String loginUser, String password) throws ServiceException {
+	private CompanyService() {
+
+	}
+
+	@Override
+	public void connectToWebService(String loginUser, String password) throws ServiceException {
+		// Locate the User service
 		CompanyServiceSoapServiceLocator locatorCompany = new CompanyServiceSoapServiceLocator();
-		soapCompany = locatorCompany.getPortal_CompanyService(AccessUtils.getLiferayUrl(loginUser, password,
+		companyServiceSoap = locatorCompany.getPortal_CompanyService(AccessUtils.getLiferayUrl(loginUser, password,
 				SERVICE_COMPANY_NAME));
+	}
+
+	@Override
+	public void connectToWebService() throws ServiceException {
+		// Read user and password.
+		String loginUser = ConfigurationReader.getInstance().getUser();
+		String password = ConfigurationReader.getInstance().getPassword();
+		// Locate the User service.
+		CompanyServiceSoapServiceLocator locatorCompany = new CompanyServiceSoapServiceLocator();
+		companyServiceSoap = locatorCompany.getPortal_CompanyService(AccessUtils.getLiferayUrl(loginUser, password,
+				SERVICE_COMPANY_NAME));
+	}
+
+	@Override
+	public boolean isNotConnected() {
+		return companyServiceSoap == null;
+	}
+
+	@Override
+	public void checkConnection() throws NotConnectedToWebServiceException {
+		if (isNotConnected()) {
+			throw new NotConnectedToWebServiceException(
+					"user credentials are needed to use Liferay webservice. Use the connect method for this.");
+		}
+	}
+
+	public static CompanyService getInstance() {
+		return instance;
 	}
 
 	/**
@@ -32,7 +69,7 @@ public class CompanyService {
 	 * 
 	 */
 	public Company getCompanyByVirtualHost(String virtualHost) throws RemoteException {
-		return soapCompany.getCompanyByVirtualHost(virtualHost);
+		return companyServiceSoap.getCompanyByVirtualHost(virtualHost);
 	}
 
 	/**
@@ -45,7 +82,7 @@ public class CompanyService {
 	 *             if there is a communication problem
 	 */
 	public Company getCompanyById(long companyId) throws RemoteException {
-		return soapCompany.getCompanyById(companyId);
+		return companyServiceSoap.getCompanyById(companyId);
 	}
 
 	/**
@@ -58,7 +95,7 @@ public class CompanyService {
 	 *             if there is a communication problem
 	 */
 	public Company getCompanyByWebId(String webId) throws RemoteException {
-		return soapCompany.getCompanyByWebId(webId);
+		return companyServiceSoap.getCompanyByWebId(webId);
 	}
 
 }

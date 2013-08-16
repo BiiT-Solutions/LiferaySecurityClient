@@ -7,14 +7,18 @@ import com.biit.utils.file.PropertiesFile;
 
 public class ConfigurationReader {
 	private final String LIFERAY_CONFIG_FILE = "liferay.conf";
+
 	private final String USER_TAG = "user";
 	private final String PASSWORD_TAG = "password";
+	private final String VIRTUAL_HOST_TAG = "virtualhost";
 
 	private final String DEFAULT_USER = "user";
 	private final String DEFAULT_PASSWORD = "pass";
+	private final String DEFAULT_VIRTUAL_HOST = "localhost";
 
 	private String user;
 	private String password;
+	private String virtualhost;
 
 	private static ConfigurationReader instance;
 
@@ -43,6 +47,7 @@ public class ConfigurationReader {
 			prop = PropertiesFile.load(LIFERAY_CONFIG_FILE);
 			user = prop.getProperty(USER_TAG);
 			password = prop.getProperty(PASSWORD_TAG);
+			virtualhost = prop.getProperty(VIRTUAL_HOST_TAG);
 		} catch (IOException e) {
 			// Do nothing.
 		}
@@ -53,6 +58,10 @@ public class ConfigurationReader {
 		if (password == null) {
 			password = DEFAULT_PASSWORD;
 		}
+
+		if (virtualhost == null) {
+			virtualhost = DEFAULT_VIRTUAL_HOST;
+		}
 	}
 
 	public String getUser() {
@@ -61,5 +70,9 @@ public class ConfigurationReader {
 
 	public String getPassword() {
 		return password;
+	}
+
+	public String getVirtualHost() {
+		return virtualhost;
 	}
 }
