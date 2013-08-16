@@ -7,7 +7,7 @@
 
 package com.liferay.portal.model;
 
-public class WebsiteSoap  implements java.io.Serializable {
+public class Website  implements java.io.Serializable {
     private long classNameId;
 
     private long classPK;
@@ -32,10 +32,10 @@ public class WebsiteSoap  implements java.io.Serializable {
 
     private long websiteId;
 
-    public WebsiteSoap() {
+    public Website() {
     }
 
-    public WebsiteSoap(
+    public Website(
            long classNameId,
            long classPK,
            long companyId,
@@ -304,8 +304,8 @@ public class WebsiteSoap  implements java.io.Serializable {
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof WebsiteSoap)) return false;
-        WebsiteSoap other = (WebsiteSoap) obj;
+        if (!(obj instanceof Website)) return false;
+        Website other = (Website) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -371,7 +371,7 @@ public class WebsiteSoap  implements java.io.Serializable {
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(WebsiteSoap.class, true);
+        new org.apache.axis.description.TypeDesc(Website.class, true);
 
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "WebsiteSoap"));

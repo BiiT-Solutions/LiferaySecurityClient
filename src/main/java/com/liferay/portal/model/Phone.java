@@ -7,7 +7,7 @@
 
 package com.liferay.portal.model;
 
-public class PhoneSoap  implements java.io.Serializable {
+public class Phone  implements java.io.Serializable {
     private long classNameId;
 
     private long classPK;
@@ -34,10 +34,10 @@ public class PhoneSoap  implements java.io.Serializable {
 
     private java.lang.String userName;
 
-    public PhoneSoap() {
+    public Phone() {
     }
 
-    public PhoneSoap(
+    public Phone(
            long classNameId,
            long classPK,
            long companyId,
@@ -328,8 +328,8 @@ public class PhoneSoap  implements java.io.Serializable {
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof PhoneSoap)) return false;
-        PhoneSoap other = (PhoneSoap) obj;
+        if (!(obj instanceof Phone)) return false;
+        Phone other = (Phone) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -401,7 +401,7 @@ public class PhoneSoap  implements java.io.Serializable {
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(PhoneSoap.class, true);
+        new org.apache.axis.description.TypeDesc(Phone.class, true);
 
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "PhoneSoap"));

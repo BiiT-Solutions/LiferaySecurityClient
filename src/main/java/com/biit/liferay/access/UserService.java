@@ -4,8 +4,10 @@ import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
 
-import com.liferay.portal.model.CompanySoap;
-import com.liferay.portal.model.UserSoap;
+import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.security.BasicEncryptionMethod;
+import com.liferay.portal.model.Company;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.http.UserServiceSoap;
 import com.liferay.portal.service.http.UserServiceSoapServiceLocator;
@@ -15,13 +17,44 @@ import com.liferay.portal.service.http.UserServiceSoapServiceLocator;
  */
 public class UserService {
 	private final static String SERVICE_USER_NAME = "Portal_UserService";
-	private UserServiceSoap userServiceSoap;
+	private UserServiceSoap userServiceSoap = null;
+	private final static UserService instance = new UserService();
 
-	public UserService(String loginUser, String password) throws ServiceException {
+	public UserService() {
+	}
+
+	/**
+	 * Connects to Liferay webservice using the provided user and password.
+	 * 
+	 * @param loginUser
+	 * @param password
+	 * @throws ServiceException
+	 */
+	public void connectToWebService(String loginUser, String password) throws ServiceException {
 		// Locate the User service
 		UserServiceSoapServiceLocator locatorUser = new UserServiceSoapServiceLocator();
 		userServiceSoap = locatorUser.getPortal_UserService(AccessUtils.getLiferayUrl(loginUser, password,
 				SERVICE_USER_NAME));
+	}
+
+	public static UserService getInstance() {
+		return instance;
+	}
+
+	/**
+	 * Tells if the user and password has been successfully inserted before.
+	 * 
+	 * @return
+	 */
+	public boolean isNotConnected() {
+		return userServiceSoap == null;
+	}
+
+	public void checkConnection() throws NotConnectedToWebServiceException {
+		if (isNotConnected()) {
+			throw new NotConnectedToWebServiceException(
+					"user credentials are needed to use Liferay webservice. Use the connect method for this.");
+		}
 	}
 
 	/**
@@ -34,8 +67,11 @@ public class UserService {
 	 * @return a user.
 	 * @throws RemoteException
 	 *             if there is any communication problem.
+	 * @throws NotConnectedToWebServiceException
 	 */
-	public UserSoap getUserByEmailAddress(CompanySoap companySoap, String emailAddress) throws RemoteException {
+	public User getUserByEmailAddress(Company companySoap, String emailAddress) throws RemoteException,
+			NotConnectedToWebServiceException {
+		checkConnection();
 		return userServiceSoap.getUserByEmailAddress(companySoap.getCompanyId(), emailAddress);
 	}
 
@@ -47,8 +83,10 @@ public class UserService {
 	 * @return a user.
 	 * @throws RemoteException
 	 *             if there is any communication problem.
+	 * @throws NotConnectedToWebServiceException
 	 */
-	public UserSoap getUserById(long userId) throws RemoteException {
+	public User getUserById(long userId) throws RemoteException, NotConnectedToWebServiceException {
+		checkConnection();
 		return userServiceSoap.getUserById(userId);
 	}
 
@@ -63,8 +101,11 @@ public class UserService {
 	 * @return a user.
 	 * @throws RemoteException
 	 *             if there is any communication problem.
+	 * @throws NotConnectedToWebServiceException
 	 */
-	public UserSoap getUserByScreenName(CompanySoap companySoap, String screenName) throws RemoteException {
+	public User getUserByScreenName(Company companySoap, String screenName) throws RemoteException,
+			NotConnectedToWebServiceException {
+		checkConnection();
 		return userServiceSoap.getUserByScreenName(companySoap.getCompanyId(), screenName);
 	}
 
@@ -74,8 +115,9 @@ public class UserService {
 	 * @param companySoap
 	 * @param user
 	 * @throws RemoteException
+	 * @throws NotConnectedToWebServiceException
 	 */
-	public void addUser(CompanySoap companySoap, UserSoap user) throws RemoteException {
+	public void addUser(Company companySoap, User user) throws RemoteException, NotConnectedToWebServiceException {
 		addUser(companySoap, user.getPassword(), user.getScreenName(), user.getEmailAddress(), user.getFacebookId(),
 				user.getOpenId(), user.getTimeZoneId(), user.getFirstName(), user.getMiddleName(), user.getLastName());
 
@@ -96,10 +138,12 @@ public class UserService {
 	 * @param middleName
 	 * @param lastName
 	 * @throws RemoteException
+	 * @throws NotConnectedToWebServiceException
 	 */
-	public void addUser(CompanySoap companySoap, String password, String screenName, String emailAddress,
-			long facebookId, String openId, String locale, String firstName, String middleName, String lastName)
-			throws RemoteException {
+	public void addUser(Company companySoap, String password, String screenName, String emailAddress, long facebookId,
+			String openId, String locale, String firstName, String middleName, String lastName) throws RemoteException,
+			NotConnectedToWebServiceException {
+		checkConnection();
 		boolean autoPassword = false;
 		boolean autoScreenName = false;
 		if (password == null || password.length() == 0) {
@@ -113,8 +157,31 @@ public class UserService {
 				1, 1970, "", null, null, null, null, false, new ServiceContext());
 	}
 
-	public void deleteUser(UserSoap user) throws RemoteException {
+	/**
+	 * Deletes an user from the database.
+	 * 
+	 * @param user
+	 * @throws RemoteException
+	 * @throws NotConnectedToWebServiceException
+	 */
+	public void deleteUser(User user) throws RemoteException, NotConnectedToWebServiceException {
+		checkConnection();
 		userServiceSoap.deleteUser(user.getUserId());
+	}
+
+	/**
+	 * Updates the password of a user.
+	 * 
+	 * @param user
+	 * @param plainTextPassword
+	 * @throws NotConnectedToWebServiceException
+	 * @throws RemoteException
+	 */
+	public void updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
+			RemoteException {
+		checkConnection();
+		userServiceSoap.updatePassword(user.getUserId(), plainTextPassword, plainTextPassword, false);
+		user.setPassword(plainTextPassword);
 	}
 
 }

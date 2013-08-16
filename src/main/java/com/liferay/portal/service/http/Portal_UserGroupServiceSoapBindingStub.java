@@ -52,7 +52,7 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "description"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "UserGroupSoap"));
-        oper.setReturnClass(com.liferay.portal.model.UserGroupSoap.class);
+        oper.setReturnClass(com.liferay.portal.model.UserGroup.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "addUserGroupReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -72,7 +72,7 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "userGroupId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "UserGroupSoap"));
-        oper.setReturnClass(com.liferay.portal.model.UserGroupSoap.class);
+        oper.setReturnClass(com.liferay.portal.model.UserGroup.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getUserGroupReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -83,7 +83,7 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "name"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "UserGroupSoap"));
-        oper.setReturnClass(com.liferay.portal.model.UserGroupSoap.class);
+        oper.setReturnClass(com.liferay.portal.model.UserGroup.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getUserGroupReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -94,7 +94,7 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "userId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_tns2_UserGroupSoap"));
-        oper.setReturnClass(com.liferay.portal.model.UserGroupSoap[].class);
+        oper.setReturnClass(com.liferay.portal.model.UserGroup[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getUserUserGroupsReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -131,7 +131,7 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "description"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "UserGroupSoap"));
-        oper.setReturnClass(com.liferay.portal.model.UserGroupSoap.class);
+        oper.setReturnClass(com.liferay.portal.model.UserGroup.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "updateUserGroupReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -170,14 +170,14 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
             qName = new javax.xml.namespace.QName("http://model.portal.liferay.com", "UserGroupSoap");
             cachedSerQNames.add(qName);
-            cls = com.liferay.portal.model.UserGroupSoap.class;
+            cls = com.liferay.portal.model.UserGroup.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_tns2_UserGroupSoap");
             cachedSerQNames.add(qName);
-            cls = com.liferay.portal.model.UserGroupSoap[].class;
+            cls = com.liferay.portal.model.UserGroup[].class;
             cachedSerClasses.add(cls);
             qName = new javax.xml.namespace.QName("http://model.portal.liferay.com", "UserGroupSoap");
             qName2 = null;
@@ -308,7 +308,7 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
 }
     }
 
-    public com.liferay.portal.model.UserGroupSoap addUserGroup(java.lang.String name, java.lang.String description) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.UserGroup addUserGroup(java.lang.String name, java.lang.String description) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -329,9 +329,9 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.UserGroupSoap) _resp;
+                return (com.liferay.portal.model.UserGroup) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.UserGroupSoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.UserGroupSoap.class);
+                return (com.liferay.portal.model.UserGroup) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.UserGroup.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -363,7 +363,7 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
 }
     }
 
-    public com.liferay.portal.model.UserGroupSoap getUserGroup(long userGroupId) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.UserGroup getUserGroup(long userGroupId) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -384,9 +384,9 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.UserGroupSoap) _resp;
+                return (com.liferay.portal.model.UserGroup) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.UserGroupSoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.UserGroupSoap.class);
+                return (com.liferay.portal.model.UserGroup) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.UserGroup.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -394,7 +394,7 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
 }
     }
 
-    public com.liferay.portal.model.UserGroupSoap getUserGroup(java.lang.String name) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.UserGroup getUserGroup(java.lang.String name) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -415,9 +415,9 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.UserGroupSoap) _resp;
+                return (com.liferay.portal.model.UserGroup) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.UserGroupSoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.UserGroupSoap.class);
+                return (com.liferay.portal.model.UserGroup) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.UserGroup.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -425,7 +425,7 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
 }
     }
 
-    public com.liferay.portal.model.UserGroupSoap[] getUserUserGroups(long userId) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.UserGroup[] getUserUserGroups(long userId) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -446,9 +446,9 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.UserGroupSoap[]) _resp;
+                return (com.liferay.portal.model.UserGroup[]) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.UserGroupSoap[]) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.UserGroupSoap[].class);
+                return (com.liferay.portal.model.UserGroup[]) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.UserGroup[].class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -504,7 +504,7 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
 }
     }
 
-    public com.liferay.portal.model.UserGroupSoap updateUserGroup(long userGroupId, java.lang.String name, java.lang.String description) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.UserGroup updateUserGroup(long userGroupId, java.lang.String name, java.lang.String description) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -525,9 +525,9 @@ public class Portal_UserGroupServiceSoapBindingStub extends org.apache.axis.clie
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.UserGroupSoap) _resp;
+                return (com.liferay.portal.model.UserGroup) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.UserGroupSoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.UserGroupSoap.class);
+                return (com.liferay.portal.model.UserGroup) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.UserGroup.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {

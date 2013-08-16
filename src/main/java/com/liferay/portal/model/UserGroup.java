@@ -7,7 +7,7 @@
 
 package com.liferay.portal.model;
 
-public class UserGroupSoap  implements java.io.Serializable {
+public class UserGroup  implements java.io.Serializable {
     private boolean addedByLDAPImport;
 
     private long companyId;
@@ -22,10 +22,10 @@ public class UserGroupSoap  implements java.io.Serializable {
 
     private long userGroupId;
 
-    public UserGroupSoap() {
+    public UserGroup() {
     }
 
-    public UserGroupSoap(
+    public UserGroup(
            boolean addedByLDAPImport,
            long companyId,
            java.lang.String description,
@@ -184,8 +184,8 @@ public class UserGroupSoap  implements java.io.Serializable {
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof UserGroupSoap)) return false;
-        UserGroupSoap other = (UserGroupSoap) obj;
+        if (!(obj instanceof UserGroup)) return false;
+        UserGroup other = (UserGroup) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -233,7 +233,7 @@ public class UserGroupSoap  implements java.io.Serializable {
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(UserGroupSoap.class, true);
+        new org.apache.axis.description.TypeDesc(UserGroup.class, true);
 
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "UserGroupSoap"));

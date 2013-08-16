@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
-import com.liferay.portal.model.UserGroupSoap;
-import com.liferay.portal.model.UserSoap;
+import com.liferay.portal.model.UserGroup;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.http.UserGroupServiceSoap;
 import com.liferay.portal.service.http.UserGroupServiceSoapServiceLocator;
 
@@ -31,7 +31,7 @@ public class GroupService {
 	 * @throws RemoteException
 	 *             if there is any communication problem.
 	 */
-	public UserGroupSoap getUserGroup(long userGroupId) throws RemoteException {
+	public UserGroup getUserGroup(long userGroupId) throws RemoteException {
 		return userGroupSoap.getUserGroup(userGroupId);
 	}
 
@@ -44,7 +44,7 @@ public class GroupService {
 	 * @throws RemoteException
 	 *             if there is any communication problem.
 	 */
-	public UserGroupSoap getUserGroup(String name) throws RemoteException {
+	public UserGroup getUserGroup(String name) throws RemoteException {
 		return userGroupSoap.getUserGroup(name);
 	}
 
@@ -56,9 +56,9 @@ public class GroupService {
 	 * @throws RemoteException
 	 *             if there is any communication problem.
 	 */
-	public List<UserGroupSoap> getUserUserGroups(UserSoap user) throws RemoteException {
-		List<UserGroupSoap> groups = new ArrayList<UserGroupSoap>();
-		UserGroupSoap[] arrayOfGroups = userGroupSoap.getUserUserGroups(user.getUserId());
+	public List<UserGroup> getUserUserGroups(User user) throws RemoteException {
+		List<UserGroup> groups = new ArrayList<UserGroup>();
+		UserGroup[] arrayOfGroups = userGroupSoap.getUserUserGroups(user.getUserId());
 		for (int i = 0; i < arrayOfGroups.length; i++) {
 			groups.add(arrayOfGroups[i]);
 		}

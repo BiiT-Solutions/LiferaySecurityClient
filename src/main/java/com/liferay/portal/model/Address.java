@@ -7,7 +7,7 @@
 
 package com.liferay.portal.model;
 
-public class AddressSoap  implements java.io.Serializable {
+public class Address  implements java.io.Serializable {
     private long addressId;
 
     private java.lang.String city;
@@ -46,10 +46,10 @@ public class AddressSoap  implements java.io.Serializable {
 
     private java.lang.String zip;
 
-    public AddressSoap() {
+    public Address() {
     }
 
-    public AddressSoap(
+    public Address(
            long addressId,
            java.lang.String city,
            long classNameId,
@@ -472,8 +472,8 @@ public class AddressSoap  implements java.io.Serializable {
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof AddressSoap)) return false;
-        AddressSoap other = (AddressSoap) obj;
+        if (!(obj instanceof Address)) return false;
+        Address other = (Address) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -569,7 +569,7 @@ public class AddressSoap  implements java.io.Serializable {
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(AddressSoap.class, true);
+        new org.apache.axis.description.TypeDesc(Address.class, true);
 
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "AddressSoap"));

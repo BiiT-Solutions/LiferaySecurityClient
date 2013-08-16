@@ -7,7 +7,7 @@
 
 package com.liferay.portal.model;
 
-public class UserSoap  implements java.io.Serializable {
+public class User  implements java.io.Serializable {
     private boolean agreedToTermsOfUse;
 
     private java.lang.String comments;
@@ -88,10 +88,10 @@ public class UserSoap  implements java.io.Serializable {
 
     private java.lang.String uuid;
 
-    public UserSoap() {
+    public User() {
     }
 
-    public UserSoap(
+    public User(
            boolean agreedToTermsOfUse,
            java.lang.String comments,
            long companyId,
@@ -976,8 +976,8 @@ public class UserSoap  implements java.io.Serializable {
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof UserSoap)) return false;
-        UserSoap other = (UserSoap) obj;
+        if (!(obj instanceof User)) return false;
+        User other = (User) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -1183,7 +1183,7 @@ public class UserSoap  implements java.io.Serializable {
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(UserSoap.class, true);
+        new org.apache.axis.description.TypeDesc(User.class, true);
 
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "UserSoap"));

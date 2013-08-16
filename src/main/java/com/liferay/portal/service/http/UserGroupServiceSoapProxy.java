@@ -56,7 +56,7 @@ public class UserGroupServiceSoapProxy implements com.liferay.portal.service.htt
     userGroupServiceSoap.addTeamUserGroups(teamId, userGroupIds);
   }
   
-  public com.liferay.portal.model.UserGroupSoap addUserGroup(java.lang.String name, java.lang.String description) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.UserGroup addUserGroup(java.lang.String name, java.lang.String description) throws java.rmi.RemoteException{
     if (userGroupServiceSoap == null)
       _initUserGroupServiceSoapProxy();
     return userGroupServiceSoap.addUserGroup(name, description);
@@ -68,19 +68,19 @@ public class UserGroupServiceSoapProxy implements com.liferay.portal.service.htt
     userGroupServiceSoap.deleteUserGroup(userGroupId);
   }
   
-  public com.liferay.portal.model.UserGroupSoap getUserGroup(long userGroupId) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.UserGroup getUserGroup(long userGroupId) throws java.rmi.RemoteException{
     if (userGroupServiceSoap == null)
       _initUserGroupServiceSoapProxy();
     return userGroupServiceSoap.getUserGroup(userGroupId);
   }
   
-  public com.liferay.portal.model.UserGroupSoap getUserGroup(java.lang.String name) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.UserGroup getUserGroup(java.lang.String name) throws java.rmi.RemoteException{
     if (userGroupServiceSoap == null)
       _initUserGroupServiceSoapProxy();
     return userGroupServiceSoap.getUserGroup(name);
   }
   
-  public com.liferay.portal.model.UserGroupSoap[] getUserUserGroups(long userId) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.UserGroup[] getUserUserGroups(long userId) throws java.rmi.RemoteException{
     if (userGroupServiceSoap == null)
       _initUserGroupServiceSoapProxy();
     return userGroupServiceSoap.getUserUserGroups(userId);
@@ -98,7 +98,7 @@ public class UserGroupServiceSoapProxy implements com.liferay.portal.service.htt
     userGroupServiceSoap.unsetTeamUserGroups(teamId, userGroupIds);
   }
   
-  public com.liferay.portal.model.UserGroupSoap updateUserGroup(long userGroupId, java.lang.String name, java.lang.String description) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.UserGroup updateUserGroup(long userGroupId, java.lang.String name, java.lang.String description) throws java.rmi.RemoteException{
     if (userGroupServiceSoap == null)
       _initUserGroupServiceSoapProxy();
     return userGroupServiceSoap.updateUserGroup(userGroupId, name, description);

@@ -10,15 +10,13 @@ public class BasicSecurityMethodTest {
 
 	@Test
 	public void encriptionNotEquals() {
-		SecurityMethod security = new BasicSecurityMethod();
-		String passwordEncrypted = security.encryptPassword("asd124");
+		String passwordEncrypted = BasicEncryptionMethod.getInstance().encryptPassword("asd124");
 		Assert.assertNotEquals(passwordEncrypted, LIFERAY_BASIC_ENCRYPTED_PASSWORD);
 	}
 
 	@Test
 	public void encriptionEquals() {
-		SecurityMethod security = new BasicSecurityMethod();
-		String passwordEncrypted = security.encryptPassword(PLAIN_PASSWORD);
+		String passwordEncrypted = BasicEncryptionMethod.getInstance().encryptPassword(PLAIN_PASSWORD);
 		Assert.assertEquals(passwordEncrypted, LIFERAY_BASIC_ENCRYPTED_PASSWORD);
 	}
 }

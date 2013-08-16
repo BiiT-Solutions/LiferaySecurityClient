@@ -4,7 +4,7 @@ import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
 
-import com.liferay.portal.model.CompanySoap;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.service.http.CompanyServiceSoap;
 import com.liferay.portal.service.http.CompanyServiceSoapServiceLocator;
 
@@ -31,7 +31,7 @@ public class CompanyService {
 	 *             if there is a communication problem
 	 * 
 	 */
-	public CompanySoap getCompanyByVirtualHost(String virtualHost) throws RemoteException {
+	public Company getCompanyByVirtualHost(String virtualHost) throws RemoteException {
 		return soapCompany.getCompanyByVirtualHost(virtualHost);
 	}
 
@@ -44,7 +44,7 @@ public class CompanyService {
 	 * @throws RemoteException
 	 *             if there is a communication problem
 	 */
-	public CompanySoap getCompanyById(long companyId) throws RemoteException {
+	public Company getCompanyById(long companyId) throws RemoteException {
 		return soapCompany.getCompanyById(companyId);
 	}
 
@@ -57,7 +57,7 @@ public class CompanyService {
 	 * @throws RemoteException
 	 *             if there is a communication problem
 	 */
-	public CompanySoap getCompanyByWebId(String webId) throws RemoteException {
+	public Company getCompanyByWebId(String webId) throws RemoteException {
 		return soapCompany.getCompanyByWebId(webId);
 	}
 

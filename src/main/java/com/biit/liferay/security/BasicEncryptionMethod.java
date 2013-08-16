@@ -8,9 +8,18 @@ import org.apache.axis.encoding.Base64;
 
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
 
-public class BasicSecurityMethod implements SecurityMethod {
+public class BasicEncryptionMethod implements EncryptionMethod {
 	private static final String DEFAULT_ALGORITHM = "SHA";
 	private static final String ENCODING = "UTF-8";
+	private static final BasicEncryptionMethod instance = new BasicEncryptionMethod();
+
+	private BasicEncryptionMethod() {
+
+	}
+
+	public static BasicEncryptionMethod getInstance() {
+		return instance;
+	}
 
 	@Override
 	public String encryptPassword(String plainTextPassword) {

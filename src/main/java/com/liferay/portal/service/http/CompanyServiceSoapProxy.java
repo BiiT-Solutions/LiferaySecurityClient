@@ -44,7 +44,7 @@ public class CompanyServiceSoapProxy implements com.liferay.portal.service.http.
     return companyServiceSoap;
   }
   
-  public com.liferay.portal.model.CompanySoap addCompany(java.lang.String webId, java.lang.String virtualHost, java.lang.String mx, java.lang.String shardName, boolean system, int maxUsers, boolean active) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.Company addCompany(java.lang.String webId, java.lang.String virtualHost, java.lang.String mx, java.lang.String shardName, boolean system, int maxUsers, boolean active) throws java.rmi.RemoteException{
     if (companyServiceSoap == null)
       _initCompanyServiceSoapProxy();
     return companyServiceSoap.addCompany(webId, virtualHost, mx, shardName, system, maxUsers, active);
@@ -56,31 +56,31 @@ public class CompanyServiceSoapProxy implements com.liferay.portal.service.http.
     companyServiceSoap.deleteLogo(companyId);
   }
   
-  public com.liferay.portal.model.CompanySoap getCompanyById(long companyId) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.Company getCompanyById(long companyId) throws java.rmi.RemoteException{
     if (companyServiceSoap == null)
       _initCompanyServiceSoapProxy();
     return companyServiceSoap.getCompanyById(companyId);
   }
   
-  public com.liferay.portal.model.CompanySoap getCompanyByLogoId(long logoId) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.Company getCompanyByLogoId(long logoId) throws java.rmi.RemoteException{
     if (companyServiceSoap == null)
       _initCompanyServiceSoapProxy();
     return companyServiceSoap.getCompanyByLogoId(logoId);
   }
   
-  public com.liferay.portal.model.CompanySoap getCompanyByMx(java.lang.String mx) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.Company getCompanyByMx(java.lang.String mx) throws java.rmi.RemoteException{
     if (companyServiceSoap == null)
       _initCompanyServiceSoapProxy();
     return companyServiceSoap.getCompanyByMx(mx);
   }
   
-  public com.liferay.portal.model.CompanySoap getCompanyByVirtualHost(java.lang.String virtualHost) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.Company getCompanyByVirtualHost(java.lang.String virtualHost) throws java.rmi.RemoteException{
     if (companyServiceSoap == null)
       _initCompanyServiceSoapProxy();
     return companyServiceSoap.getCompanyByVirtualHost(virtualHost);
   }
   
-  public com.liferay.portal.model.CompanySoap getCompanyByWebId(java.lang.String webId) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.Company getCompanyByWebId(java.lang.String webId) throws java.rmi.RemoteException{
     if (companyServiceSoap == null)
       _initCompanyServiceSoapProxy();
     return companyServiceSoap.getCompanyByWebId(webId);
@@ -92,13 +92,13 @@ public class CompanyServiceSoapProxy implements com.liferay.portal.service.http.
     companyServiceSoap.removePreferences(companyId, keys);
   }
   
-  public com.liferay.portal.model.CompanySoap updateCompany(long companyId, java.lang.String virtualHost, java.lang.String mx, int maxUsers, boolean active) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.Company updateCompany(long companyId, java.lang.String virtualHost, java.lang.String mx, int maxUsers, boolean active) throws java.rmi.RemoteException{
     if (companyServiceSoap == null)
       _initCompanyServiceSoapProxy();
     return companyServiceSoap.updateCompany(companyId, virtualHost, mx, maxUsers, active);
   }
   
-  public com.liferay.portal.model.CompanySoap updateCompany(long companyId, java.lang.String virtualHost, java.lang.String mx, java.lang.String homeURL, java.lang.String name, java.lang.String legalName, java.lang.String legalId, java.lang.String legalType, java.lang.String sicCode, java.lang.String tickerSymbol, java.lang.String industry, java.lang.String type, java.lang.String size) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.Company updateCompany(long companyId, java.lang.String virtualHost, java.lang.String mx, java.lang.String homeURL, java.lang.String name, java.lang.String legalName, java.lang.String legalId, java.lang.String legalType, java.lang.String sicCode, java.lang.String tickerSymbol, java.lang.String industry, java.lang.String type, java.lang.String size) throws java.rmi.RemoteException{
     if (companyServiceSoap == null)
       _initCompanyServiceSoapProxy();
     return companyServiceSoap.updateCompany(companyId, virtualHost, mx, homeURL, name, legalName, legalId, legalType, sicCode, tickerSymbol, industry, type, size);

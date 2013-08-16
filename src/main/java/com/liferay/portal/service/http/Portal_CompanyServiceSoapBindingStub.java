@@ -41,7 +41,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "active"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"), boolean.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "CompanySoap"));
-        oper.setReturnClass(com.liferay.portal.model.CompanySoap.class);
+        oper.setReturnClass(com.liferay.portal.model.Company.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "addCompanyReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -61,7 +61,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "companyId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "CompanySoap"));
-        oper.setReturnClass(com.liferay.portal.model.CompanySoap.class);
+        oper.setReturnClass(com.liferay.portal.model.Company.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getCompanyByIdReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -72,7 +72,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "logoId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "CompanySoap"));
-        oper.setReturnClass(com.liferay.portal.model.CompanySoap.class);
+        oper.setReturnClass(com.liferay.portal.model.Company.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getCompanyByLogoIdReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -83,7 +83,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "mx"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "CompanySoap"));
-        oper.setReturnClass(com.liferay.portal.model.CompanySoap.class);
+        oper.setReturnClass(com.liferay.portal.model.Company.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getCompanyByMxReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -94,7 +94,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "virtualHost"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "CompanySoap"));
-        oper.setReturnClass(com.liferay.portal.model.CompanySoap.class);
+        oper.setReturnClass(com.liferay.portal.model.Company.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getCompanyByVirtualHostReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -105,7 +105,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "webId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "CompanySoap"));
-        oper.setReturnClass(com.liferay.portal.model.CompanySoap.class);
+        oper.setReturnClass(com.liferay.portal.model.Company.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getCompanyByWebIdReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -135,7 +135,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "active"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"), boolean.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "CompanySoap"));
-        oper.setReturnClass(com.liferay.portal.model.CompanySoap.class);
+        oper.setReturnClass(com.liferay.portal.model.Company.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "updateCompanyReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -170,7 +170,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "size"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "CompanySoap"));
-        oper.setReturnClass(com.liferay.portal.model.CompanySoap.class);
+        oper.setReturnClass(com.liferay.portal.model.Company.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "updateCompanyReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
@@ -250,7 +250,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
             qName = new javax.xml.namespace.QName("http://model.portal.liferay.com", "CompanySoap");
             cachedSerQNames.add(qName);
-            cls = com.liferay.portal.model.CompanySoap.class;
+            cls = com.liferay.portal.model.Company.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -331,7 +331,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         }
     }
 
-    public com.liferay.portal.model.CompanySoap addCompany(java.lang.String webId, java.lang.String virtualHost, java.lang.String mx, java.lang.String shardName, boolean system, int maxUsers, boolean active) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.Company addCompany(java.lang.String webId, java.lang.String virtualHost, java.lang.String mx, java.lang.String shardName, boolean system, int maxUsers, boolean active) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -352,9 +352,9 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.CompanySoap) _resp;
+                return (com.liferay.portal.model.Company) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.CompanySoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.CompanySoap.class);
+                return (com.liferay.portal.model.Company) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.Company.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -386,7 +386,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
 }
     }
 
-    public com.liferay.portal.model.CompanySoap getCompanyById(long companyId) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.Company getCompanyById(long companyId) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -407,9 +407,9 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.CompanySoap) _resp;
+                return (com.liferay.portal.model.Company) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.CompanySoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.CompanySoap.class);
+                return (com.liferay.portal.model.Company) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.Company.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -417,7 +417,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
 }
     }
 
-    public com.liferay.portal.model.CompanySoap getCompanyByLogoId(long logoId) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.Company getCompanyByLogoId(long logoId) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -438,9 +438,9 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.CompanySoap) _resp;
+                return (com.liferay.portal.model.Company) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.CompanySoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.CompanySoap.class);
+                return (com.liferay.portal.model.Company) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.Company.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -448,7 +448,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
 }
     }
 
-    public com.liferay.portal.model.CompanySoap getCompanyByMx(java.lang.String mx) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.Company getCompanyByMx(java.lang.String mx) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -469,9 +469,9 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.CompanySoap) _resp;
+                return (com.liferay.portal.model.Company) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.CompanySoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.CompanySoap.class);
+                return (com.liferay.portal.model.Company) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.Company.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -479,7 +479,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
 }
     }
 
-    public com.liferay.portal.model.CompanySoap getCompanyByVirtualHost(java.lang.String virtualHost) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.Company getCompanyByVirtualHost(java.lang.String virtualHost) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -500,9 +500,9 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.CompanySoap) _resp;
+                return (com.liferay.portal.model.Company) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.CompanySoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.CompanySoap.class);
+                return (com.liferay.portal.model.Company) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.Company.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -510,7 +510,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
 }
     }
 
-    public com.liferay.portal.model.CompanySoap getCompanyByWebId(java.lang.String webId) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.Company getCompanyByWebId(java.lang.String webId) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -531,9 +531,9 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.CompanySoap) _resp;
+                return (com.liferay.portal.model.Company) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.CompanySoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.CompanySoap.class);
+                return (com.liferay.portal.model.Company) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.Company.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -565,7 +565,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
 }
     }
 
-    public com.liferay.portal.model.CompanySoap updateCompany(long companyId, java.lang.String virtualHost, java.lang.String mx, int maxUsers, boolean active) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.Company updateCompany(long companyId, java.lang.String virtualHost, java.lang.String mx, int maxUsers, boolean active) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -586,9 +586,9 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.CompanySoap) _resp;
+                return (com.liferay.portal.model.Company) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.CompanySoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.CompanySoap.class);
+                return (com.liferay.portal.model.Company) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.Company.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -596,7 +596,7 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
 }
     }
 
-    public com.liferay.portal.model.CompanySoap updateCompany(long companyId, java.lang.String virtualHost, java.lang.String mx, java.lang.String homeURL, java.lang.String name, java.lang.String legalName, java.lang.String legalId, java.lang.String legalType, java.lang.String sicCode, java.lang.String tickerSymbol, java.lang.String industry, java.lang.String type, java.lang.String size) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.Company updateCompany(long companyId, java.lang.String virtualHost, java.lang.String mx, java.lang.String homeURL, java.lang.String name, java.lang.String legalName, java.lang.String legalId, java.lang.String legalType, java.lang.String sicCode, java.lang.String tickerSymbol, java.lang.String industry, java.lang.String type, java.lang.String size) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -617,9 +617,9 @@ public class Portal_CompanyServiceSoapBindingStub extends org.apache.axis.client
         else {
             extractAttachments(_call);
             try {
-                return (com.liferay.portal.model.CompanySoap) _resp;
+                return (com.liferay.portal.model.Company) _resp;
             } catch (java.lang.Exception _exception) {
-                return (com.liferay.portal.model.CompanySoap) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.CompanySoap.class);
+                return (com.liferay.portal.model.Company) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.Company.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {

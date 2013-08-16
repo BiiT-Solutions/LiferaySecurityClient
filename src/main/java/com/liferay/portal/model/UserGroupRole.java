@@ -7,7 +7,7 @@
 
 package com.liferay.portal.model;
 
-public class UserGroupRoleSoap  implements java.io.Serializable {
+public class UserGroupRole  implements java.io.Serializable {
     private long groupId;
 
     private com.liferay.portal.service.persistence.UserGroupRolePK primaryKey;
@@ -16,10 +16,10 @@ public class UserGroupRoleSoap  implements java.io.Serializable {
 
     private long userId;
 
-    public UserGroupRoleSoap() {
+    public UserGroupRole() {
     }
 
-    public UserGroupRoleSoap(
+    public UserGroupRole(
            long groupId,
            com.liferay.portal.service.persistence.UserGroupRolePK primaryKey,
            long roleId,
@@ -112,8 +112,8 @@ public class UserGroupRoleSoap  implements java.io.Serializable {
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof UserGroupRoleSoap)) return false;
-        UserGroupRoleSoap other = (UserGroupRoleSoap) obj;
+        if (!(obj instanceof UserGroupRole)) return false;
+        UserGroupRole other = (UserGroupRole) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -151,7 +151,7 @@ public class UserGroupRoleSoap  implements java.io.Serializable {
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(UserGroupRoleSoap.class, true);
+        new org.apache.axis.description.TypeDesc(UserGroupRole.class, true);
 
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "UserGroupRoleSoap"));
