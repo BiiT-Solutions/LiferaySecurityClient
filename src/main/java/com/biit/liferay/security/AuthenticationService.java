@@ -25,7 +25,11 @@ public class AuthenticationService {
 
 	}
 
-	public static AuthenticationService getInstance() {
+	public static AuthenticationService getInstance() throws ServiceException {
+		// Connect if not connected the fist time used.
+		if (UserService.getInstance().isNotConnected()) {
+			UserService.getInstance().connectToWebService();
+		}
 		return instance;
 	}
 

@@ -14,6 +14,7 @@
 		<plugin.compiler.version>2.3.2</plugin.compiler.version>
 		<plugin.exec.version>1.2.1</plugin.exec.version>
 		<org.testng.version>6.8</org.testng.version>
+		<biit-fileutils.version>0.0.1</biit-fileutils.version>
 	</properties>
 
 	<build>
@@ -43,6 +44,12 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
+		</dependency>
+		<!-- File access -->
+		<dependency>
+			<groupId>com.biit.utils</groupId>
+			<artifactId>fileutils</artifactId>
+			<version>${biit-fileutils.version}</version>
 		</dependency>
 		<!-- Axis WS access -->
 		<dependency>

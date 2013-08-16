@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
-import com.biit.liferay.security.BasicEncryptionMethod;
+import com.biit.liferay.configuration.ConfigurationReader;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
@@ -32,6 +32,23 @@ public class UserService {
 	 */
 	public void connectToWebService(String loginUser, String password) throws ServiceException {
 		// Locate the User service
+		UserServiceSoapServiceLocator locatorUser = new UserServiceSoapServiceLocator();
+		userServiceSoap = locatorUser.getPortal_UserService(AccessUtils.getLiferayUrl(loginUser, password,
+				SERVICE_USER_NAME));
+	}
+
+	/**
+	 * Connects to Liferay webservice using the liferay.conf file.
+	 * 
+	 * @param loginUser
+	 * @param password
+	 * @throws ServiceException
+	 */
+	public void connectToWebService() throws ServiceException {
+		// Read user and password.
+		String loginUser = ConfigurationReader.getInstance().getUser();
+		String password = ConfigurationReader.getInstance().getPassword();
+		// Locate the User service.
 		UserServiceSoapServiceLocator locatorUser = new UserServiceSoapServiceLocator();
 		userServiceSoap = locatorUser.getPortal_UserService(AccessUtils.getLiferayUrl(loginUser, password,
 				SERVICE_USER_NAME));
