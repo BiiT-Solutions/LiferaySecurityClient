@@ -36,9 +36,7 @@ public class CompanyService implements LiferayService {
 		String loginUser = ConfigurationReader.getInstance().getUser();
 		String password = ConfigurationReader.getInstance().getPassword();
 		// Locate the User service.
-		CompanyServiceSoapServiceLocator locatorCompany = new CompanyServiceSoapServiceLocator();
-		companyServiceSoap = locatorCompany.getPortal_CompanyService(AccessUtils.getLiferayUrl(loginUser, password,
-				SERVICE_COMPANY_NAME));
+		connectToWebService(loginUser, password);
 	}
 
 	@Override

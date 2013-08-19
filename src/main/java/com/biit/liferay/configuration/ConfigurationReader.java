@@ -8,17 +8,20 @@ import com.biit.utils.file.PropertiesFile;
 public class ConfigurationReader {
 	private final String LIFERAY_CONFIG_FILE = "liferay.conf";
 
-	private final String USER_TAG = "user";
-	private final String PASSWORD_TAG = "password";
-	private final String VIRTUAL_HOST_TAG = "virtualhost";
+	private static final String USER_TAG = "user";
+	private static final String PASSWORD_TAG = "password";
+	private static final String VIRTUAL_HOST_TAG = "virtualhost";
+	private static final String WEBAPP_TAG = "webapp";
 
-	private final String DEFAULT_USER = "user";
-	private final String DEFAULT_PASSWORD = "pass";
+	private final String DEFAULT_USER = "test@liferay.com";
+	private final String DEFAULT_PASSWORD = "test";
 	private final String DEFAULT_VIRTUAL_HOST = "localhost";
+	private final String DEFAULT_LIFERAY_WEBAPP = "lportal-6.1.1";
 
 	private String user;
 	private String password;
 	private String virtualhost;
+	private String webappName;
 
 	private static ConfigurationReader instance;
 
@@ -48,7 +51,10 @@ public class ConfigurationReader {
 			user = prop.getProperty(USER_TAG);
 			password = prop.getProperty(PASSWORD_TAG);
 			virtualhost = prop.getProperty(VIRTUAL_HOST_TAG);
+			webappName = prop.getProperty(WEBAPP_TAG);
 		} catch (IOException e) {
+			// Do nothing.
+		} catch (NullPointerException e) {
 			// Do nothing.
 		}
 
@@ -62,6 +68,10 @@ public class ConfigurationReader {
 		if (virtualhost == null) {
 			virtualhost = DEFAULT_VIRTUAL_HOST;
 		}
+
+		if (webappName == null) {
+			webappName = DEFAULT_LIFERAY_WEBAPP;
+		}
 	}
 
 	public String getUser() {
@@ -74,5 +84,9 @@ public class ConfigurationReader {
 
 	public String getVirtualHost() {
 		return virtualhost;
+	}
+
+	public String getWebAppName() {
+		return webappName;
 	}
 }

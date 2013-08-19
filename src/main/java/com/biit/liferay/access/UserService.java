@@ -37,9 +37,7 @@ public class UserService implements LiferayService {
 		String loginUser = ConfigurationReader.getInstance().getUser();
 		String password = ConfigurationReader.getInstance().getPassword();
 		// Locate the User service.
-		UserServiceSoapServiceLocator locatorUser = new UserServiceSoapServiceLocator();
-		userServiceSoap = locatorUser.getPortal_UserService(AccessUtils.getLiferayUrl(loginUser, password,
-				SERVICE_USER_NAME));
+		connectToWebService(loginUser, password);
 	}
 
 	public static UserService getInstance() {
