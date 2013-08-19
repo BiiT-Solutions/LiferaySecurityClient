@@ -29,18 +29,18 @@ public class AuthenticationService {
 		return instance;
 	}
 
-	public User authenticate(String userName, String password) throws InvalidCredentialsException, ServiceException,
+	public User authenticate(String userMail, String password) throws InvalidCredentialsException, ServiceException,
 			RemoteException, NotConnectedToWebServiceException {
 		// Login fails if either the username or password is null
-		if (userName == null || password == null) {
+		if (userMail == null || password == null) {
 			throw new InvalidCredentialsException("No fields filled up.");
 		}
 
 		User user = null;
 		try {
-			user = UserService.getInstance().getUserByScreenName(
+			user = UserService.getInstance().getUserByEmailAddress(
 					CompanyService.getInstance().getCompanyByVirtualHost(
-							ConfigurationReader.getInstance().getVirtualHost()), userName);
+							ConfigurationReader.getInstance().getVirtualHost()), userMail);
 		} catch (RemoteException e) {
 			if (e.getLocalizedMessage().contains("No User exists with the key")) {
 				throw new InvalidCredentialsException("User does not exist.");
