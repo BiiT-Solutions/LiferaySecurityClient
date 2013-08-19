@@ -5,7 +5,6 @@ import java.rmi.RemoteException;
 import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
-import com.biit.liferay.configuration.ConfigurationReader;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
@@ -15,29 +14,11 @@ import com.liferay.portal.service.http.UserServiceSoapServiceLocator;
 /**
  * This class represent allows to obtain a user from a liferay portal.
  */
-public class UserService implements LiferayService {
+public class UserService extends ServiceAccess {
 	private final static String SERVICE_USER_NAME = "Portal_UserService";
-	private UserServiceSoap userServiceSoap = null;
 	private final static UserService instance = new UserService();
 
 	private UserService() {
-	}
-
-	@Override
-	public void connectToWebService(String loginUser, String password) throws ServiceException {
-		// Locate the User service
-		UserServiceSoapServiceLocator locatorUser = new UserServiceSoapServiceLocator();
-		userServiceSoap = locatorUser.getPortal_UserService(AccessUtils.getLiferayUrl(loginUser, password,
-				SERVICE_USER_NAME));
-	}
-
-	@Override
-	public void connectToWebService() throws ServiceException {
-		// Read user and password.
-		String loginUser = ConfigurationReader.getInstance().getUser();
-		String password = ConfigurationReader.getInstance().getPassword();
-		// Locate the User service.
-		connectToWebService(loginUser, password);
 	}
 
 	public static UserService getInstance() {
@@ -45,16 +26,16 @@ public class UserService implements LiferayService {
 	}
 
 	@Override
-	public boolean isNotConnected() {
-		return userServiceSoap == null;
+	public void connectToWebService(String loginUser, String password) throws ServiceException {
+		// Locate the User service
+		UserServiceSoapServiceLocator locatorUser = new UserServiceSoapServiceLocator();
+		setServiceSoap(locatorUser.getPortal_UserService(AccessUtils.getLiferayUrl(loginUser, password,
+				SERVICE_USER_NAME)));
 	}
 
 	@Override
-	public void checkConnection() throws NotConnectedToWebServiceException {
-		if (isNotConnected()) {
-			throw new NotConnectedToWebServiceException(
-					"user credentials are needed to use Liferay webservice. Use the connect method for this.");
-		}
+	public String getServiceName() {
+		return SERVICE_USER_NAME;
 	}
 
 	/**
@@ -72,7 +53,7 @@ public class UserService implements LiferayService {
 	public User getUserByEmailAddress(Company companySoap, String emailAddress) throws RemoteException,
 			NotConnectedToWebServiceException {
 		checkConnection();
-		return userServiceSoap.getUserByEmailAddress(companySoap.getCompanyId(), emailAddress);
+		return ((UserServiceSoap) getServiceSoap()).getUserByEmailAddress(companySoap.getCompanyId(), emailAddress);
 	}
 
 	/**
@@ -87,7 +68,7 @@ public class UserService implements LiferayService {
 	 */
 	public User getUserById(long userId) throws RemoteException, NotConnectedToWebServiceException {
 		checkConnection();
-		return userServiceSoap.getUserById(userId);
+		return ((UserServiceSoap) getServiceSoap()).getUserById(userId);
 	}
 
 	/**
@@ -106,7 +87,7 @@ public class UserService implements LiferayService {
 	public User getUserByScreenName(Company companySoap, String screenName) throws RemoteException,
 			NotConnectedToWebServiceException {
 		checkConnection();
-		return userServiceSoap.getUserByScreenName(companySoap.getCompanyId(), screenName);
+		return ((UserServiceSoap) getServiceSoap()).getUserByScreenName(companySoap.getCompanyId(), screenName);
 	}
 
 	/**
@@ -152,9 +133,9 @@ public class UserService implements LiferayService {
 		if (screenName == null || screenName.length() == 0) {
 			autoScreenName = true;
 		}
-		userServiceSoap.addUser(companySoap.getCompanyId(), autoPassword, password, password, autoScreenName,
-				screenName, emailAddress, facebookId, openId, locale, firstName, middleName, lastName, 0, 0, false, 1,
-				1, 1970, "", null, null, null, null, false, new ServiceContext());
+		((UserServiceSoap) getServiceSoap()).addUser(companySoap.getCompanyId(), autoPassword, password, password,
+				autoScreenName, screenName, emailAddress, facebookId, openId, locale, firstName, middleName, lastName,
+				0, 0, false, 1, 1, 1970, "", null, null, null, null, false, new ServiceContext());
 	}
 
 	/**
@@ -166,7 +147,7 @@ public class UserService implements LiferayService {
 	 */
 	public void deleteUser(User user) throws RemoteException, NotConnectedToWebServiceException {
 		checkConnection();
-		userServiceSoap.deleteUser(user.getUserId());
+		((UserServiceSoap) getServiceSoap()).deleteUser(user.getUserId());
 	}
 
 	/**
@@ -180,7 +161,8 @@ public class UserService implements LiferayService {
 	public void updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
 			RemoteException {
 		checkConnection();
-		userServiceSoap.updatePassword(user.getUserId(), plainTextPassword, plainTextPassword, false);
+		((UserServiceSoap) getServiceSoap()).updatePassword(user.getUserId(), plainTextPassword, plainTextPassword,
+				false);
 		user.setPassword(plainTextPassword);
 	}
 

@@ -30,7 +30,7 @@ public interface LiferayService {
 	void connectToWebService() throws ServiceException;
 
 	/**
-	 * Ensures that a connection has been stablished
+	 * Checks if a connection has been established.
 	 * 
 	 * @throws NotConnectedToWebServiceException
 	 */
