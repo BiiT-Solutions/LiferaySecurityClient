@@ -13,16 +13,19 @@ public class ConfigurationReader {
 	private static final String PASSWORD_TAG = "password";
 	private static final String VIRTUAL_HOST_TAG = "virtualhost";
 	private static final String WEBAPP_TAG = "webapp";
+	private static final String PORT_TAG = "port";
 
 	private final String DEFAULT_USER = "user";
 	private final String DEFAULT_PASSWORD = "pass";
 	private final String DEFAULT_VIRTUAL_HOST = "localhost";
 	private final String DEFAULT_LIFERAY_WEBAPP = "lportal-6.1.1";
+	private final String DEFAULT_PORT = "8080";
 
 	private String user;
 	private String password;
 	private String virtualhost;
 	private String webappName;
+	private String connectionport;
 
 	private static ConfigurationReader instance;
 
@@ -53,6 +56,7 @@ public class ConfigurationReader {
 			password = prop.getProperty(PASSWORD_TAG);
 			virtualhost = prop.getProperty(VIRTUAL_HOST_TAG);
 			webappName = prop.getProperty(WEBAPP_TAG);
+			connectionport = prop.getProperty(PORT_TAG);
 			AuthorizationAccessLog.info(this.getClass().getName(), "Access with user '" + user + "' and password '"
 					+ password + "'.");
 		} catch (IOException e) {
@@ -72,6 +76,10 @@ public class ConfigurationReader {
 			virtualhost = DEFAULT_VIRTUAL_HOST;
 		}
 
+		if (connectionport == null) {
+			connectionport = DEFAULT_PORT;
+		}
+
 		if (webappName == null) {
 			webappName = DEFAULT_LIFERAY_WEBAPP;
 		}
@@ -87,6 +95,10 @@ public class ConfigurationReader {
 
 	public String getVirtualHost() {
 		return virtualhost;
+	}
+	
+	public String getConnectionPort(){
+		return connectionport;
 	}
 
 	public String getWebAppName() {
