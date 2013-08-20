@@ -71,7 +71,10 @@ public class UserService extends ServiceAccess {
 	 */
 	public User getUserById(long userId) throws RemoteException, NotConnectedToWebServiceException {
 		checkConnection();
-		return ((UserServiceSoap) getServiceSoap()).getUserById(userId);
+		if (userId >= 0) {
+			return ((UserServiceSoap) getServiceSoap()).getUserById(userId);
+		}
+		return null;
 	}
 
 	/**

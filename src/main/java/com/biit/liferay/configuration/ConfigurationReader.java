@@ -3,6 +3,7 @@ package com.biit.liferay.configuration;
 import java.io.IOException;
 import java.util.Properties;
 
+import com.biit.liferay.log.AuthorizationAccessLog;
 import com.biit.utils.file.PropertiesFile;
 
 public class ConfigurationReader {
@@ -13,8 +14,8 @@ public class ConfigurationReader {
 	private static final String VIRTUAL_HOST_TAG = "virtualhost";
 	private static final String WEBAPP_TAG = "webapp";
 
-	private final String DEFAULT_USER = "test@liferay.com";
-	private final String DEFAULT_PASSWORD = "test";
+	private final String DEFAULT_USER = "user";
+	private final String DEFAULT_PASSWORD = "pass";
 	private final String DEFAULT_VIRTUAL_HOST = "localhost";
 	private final String DEFAULT_LIFERAY_WEBAPP = "lportal-6.1.1";
 
@@ -52,10 +53,12 @@ public class ConfigurationReader {
 			password = prop.getProperty(PASSWORD_TAG);
 			virtualhost = prop.getProperty(VIRTUAL_HOST_TAG);
 			webappName = prop.getProperty(WEBAPP_TAG);
+			AuthorizationAccessLog.info(this.getClass().getName(), "Access with user '" + user + "' and password '"
+					+ password + "'.");
 		} catch (IOException e) {
-			// Do nothing.
+			AuthorizationAccessLog.info(this.getClass().getName(), "No configuration file found.");
 		} catch (NullPointerException e) {
-			// Do nothing.
+			AuthorizationAccessLog.info(this.getClass().getName(), "No configuration file found.");
 		}
 
 		if (user == null) {
