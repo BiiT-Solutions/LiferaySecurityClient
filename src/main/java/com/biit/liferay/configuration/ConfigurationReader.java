@@ -3,7 +3,6 @@ package com.biit.liferay.configuration;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.biit.liferay.log.AuthorizationAccessLog;
 import com.biit.utils.file.PropertiesFile;
 
 public class ConfigurationReader {
@@ -57,12 +56,10 @@ public class ConfigurationReader {
 			virtualhost = prop.getProperty(VIRTUAL_HOST_TAG);
 			webappName = prop.getProperty(WEBAPP_TAG);
 			connectionport = prop.getProperty(PORT_TAG);
-			AuthorizationAccessLog.info(this.getClass().getName(), "Access with user '" + user + "' and password '"
-					+ password + "'.");
 		} catch (IOException e) {
-			AuthorizationAccessLog.info(this.getClass().getName(), "No configuration file found.");
+			
 		} catch (NullPointerException e) {
-			AuthorizationAccessLog.info(this.getClass().getName(), "No configuration file found.");
+
 		}
 
 		if (user == null) {
@@ -96,8 +93,8 @@ public class ConfigurationReader {
 	public String getVirtualHost() {
 		return virtualhost;
 	}
-	
-	public String getConnectionPort(){
+
+	public String getConnectionPort() {
 		return connectionport;
 	}
 

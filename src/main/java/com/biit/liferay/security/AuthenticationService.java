@@ -9,6 +9,7 @@ import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.configuration.ConfigurationReader;
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
+import com.biit.liferay.security.exceptions.LiferayConnectionException;
 import com.liferay.portal.model.User;
 
 public class AuthenticationService {
@@ -30,7 +31,7 @@ public class AuthenticationService {
 	}
 
 	public User authenticate(String userMail, String password) throws InvalidCredentialsException, ServiceException,
-			RemoteException, NotConnectedToWebServiceException {
+			RemoteException, NotConnectedToWebServiceException, LiferayConnectionException {
 		// Login fails if either the username or password is null
 		if (userMail == null || password == null) {
 			throw new InvalidCredentialsException("No fields filled up.");
@@ -44,6 +45,13 @@ public class AuthenticationService {
 		} catch (RemoteException e) {
 			if (e.getLocalizedMessage().contains("No User exists with the key")) {
 				throw new InvalidCredentialsException("User does not exist.");
+
+			} else if (e.getLocalizedMessage().contains("Connection refused: connect")) {
+				throw new LiferayConnectionException("Error connecting to Liferay service. Using "
+						+ ConfigurationReader.getInstance().getUser() + ":"
+						+ ConfigurationReader.getInstance().getPassword() + "@"
+						+ ConfigurationReader.getInstance().getVirtualHost() + ":"
+						+ ConfigurationReader.getInstance().getConnectionPort());
 			} else {
 				throw e;
 			}
