@@ -1,18 +1,21 @@
 package com.biit.liferay.access;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.liferay.portal.model.Company;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.http.UserServiceSoap;
 import com.liferay.portal.service.http.UserServiceSoapServiceLocator;
 
 /**
- * This class represent allows to obtain a user from a liferay portal.
+ * This class allows to manage users from Liferay portal.
  */
 public class UserService extends ServiceAccess {
 	private final static String SERVICE_USER_NAME = "Portal_UserService";
@@ -30,7 +33,7 @@ public class UserService extends ServiceAccess {
 		// Locate the User service
 		UserServiceSoapServiceLocator locatorUser = new UserServiceSoapServiceLocator();
 		setServiceSoap(locatorUser.getPortal_UserService(AccessUtils.getLiferayUrl(loginUser, password,
-				SERVICE_USER_NAME)));
+				getServiceName())));
 	}
 
 	@Override
@@ -166,4 +169,47 @@ public class UserService extends ServiceAccess {
 		user.setPassword(plainTextPassword);
 	}
 
+	/**
+	 * Adds a list of users to a role.
+	 * 
+	 * @param role
+	 * @param users
+	 * @throws NotConnectedToWebServiceException
+	 * @throws RemoteException
+	 */
+	public void addRoleUsers(Role role, List<User> users) throws NotConnectedToWebServiceException, RemoteException {
+		checkConnection();
+		long[] userIds = new long[users.size()];
+		for (int i = 0; i < users.size(); i++) {
+			userIds[i] = users.get(i).getUserId();
+		}
+		((UserServiceSoap) getServiceSoap()).addRoleUsers(role.getRoleId(), userIds);
+	}
+
+	/**
+	 * Adds a user to a role.
+	 * 
+	 * @param role
+	 * @param user
+	 * @throws NotConnectedToWebServiceException
+	 * @throws RemoteException
+	 */
+	public void addRoleUser(Role role, User user) throws NotConnectedToWebServiceException, RemoteException {
+		List<User> users = new ArrayList<User>();
+		users.add(user);
+		addRoleUsers(role, users);
+	}
+
+	/**
+	 * Removes the user from the role.
+	 * 
+	 * @param role
+	 * @param user
+	 * @throws RemoteException
+	 * @throws NotConnectedToWebServiceException
+	 */
+	public void deleteRoleUser(Role role, User user) throws RemoteException, NotConnectedToWebServiceException {
+		checkConnection();
+		((UserServiceSoap) getServiceSoap()).deleteRoleUser(role.getRoleId(), user.getUserId());
+	}
 }

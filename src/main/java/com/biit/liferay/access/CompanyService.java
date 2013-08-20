@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
 
+import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.service.http.CompanyServiceSoap;
 import com.liferay.portal.service.http.CompanyServiceSoapServiceLocator;
@@ -44,9 +45,12 @@ public class CompanyService extends ServiceAccess {
 	 * @return Returns the company with the virtual host name.
 	 * @throws RemoteException
 	 *             if there is a communication problem
+	 * @throws NotConnectedToWebServiceException
 	 * 
 	 */
-	public Company getCompanyByVirtualHost(String virtualHost) throws RemoteException {
+	public Company getCompanyByVirtualHost(String virtualHost) throws RemoteException,
+			NotConnectedToWebServiceException {
+		checkConnection();
 		return ((CompanyServiceSoap) getServiceSoap()).getCompanyByVirtualHost(virtualHost);
 	}
 
@@ -58,8 +62,10 @@ public class CompanyService extends ServiceAccess {
 	 * @return Returns the company with the virtual host name.
 	 * @throws RemoteException
 	 *             if there is a communication problem
+	 * @throws NotConnectedToWebServiceException
 	 */
-	public Company getCompanyById(long companyId) throws RemoteException {
+	public Company getCompanyById(long companyId) throws RemoteException, NotConnectedToWebServiceException {
+		checkConnection();
 		return ((CompanyServiceSoap) getServiceSoap()).getCompanyById(companyId);
 	}
 
@@ -71,8 +77,10 @@ public class CompanyService extends ServiceAccess {
 	 * @return Returns the company with the virtual host name.
 	 * @throws RemoteException
 	 *             if there is a communication problem
+	 * @throws NotConnectedToWebServiceException
 	 */
-	public Company getCompanyByWebId(String webId) throws RemoteException {
+	public Company getCompanyByWebId(String webId) throws RemoteException, NotConnectedToWebServiceException {
+		checkConnection();
 		return ((CompanyServiceSoap) getServiceSoap()).getCompanyByWebId(webId);
 	}
 

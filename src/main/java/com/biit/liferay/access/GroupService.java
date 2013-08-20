@@ -12,6 +12,9 @@ import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.http.RoleServiceSoapServiceLocator;
 import com.liferay.portal.service.http.UserGroupServiceSoap;
 
+/**
+ * This class allows to manage group from Liferay portal.
+ */
 public class GroupService extends ServiceAccess {
 	private final static String SERVICE_GROUP_NAME = "Portal_UserGroupService";
 	private UserGroupServiceSoap userGroupSoap;

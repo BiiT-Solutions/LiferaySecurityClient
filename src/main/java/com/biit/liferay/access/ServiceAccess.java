@@ -8,8 +8,7 @@ import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.configuration.ConfigurationReader;
 
 /**
- * Common classes for accessing to a liferay web service.
- * 
+ * Common methods for accessing to a Liferay web service.
  */
 public abstract class ServiceAccess implements LiferayService {
 	private Remote serviceSoap = null;
@@ -22,6 +21,12 @@ public abstract class ServiceAccess implements LiferayService {
 		this.serviceSoap = serviceSoap;
 	}
 
+	/**
+	 * Gets a string that identify the name of the service exposed by the
+	 * Liferay web services.
+	 * 
+	 * @return
+	 */
 	public abstract String getServiceName();
 
 	@Override
