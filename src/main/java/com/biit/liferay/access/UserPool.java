@@ -26,7 +26,7 @@ public class UserPool {
 				userId = e.nextElement();
 				if ((now - time.get(userId)) > EXPIRATION_TIME) {
 					// object has expired
-					time.remove(userId);
+					deleteUser(userId);
 					userId = null;
 				} else {
 					if (users.get(userId).getEmailAddress().equals(emailAddress)) {
@@ -47,11 +47,11 @@ public class UserPool {
 				storedObject = e.nextElement();
 				if ((now - time.get(storedObject)) > EXPIRATION_TIME) {
 					// object has expired
-					time.remove(storedObject);
+					deleteUser(storedObject);
 					storedObject = null;
 				} else {
-					if (users.get(userId).getUserId() == userId) {
-						return users.get(storedObject);
+					if (users.get(userId) != null) {
+						return users.get(userId);
 					}
 				}
 			}
@@ -68,7 +68,7 @@ public class UserPool {
 				userId = e.nextElement();
 				if ((now - time.get(userId)) > EXPIRATION_TIME) {
 					// object has expired
-					time.remove(userId);
+					deleteUser(userId);
 					userId = null;
 				} else {
 					if (users.get(userId).getScreenName().equals(screenName)) {
@@ -85,6 +85,11 @@ public class UserPool {
 			time.put(user.getUserId(), System.currentTimeMillis());
 			users.put(user.getUserId(), user);
 		}
+	}
+
+	public void deleteUser(long userId) {
+		time.remove(userId);
+		users.remove(userId);
 	}
 
 	public void deleteUser(User user) {

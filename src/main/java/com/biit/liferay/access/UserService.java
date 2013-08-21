@@ -81,11 +81,11 @@ public class UserService extends ServiceAccess {
 	 */
 	public User getUserById(long userId) throws RemoteException, NotConnectedToWebServiceException,
 			UserDoesNotExistException {
-		User user = userPool.getUserById(userId);
-		if (user != null) {
-			return user;
-		}
 		if (userId >= 0) {
+			User user = userPool.getUserById(userId);
+			if (user != null) {
+				return user;
+			}
 			checkConnection();
 			try {
 				return ((UserServiceSoap) getServiceSoap()).getUserById(userId);

@@ -6,7 +6,7 @@ import java.io.Writer;
 import org.apache.log4j.Logger;
 
 public class LiferayAuthenticationClientLogger {
-	private static final Logger logger = Logger.getLogger("LiferayAuthenticationClient");
+	private static final Logger logger = Logger.getLogger("org.biit.liferay.access");
 
 	private LiferayAuthenticationClientLogger() {
 	}

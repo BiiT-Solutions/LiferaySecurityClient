@@ -45,7 +45,7 @@ public class AuthenticationService {
 							ConfigurationReader.getInstance().getVirtualHost()), userMail);
 		} catch (RemoteException e) {
 			if (e.getLocalizedMessage().contains("No User exists with the key")) {
-				LiferayAuthenticationClientLogger.warning(this.getClass().getName(), "Attempt to loggin failed using user '" + userMail + "'.");
+				LiferayAuthenticationClientLogger.warning(this.getClass().getName(), "Attempt to loggin failed with user '" + userMail + "'.");
 				throw new InvalidCredentialsException("User does not exist.");
 			} else if (e.getLocalizedMessage().contains("Connection refused: connect")) {
 				throw new LiferayConnectionException("Error connecting to Liferay service. Using "
@@ -58,7 +58,6 @@ public class AuthenticationService {
 			}
 		}
 
-		LiferayAuthenticationClientLogger.info(this.getClass().getName(), "User '" + userMail + "' exists in Liferay Portal.");
 		BasicEncryptionMethod.getInstance().validatePassword(password, user.getPassword());
 		LiferayAuthenticationClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'");
 		return user;
