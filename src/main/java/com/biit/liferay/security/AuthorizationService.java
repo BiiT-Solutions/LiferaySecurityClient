@@ -3,8 +3,8 @@ package com.biit.liferay.security;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroupRole;
 
 public abstract class AuthorizationService {
 

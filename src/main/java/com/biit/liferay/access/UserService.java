@@ -8,6 +8,8 @@ import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.UserDoesNotExistException;
+import com.biit.liferay.log.LiferayAuthenticationClientLogger;
+import com.biit.liferay.security.BasicEncryptionMethod;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
@@ -58,6 +60,7 @@ public class UserService extends ServiceAccess {
 	 */
 	public User getUserByEmailAddress(Company companySoap, String emailAddress) throws RemoteException,
 			NotConnectedToWebServiceException {
+		emailAddress = emailAddress.toLowerCase();
 		User user = userPool.getUserByEmailAddress(emailAddress);
 		if (user != null) {
 			return user;
@@ -113,6 +116,7 @@ public class UserService extends ServiceAccess {
 	 */
 	public User getUserByScreenName(Company companySoap, String screenName) throws RemoteException,
 			NotConnectedToWebServiceException {
+		screenName = screenName.toLowerCase();
 		User user = userPool.getUserByScreenName(screenName);
 		if (user != null) {
 			return user;
@@ -170,10 +174,13 @@ public class UserService extends ServiceAccess {
 			autoScreenName = true;
 		}
 		User user = ((UserServiceSoap) getServiceSoap()).addUser(companySoap.getCompanyId(), autoPassword, password,
-				password, autoScreenName, screenName, emailAddress, facebookId, openId, locale, firstName, middleName,
-				lastName, 0, 0, false, 1, 1, 1970, "", null, null, null, null, false, new ServiceContext());
+				password, autoScreenName, screenName.toLowerCase(), emailAddress.toLowerCase(), facebookId, openId,
+				locale, firstName, middleName, lastName, 0, 0, false, 1, 1, 1970, "", null, null, null, null, false,
+				new ServiceContext());
 
-		userPool.addUser(user);
+		if (user != null) {
+			userPool.addUser(user);
+		}
 		return user;
 	}
 
@@ -188,6 +195,8 @@ public class UserService extends ServiceAccess {
 		checkConnection();
 		((UserServiceSoap) getServiceSoap()).deleteUser(user.getUserId());
 		userPool.deleteUser(user);
+		LiferayAuthenticationClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName()
+				+ "' deleted.");
 	}
 
 	/**
@@ -203,7 +212,9 @@ public class UserService extends ServiceAccess {
 		checkConnection();
 		((UserServiceSoap) getServiceSoap()).updatePassword(user.getUserId(), plainTextPassword, plainTextPassword,
 				false);
-		user.setPassword(plainTextPassword);
+		user.setPassword(BasicEncryptionMethod.getInstance().encryptPassword(plainTextPassword));
+		LiferayAuthenticationClientLogger.info(this.getClass().getName(),
+				"User has change its password '" + user.getScreenName() + "'.");
 	}
 
 	/**

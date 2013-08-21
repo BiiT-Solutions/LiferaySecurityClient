@@ -35,4 +35,9 @@ public interface LiferayService {
 	 * @throws NotConnectedToWebServiceException
 	 */
 	void checkConnection() throws NotConnectedToWebServiceException;
+
+	/**
+	 * Finish the connection.
+	 */
+	void disconnect();
 }

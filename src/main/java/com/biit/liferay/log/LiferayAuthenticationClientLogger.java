@@ -3,7 +3,7 @@ package com.biit.liferay.log;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class LiferayAuthenticationClientLogger {
 	private static final Logger logger = Logger.getLogger("LiferayAuthenticationClient");
@@ -19,16 +19,8 @@ public class LiferayAuthenticationClientLogger {
 		info(className + ": " + message);
 	}
 
-	private static void config(String message) {
-		logger.config(message);
-	}
-
-	public static void config(String className, String message) {
-		config(className + ": " + message);
-	}
-
 	private static void warning(String message) {
-		logger.warning(message);
+		logger.warn(message);
 	}
 
 	public static void warning(String className, String message) {
@@ -36,43 +28,27 @@ public class LiferayAuthenticationClientLogger {
 	}
 
 	private static void debug(String message) {
-		logger.finest(message);
+		logger.debug(message);
 	}
 
 	public static void debug(String className, String message) {
 		debug(className + ": " + message);
 	}
 
-	private static void severe(String message) {
-		logger.severe(message);
+	private static void error(String message) {
+		logger.error(message);
 	}
 
-	public static void severe(String className, String message) {
-		severe(className + ": " + message);
+	public static void error(String className, String message) {
+		error(className + ": " + message);
 	}
 
-	private static void fine(String message) {
-		logger.fine(message);
+	private static void fatal(String message) {
+		logger.fatal(message);
 	}
 
-	public static void fine(String className, String message) {
-		fine(className + ": " + message);
-	}
-
-	private static void finer(String message) {
-		logger.finer(message);
-	}
-
-	public static void finer(String className, String message) {
-		finer(className + ": " + message);
-	}
-
-	private static void finest(String messsage) {
-		logger.finest(messsage);
-	}
-
-	public static void finest(String className, String message) {
-		finest(className + ": " + message);
+	public static void fatal(String className, String message) {
+		fatal(className + ": " + message);
 	}
 
 	public static void entering(String className, String method) {
@@ -85,7 +61,7 @@ public class LiferayAuthenticationClientLogger {
 
 	public static void errorMessage(String className, Throwable throwable) {
 		String error = getStackTrace(throwable);
-		severe(className, error);
+		error(className, error);
 	}
 
 	private static String getStackTrace(Throwable throwable) {

@@ -56,7 +56,7 @@ public class RoleService extends ServiceAccess {
 				roles.add(arrayOfRoles[i]);
 			}
 		} catch (RemoteException re) {
-			
+
 		}
 		return roles;
 	}

@@ -35,6 +35,11 @@ public abstract class ServiceAccess implements LiferayService {
 	}
 
 	@Override
+	public void disconnect() {
+		serviceSoap = null;
+	}
+
+	@Override
 	public void connectToWebService() throws ServiceException {
 		// Read user and password.
 		String loginUser = ConfigurationReader.getInstance().getUser();

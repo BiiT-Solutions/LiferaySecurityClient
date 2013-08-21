@@ -9,26 +9,28 @@ public class UserPool {
 
 	private final static long EXPIRATION_TIME = 30000;// 30 seconds
 
-	private Hashtable<User, Long> users;
+	private Hashtable<Long, Long> time; // user id -> time.
+	private Hashtable<Long, User> users; // user id -> user.
 
 	public UserPool() {
-		users = new Hashtable<User, Long>();
+		time = new Hashtable<Long, Long>();
+		users = new Hashtable<Long, User>();
 	}
 
 	public User getUserByEmailAddress(String emailAddress) {
 		long now = System.currentTimeMillis();
-		User storedObject = null;
-		if (users.size() > 0) {
-			Enumeration<User> e = users.keys();
+		Long userId = null;
+		if (time.size() > 0) {
+			Enumeration<Long> e = time.keys();
 			while (e.hasMoreElements()) {
-				storedObject = e.nextElement();
-				if ((now - users.get(storedObject)) > EXPIRATION_TIME) {
+				userId = e.nextElement();
+				if ((now - time.get(userId)) > EXPIRATION_TIME) {
 					// object has expired
-					users.remove(storedObject);
-					storedObject = null;
+					time.remove(userId);
+					userId = null;
 				} else {
-					if (storedObject.getEmailAddress().equals(emailAddress)) {
-						return storedObject;
+					if (users.get(userId).getEmailAddress().equals(emailAddress)) {
+						return users.get(userId);
 					}
 				}
 			}
@@ -38,18 +40,18 @@ public class UserPool {
 
 	public User getUserById(long userId) {
 		long now = System.currentTimeMillis();
-		User storedObject = null;
-		if (users.size() > 0) {
-			Enumeration<User> e = users.keys();
+		Long storedObject = null;
+		if (time.size() > 0) {
+			Enumeration<Long> e = time.keys();
 			while (e.hasMoreElements()) {
 				storedObject = e.nextElement();
-				if ((now - users.get(storedObject)) > EXPIRATION_TIME) {
+				if ((now - time.get(storedObject)) > EXPIRATION_TIME) {
 					// object has expired
-					users.remove(storedObject);
+					time.remove(storedObject);
 					storedObject = null;
 				} else {
-					if (storedObject.getUserId() == userId) {
-						return storedObject;
+					if (users.get(userId).getUserId() == userId) {
+						return users.get(storedObject);
 					}
 				}
 			}
@@ -59,18 +61,18 @@ public class UserPool {
 
 	public User getUserByScreenName(String screenName) {
 		long now = System.currentTimeMillis();
-		User storedObject = null;
-		if (users.size() > 0) {
-			Enumeration<User> e = users.keys();
+		Long userId = null;
+		if (time.size() > 0) {
+			Enumeration<Long> e = time.keys();
 			while (e.hasMoreElements()) {
-				storedObject = e.nextElement();
-				if ((now - users.get(storedObject)) > EXPIRATION_TIME) {
+				userId = e.nextElement();
+				if ((now - time.get(userId)) > EXPIRATION_TIME) {
 					// object has expired
-					users.remove(storedObject);
-					storedObject = null;
+					time.remove(userId);
+					userId = null;
 				} else {
-					if (storedObject.getScreenName().equals(screenName)) {
-						return storedObject;
+					if (users.get(userId).getScreenName().equals(screenName)) {
+						return users.get(userId);
 					}
 				}
 			}
@@ -79,11 +81,17 @@ public class UserPool {
 	}
 
 	public void addUser(User user) {
-		users.put(user, System.currentTimeMillis());
+		if (user != null) {
+			time.put(user.getUserId(), System.currentTimeMillis());
+			users.put(user.getUserId(), user);
+		}
 	}
 
 	public void deleteUser(User user) {
-		// User object could be modified. Look up by id.
-		users.remove(getUserById(user.getUserId()));
+		if (user != null) {
+			// User object could be modified. Look up by id.
+			time.remove(user.getUserId());
+			users.remove(user.getUserId());
+		}
 	}
 }
