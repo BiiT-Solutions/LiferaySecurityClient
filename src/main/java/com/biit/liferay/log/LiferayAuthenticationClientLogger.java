@@ -13,7 +13,6 @@ public class LiferayAuthenticationClientLogger {
 
 	private static void info(String message) {
 		logger.info(message);
-
 	}
 
 	public static void info(String className, String message) {

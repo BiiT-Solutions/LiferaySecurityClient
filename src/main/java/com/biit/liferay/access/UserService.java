@@ -7,6 +7,7 @@ import java.util.List;
 import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.access.exceptions.UserDoesNotExistException;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
@@ -20,8 +21,10 @@ import com.liferay.portal.service.http.UserServiceSoapServiceLocator;
 public class UserService extends ServiceAccess {
 	private final static String SERVICE_USER_NAME = "Portal_UserService";
 	private final static UserService instance = new UserService();
+	private UserPool userPool;
 
 	private UserService() {
+		userPool = new UserPool();
 	}
 
 	public static UserService getInstance() {
@@ -55,6 +58,10 @@ public class UserService extends ServiceAccess {
 	 */
 	public User getUserByEmailAddress(Company companySoap, String emailAddress) throws RemoteException,
 			NotConnectedToWebServiceException {
+		User user = userPool.getUserByEmailAddress(emailAddress);
+		if (user != null) {
+			return user;
+		}
 		checkConnection();
 		return ((UserServiceSoap) getServiceSoap()).getUserByEmailAddress(companySoap.getCompanyId(), emailAddress);
 	}
@@ -69,10 +76,24 @@ public class UserService extends ServiceAccess {
 	 *             if there is any communication problem.
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public User getUserById(long userId) throws RemoteException, NotConnectedToWebServiceException {
-		checkConnection();
+	public User getUserById(long userId) throws RemoteException, NotConnectedToWebServiceException,
+			UserDoesNotExistException {
+		User user = userPool.getUserById(userId);
+		if (user != null) {
+			return user;
+		}
 		if (userId >= 0) {
-			return ((UserServiceSoap) getServiceSoap()).getUserById(userId);
+			checkConnection();
+			try {
+				return ((UserServiceSoap) getServiceSoap()).getUserById(userId);
+			} catch (RemoteException re) {
+				if (re.getLocalizedMessage().contains("No User exists with the primary key")) {
+					throw new UserDoesNotExistException("User does not exists.");
+				} else {
+					re.printStackTrace();
+					throw re;
+				}
+			}
 		}
 		return null;
 	}
@@ -92,6 +113,10 @@ public class UserService extends ServiceAccess {
 	 */
 	public User getUserByScreenName(Company companySoap, String screenName) throws RemoteException,
 			NotConnectedToWebServiceException {
+		User user = userPool.getUserByScreenName(screenName);
+		if (user != null) {
+			return user;
+		}
 		checkConnection();
 		return ((UserServiceSoap) getServiceSoap()).getUserByScreenName(companySoap.getCompanyId(), screenName);
 	}
@@ -101,13 +126,17 @@ public class UserService extends ServiceAccess {
 	 * 
 	 * @param companySoap
 	 * @param user
+	 * @return a user.
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public void addUser(Company companySoap, User user) throws RemoteException, NotConnectedToWebServiceException {
-		addUser(companySoap, user.getPassword(), user.getScreenName(), user.getEmailAddress(), user.getFacebookId(),
-				user.getOpenId(), user.getTimeZoneId(), user.getFirstName(), user.getMiddleName(), user.getLastName());
-
+	public User addUser(Company companySoap, User user) throws RemoteException, NotConnectedToWebServiceException {
+		if (user != null) {
+			return addUser(companySoap, user.getPassword(), user.getScreenName(), user.getEmailAddress(),
+					user.getFacebookId(), user.getOpenId(), user.getTimeZoneId(), user.getFirstName(),
+					user.getMiddleName(), user.getLastName());
+		}
+		return null;
 	}
 
 	/**
@@ -124,10 +153,11 @@ public class UserService extends ServiceAccess {
 	 * @param firstName
 	 * @param middleName
 	 * @param lastName
+	 * @return a user.
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public void addUser(Company companySoap, String password, String screenName, String emailAddress, long facebookId,
+	public User addUser(Company companySoap, String password, String screenName, String emailAddress, long facebookId,
 			String openId, String locale, String firstName, String middleName, String lastName) throws RemoteException,
 			NotConnectedToWebServiceException {
 		checkConnection();
@@ -139,9 +169,12 @@ public class UserService extends ServiceAccess {
 		if (screenName == null || screenName.length() == 0) {
 			autoScreenName = true;
 		}
-		((UserServiceSoap) getServiceSoap()).addUser(companySoap.getCompanyId(), autoPassword, password, password,
-				autoScreenName, screenName, emailAddress, facebookId, openId, locale, firstName, middleName, lastName,
-				0, 0, false, 1, 1, 1970, "", null, null, null, null, false, new ServiceContext());
+		User user = ((UserServiceSoap) getServiceSoap()).addUser(companySoap.getCompanyId(), autoPassword, password,
+				password, autoScreenName, screenName, emailAddress, facebookId, openId, locale, firstName, middleName,
+				lastName, 0, 0, false, 1, 1, 1970, "", null, null, null, null, false, new ServiceContext());
+
+		userPool.addUser(user);
+		return user;
 	}
 
 	/**
@@ -154,6 +187,7 @@ public class UserService extends ServiceAccess {
 	public void deleteUser(User user) throws RemoteException, NotConnectedToWebServiceException {
 		checkConnection();
 		((UserServiceSoap) getServiceSoap()).deleteUser(user.getUserId());
+		userPool.deleteUser(user);
 	}
 
 	/**
