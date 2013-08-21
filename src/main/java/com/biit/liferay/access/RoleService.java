@@ -48,15 +48,13 @@ public class RoleService extends ServiceAccess {
 	 * @throws NotConnectedToWebServiceException
 	 */
 	public List<Role> getUserRoles(User user) throws RemoteException, NotConnectedToWebServiceException {
-		checkConnection();
 		List<Role> roles = new ArrayList<Role>();
-		try {
+		if (user != null) {
+			checkConnection();
 			Role[] arrayOfRoles = ((RoleServiceSoap) getServiceSoap()).getUserRoles(user.getUserId());
 			for (int i = 0; i < arrayOfRoles.length; i++) {
 				roles.add(arrayOfRoles[i]);
 			}
-		} catch (RemoteException re) {
-
 		}
 		return roles;
 	}
@@ -70,11 +68,13 @@ public class RoleService extends ServiceAccess {
 	 * @throws NotConnectedToWebServiceException
 	 */
 	public List<Role> getGroupRoles(UserGroup group) throws RemoteException, NotConnectedToWebServiceException {
-		checkConnection();
 		List<Role> roles = new ArrayList<Role>();
-		Role[] arrayOfRoles = ((RoleServiceSoap) getServiceSoap()).getGroupRoles(group.getUserGroupId());
-		for (int i = 0; i < arrayOfRoles.length; i++) {
-			roles.add(arrayOfRoles[i]);
+		checkConnection();
+		if (group != null) {
+			Role[] arrayOfRoles = ((RoleServiceSoap) getServiceSoap()).getGroupRoles(group.getUserGroupId());
+			for (int i = 0; i < arrayOfRoles.length; i++) {
+				roles.add(arrayOfRoles[i]);
+			}
 		}
 		return roles;
 	}
@@ -89,9 +89,12 @@ public class RoleService extends ServiceAccess {
 	 * @throws RemoteException
 	 */
 	public Role addRole(String name) throws NotConnectedToWebServiceException, RemoteException {
-		checkConnection();
-		return ((RoleServiceSoap) getServiceSoap()).addRole(name, new String[0], new String[0], new String[0],
-				new String[0], 0);
+		if (name != null && name.length() > 0) {
+			checkConnection();
+			return ((RoleServiceSoap) getServiceSoap()).addRole(name, new String[0], new String[0], new String[0],
+					new String[0], 0);
+		}
+		return null;
 	}
 
 	/**
@@ -102,8 +105,10 @@ public class RoleService extends ServiceAccess {
 	 * @throws RemoteException
 	 */
 	public void deleteRole(Role role) throws NotConnectedToWebServiceException, RemoteException {
-		checkConnection();
-		((RoleServiceSoap) getServiceSoap()).deleteRole(role.getRoleId());
+		if (role != null) {
+			checkConnection();
+			((RoleServiceSoap) getServiceSoap()).deleteRole(role.getRoleId());
+		}
 	}
 
 	/**
@@ -115,12 +120,14 @@ public class RoleService extends ServiceAccess {
 	 * @throws NotConnectedToWebServiceException
 	 */
 	public void addUserRoles(User user, List<Role> roles) throws RemoteException, NotConnectedToWebServiceException {
-		checkConnection();
-		long rolesIds[] = new long[roles.size()];
-		for (int i = 0; i < roles.size(); i++) {
-			rolesIds[i] = roles.get(i).getRoleId();
+		if (user != null && roles != null && roles.size() > 0) {
+			checkConnection();
+			long rolesIds[] = new long[roles.size()];
+			for (int i = 0; i < roles.size(); i++) {
+				rolesIds[i] = roles.get(i).getRoleId();
+			}
+			((RoleServiceSoap) getServiceSoap()).addUserRoles(user.getUserId(), rolesIds);
 		}
-		((RoleServiceSoap) getServiceSoap()).addUserRoles(user.getUserId(), rolesIds);
 	}
 
 	/**

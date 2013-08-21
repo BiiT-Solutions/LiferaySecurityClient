@@ -17,20 +17,37 @@ public class AuthenticationService {
 	private final static AuthenticationService instance = new AuthenticationService();
 
 	private AuthenticationService() {
-
+		try {
+			// Connect if not connected the fist time used.
+			if (UserService.getInstance().isNotConnected()) {
+				UserService.getInstance().connectToWebService();
+			}
+			if (CompanyService.getInstance().isNotConnected()) {
+				CompanyService.getInstance().connectToWebService();
+			}
+		} catch (ServiceException se) {
+			LiferayAuthenticationClientLogger
+					.fatal(AuthenticationService.class.getName(),
+							"Cannot connect to UserService and/or CompanyService. Please, configure the file 'liferay.conf' correctly.");
+		}
 	}
 
-	public static AuthenticationService getInstance() throws ServiceException {
-		// Connect if not connected the fist time used.
-		if (UserService.getInstance().isNotConnected()) {
-			UserService.getInstance().connectToWebService();
-		}
-		if (CompanyService.getInstance().isNotConnected()) {
-			CompanyService.getInstance().connectToWebService();
-		}
+	public static AuthenticationService getInstance() {
 		return instance;
 	}
 
+	/**
+	 * Obtains a liferay user by the mail and the password.
+	 * 
+	 * @param userMail
+	 * @param password
+	 * @return
+	 * @throws InvalidCredentialsException
+	 * @throws ServiceException
+	 * @throws RemoteException
+	 * @throws NotConnectedToWebServiceException
+	 * @throws LiferayConnectionException
+	 */
 	public User authenticate(String userMail, String password) throws InvalidCredentialsException, ServiceException,
 			RemoteException, NotConnectedToWebServiceException, LiferayConnectionException {
 		// Login fails if either the username or password is null
@@ -45,7 +62,8 @@ public class AuthenticationService {
 							ConfigurationReader.getInstance().getVirtualHost()), userMail);
 		} catch (RemoteException e) {
 			if (e.getLocalizedMessage().contains("No User exists with the key")) {
-				LiferayAuthenticationClientLogger.warning(this.getClass().getName(), "Attempt to loggin failed with user '" + userMail + "'.");
+				LiferayAuthenticationClientLogger.warning(this.getClass().getName(),
+						"Attempt to loggin failed with user '" + userMail + "'.");
 				throw new InvalidCredentialsException("User does not exist.");
 			} else if (e.getLocalizedMessage().contains("Connection refused: connect")) {
 				throw new LiferayConnectionException("Error connecting to Liferay service. Using "
