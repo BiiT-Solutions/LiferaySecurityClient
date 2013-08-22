@@ -66,10 +66,11 @@ public class AuthenticationService {
 						"Attempt to loggin failed with user '" + userMail + "'.");
 				throw new InvalidCredentialsException("User does not exist.");
 			} else if (e.getLocalizedMessage().contains("Connection refused: connect")) {
-				throw new LiferayConnectionException("Error connecting to Liferay service. Using "
+				throw new LiferayConnectionException("Error connecting to Liferay service with '"
 						+ ConfigurationReader.getInstance().getUser() + "@"
 						+ ConfigurationReader.getInstance().getVirtualHost() + ":"
-						+ ConfigurationReader.getInstance().getConnectionPort() + ".\n Check the liferay.conf file");
+						+ ConfigurationReader.getInstance().getConnectionPort()
+						+ "'.\n Check configuration at 'liferay.conf' file");
 			} else {
 				LiferayAuthenticationClientLogger.errorMessage(this.getClass().getName(), e);
 				throw e;

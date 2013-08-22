@@ -7,11 +7,13 @@ import java.util.List;
 import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.log.LiferayAuthenticationClientLogger;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.http.RoleServiceSoap;
 import com.liferay.portal.service.http.RoleServiceSoapServiceLocator;
+import com.liferay.portal.service.http.UserServiceSoap;
 
 /**
  * This class allows to manage roles from Liferay portal.
@@ -19,8 +21,10 @@ import com.liferay.portal.service.http.RoleServiceSoapServiceLocator;
 public class RoleService extends ServiceAccess {
 	private final static String SERVICE_ROLE_NAME = "Portal_RoleService";
 	private final static RoleService instance = new RoleService();
+	private UserRolesPool rolePool;
 
 	private RoleService() {
+		rolePool = new UserRolesPool();
 	}
 
 	public static RoleService getInstance() {
@@ -40,7 +44,7 @@ public class RoleService extends ServiceAccess {
 	}
 
 	/**
-	 * Get a list of roles where the user is included.
+	 * Get the list of roles for a user.
 	 * 
 	 * @param user
 	 * @return
@@ -50,17 +54,22 @@ public class RoleService extends ServiceAccess {
 	public List<Role> getUserRoles(User user) throws RemoteException, NotConnectedToWebServiceException {
 		List<Role> roles = new ArrayList<Role>();
 		if (user != null) {
+			List<Role> userRoles = rolePool.getUserRoles(user);
+			if (userRoles != null) {
+				return userRoles;
+			}
 			checkConnection();
 			Role[] arrayOfRoles = ((RoleServiceSoap) getServiceSoap()).getUserRoles(user.getUserId());
 			for (int i = 0; i < arrayOfRoles.length; i++) {
 				roles.add(arrayOfRoles[i]);
 			}
+			rolePool.addUserRoles(user, roles);
 		}
 		return roles;
 	}
 
 	/**
-	 * Get a list of roles where the group is included.
+	 * Get a list of roles for a group.
 	 * 
 	 * @param group
 	 * @return
@@ -69,18 +78,25 @@ public class RoleService extends ServiceAccess {
 	 */
 	public List<Role> getGroupRoles(UserGroup group) throws RemoteException, NotConnectedToWebServiceException {
 		List<Role> roles = new ArrayList<Role>();
-		checkConnection();
 		if (group != null) {
-			Role[] arrayOfRoles = ((RoleServiceSoap) getServiceSoap()).getGroupRoles(group.getUserGroupId());
-			for (int i = 0; i < arrayOfRoles.length; i++) {
-				roles.add(arrayOfRoles[i]);
+			List<Role> groupRoles = rolePool.getGroupRoles(group);
+			if (groupRoles != null) {
+				return groupRoles;
+			}
+			checkConnection();
+			if (group != null) {
+				Role[] arrayOfRoles = ((RoleServiceSoap) getServiceSoap()).getGroupRoles(group.getUserGroupId());
+				for (int i = 0; i < arrayOfRoles.length; i++) {
+					roles.add(arrayOfRoles[i]);
+				}
+				rolePool.addGroupRoles(group, roles);
 			}
 		}
 		return roles;
 	}
 
 	/**
-	 * Creates a new role on Liferay.
+	 * Creates a new role on Liferay. For testing use only. 
 	 * 
 	 * @param name
 	 *            name of the new role.
@@ -98,7 +114,7 @@ public class RoleService extends ServiceAccess {
 	}
 
 	/**
-	 * Removes a role from Liferay portal.
+	 * Removes a role from Liferay portal. For testing use only.
 	 * 
 	 * @param role
 	 * @throws NotConnectedToWebServiceException
@@ -108,11 +124,12 @@ public class RoleService extends ServiceAccess {
 		if (role != null) {
 			checkConnection();
 			((RoleServiceSoap) getServiceSoap()).deleteRole(role.getRoleId());
+			rolePool.removeRole(role);
 		}
 	}
 
 	/**
-	 * Add a list of roles to a user.
+	 * Add a list of roles to a user. For testing use only.
 	 * 
 	 * @param user
 	 * @param roles
@@ -127,11 +144,12 @@ public class RoleService extends ServiceAccess {
 				rolesIds[i] = roles.get(i).getRoleId();
 			}
 			((RoleServiceSoap) getServiceSoap()).addUserRoles(user.getUserId(), rolesIds);
+			rolePool.addUserRoles(user, roles);
 		}
 	}
 
 	/**
-	 * Add a role to a user.
+	 * Add a role to a user. For testing use only.
 	 * 
 	 * @param user
 	 * @param role
@@ -142,5 +160,21 @@ public class RoleService extends ServiceAccess {
 		List<Role> roles = new ArrayList<Role>();
 		roles.add(role);
 		addUserRoles(user, roles);
+	}
+
+	/**
+	 * Removes the role from the user. For testing use only.
+	 * 
+	 * @param role
+	 * @param user
+	 * @throws RemoteException
+	 * @throws NotConnectedToWebServiceException
+	 */
+	public void removeUserRole(User user, Role role) throws RemoteException, NotConnectedToWebServiceException {
+		checkConnection();
+		((UserServiceSoap) getServiceSoap()).deleteRoleUser(role.getRoleId(), user.getUserId());
+		rolePool.removeUserRole(user, role);
+		LiferayAuthenticationClientLogger.info(this.getClass().getName(), "Role '" + role.getName() + "' for user '"
+				+ user.getScreenName() + "' deleted.");
 	}
 }

@@ -94,9 +94,7 @@ public class UserPool {
 
 	public void deleteUser(User user) {
 		if (user != null) {
-			// User object could be modified. Look up by id.
-			time.remove(user.getUserId());
-			users.remove(user.getUserId());
+			deleteUser(user.getUserId());
 		}
 	}
 }

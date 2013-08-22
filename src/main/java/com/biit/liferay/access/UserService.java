@@ -1,8 +1,6 @@
 package com.biit.liferay.access;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
@@ -11,7 +9,6 @@ import com.biit.liferay.access.exceptions.UserDoesNotExistException;
 import com.biit.liferay.log.LiferayAuthenticationClientLogger;
 import com.biit.liferay.security.BasicEncryptionMethod;
 import com.liferay.portal.model.Company;
-import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.http.UserServiceSoap;
@@ -61,12 +58,17 @@ public class UserService extends ServiceAccess {
 	public User getUserByEmailAddress(Company companySoap, String emailAddress) throws RemoteException,
 			NotConnectedToWebServiceException {
 		emailAddress = emailAddress.toLowerCase();
+		//Look up user in the pool.
 		User user = userPool.getUserByEmailAddress(emailAddress);
 		if (user != null) {
 			return user;
 		}
+		
+		////Look up user in the liferay.
 		checkConnection();
-		return ((UserServiceSoap) getServiceSoap()).getUserByEmailAddress(companySoap.getCompanyId(), emailAddress);
+		user = ((UserServiceSoap) getServiceSoap()).getUserByEmailAddress(companySoap.getCompanyId(), emailAddress);
+		userPool.addUser(user);
+		return user;
 	}
 
 	/**
@@ -82,13 +84,18 @@ public class UserService extends ServiceAccess {
 	public User getUserById(long userId) throws RemoteException, NotConnectedToWebServiceException,
 			UserDoesNotExistException {
 		if (userId >= 0) {
+			//Look up user in the pool.
 			User user = userPool.getUserById(userId);
 			if (user != null) {
 				return user;
 			}
+			
+			//Read from Liferay.
 			checkConnection();
 			try {
-				return ((UserServiceSoap) getServiceSoap()).getUserById(userId);
+				user = ((UserServiceSoap) getServiceSoap()).getUserById(userId);
+				userPool.addUser(user);
+				return user;
 			} catch (RemoteException re) {
 				if (re.getLocalizedMessage().contains("No User exists with the primary key")) {
 					throw new UserDoesNotExistException("User does not exists.");
@@ -117,12 +124,18 @@ public class UserService extends ServiceAccess {
 	public User getUserByScreenName(Company companySoap, String screenName) throws RemoteException,
 			NotConnectedToWebServiceException {
 		screenName = screenName.toLowerCase();
+		
+		//Look up user in the pool. 
 		User user = userPool.getUserByScreenName(screenName);
 		if (user != null) {
 			return user;
 		}
+		
+		//Read from liferay.
 		checkConnection();
-		return ((UserServiceSoap) getServiceSoap()).getUserByScreenName(companySoap.getCompanyId(), screenName);
+		user = ((UserServiceSoap) getServiceSoap()).getUserByScreenName(companySoap.getCompanyId(), screenName);
+		userPool.addUser(user);
+		return user;
 	}
 
 	/**
@@ -215,49 +228,5 @@ public class UserService extends ServiceAccess {
 		user.setPassword(BasicEncryptionMethod.getInstance().encryptPassword(plainTextPassword));
 		LiferayAuthenticationClientLogger.info(this.getClass().getName(),
 				"User has change its password '" + user.getScreenName() + "'.");
-	}
-
-	/**
-	 * Adds a list of users to a role.
-	 * 
-	 * @param role
-	 * @param users
-	 * @throws NotConnectedToWebServiceException
-	 * @throws RemoteException
-	 */
-	public void addRoleUsers(Role role, List<User> users) throws NotConnectedToWebServiceException, RemoteException {
-		checkConnection();
-		long[] userIds = new long[users.size()];
-		for (int i = 0; i < users.size(); i++) {
-			userIds[i] = users.get(i).getUserId();
-		}
-		((UserServiceSoap) getServiceSoap()).addRoleUsers(role.getRoleId(), userIds);
-	}
-
-	/**
-	 * Adds a user to a role.
-	 * 
-	 * @param role
-	 * @param user
-	 * @throws NotConnectedToWebServiceException
-	 * @throws RemoteException
-	 */
-	public void addRoleUser(Role role, User user) throws NotConnectedToWebServiceException, RemoteException {
-		List<User> users = new ArrayList<User>();
-		users.add(user);
-		addRoleUsers(role, users);
-	}
-
-	/**
-	 * Removes the user from the role.
-	 * 
-	 * @param role
-	 * @param user
-	 * @throws RemoteException
-	 * @throws NotConnectedToWebServiceException
-	 */
-	public void deleteRoleUser(Role role, User user) throws RemoteException, NotConnectedToWebServiceException {
-		checkConnection();
-		((UserServiceSoap) getServiceSoap()).deleteRoleUser(role.getRoleId(), user.getUserId());
 	}
 }
