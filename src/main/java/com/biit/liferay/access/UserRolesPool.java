@@ -99,7 +99,7 @@ public class UserRolesPool {
 		}
 	}
 
-	public void addGroupRoles(UserGroup group, List<Role> roles) {
+	public void addUserGroupRoles(UserGroup group, List<Role> roles) {
 		if (group != null && roles != null && roles.size() > 0) {
 			groupTime.put(group.getName(), System.currentTimeMillis());
 			List<Role> groupRoles = rolesByGroup.get(group.getName());
@@ -116,11 +116,11 @@ public class UserRolesPool {
 		}
 	}
 
-	public void addGroupRole(UserGroup group, Role role) {
+	public void addUserGroupRole(UserGroup group, Role role) {
 		if (group != null && role != null) {
 			List<Role> roles = new ArrayList<Role>();
 			roles.add(role);
-			addGroupRoles(group, roles);
+			addUserGroupRoles(group, roles);
 		}
 	}
 

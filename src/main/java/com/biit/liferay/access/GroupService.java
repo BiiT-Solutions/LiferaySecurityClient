@@ -18,8 +18,10 @@ import com.liferay.portal.service.http.UserGroupServiceSoapServiceLocator;
 public class GroupService extends ServiceAccess {
 	private final static String SERVICE_GROUP_NAME = "Portal_UserGroupService";
 	private final static GroupService instance = new GroupService();
+	private UserGroupsPool groupPool;
 
 	private GroupService() {
+		groupPool = new UserGroupsPool();
 	}
 
 	public static GroupService getInstance() {
@@ -72,6 +74,26 @@ public class GroupService extends ServiceAccess {
 	}
 
 	/**
+	 * Creates a new group on Liferay. For testing use only.
+	 * 
+	 * @param name
+	 *            name of the new group.
+	 * @param description
+	 *            description of the new group.
+	 * @return
+	 * @throws NotConnectedToWebServiceException
+	 * @throws RemoteException
+	 */
+	public UserGroup addGroup(String name, String description) throws NotConnectedToWebServiceException,
+			RemoteException {
+		if (name != null && name.length() > 0) {
+			checkConnection();
+			return ((UserGroupServiceSoap) getServiceSoap()).addUserGroup(name, description);
+		}
+		return null;
+	}
+
+	/**
 	 * Get a list of groups where the user belongs to.
 	 * 
 	 * @param user
@@ -82,14 +104,36 @@ public class GroupService extends ServiceAccess {
 	 */
 	public List<UserGroup> getUserUserGroups(User user) throws RemoteException, NotConnectedToWebServiceException {
 		List<UserGroup> groups = new ArrayList<UserGroup>();
+
+		// Look up user in the pool.
 		if (user != null) {
+			List<UserGroup> usergroups = groupPool.getGroupByUser(user);
+			if (usergroups != null) {
+				return usergroups;
+			}
 			checkConnection();
 			UserGroup[] arrayOfGroups = ((UserGroupServiceSoap) getServiceSoap()).getUserUserGroups(user.getUserId());
 			for (int i = 0; i < arrayOfGroups.length; i++) {
 				groups.add(arrayOfGroups[i]);
 			}
+			groupPool.addUserGroups(user, groups);
 		}
 		return groups;
+	}
+	
+	/**
+	 * Removes a group from Liferay portal. For testing use only.
+	 * 
+	 * @param group
+	 * @throws NotConnectedToWebServiceException
+	 * @throws RemoteException
+	 */
+	public void deleteGroup(UserGroup group) throws NotConnectedToWebServiceException, RemoteException {
+		if (group != null) {
+			checkConnection();
+			((UserGroupServiceSoap) getServiceSoap()).deleteUserGroup(group.getUserGroupId());
+			groupPool.removeUserGroup(group);
+		}
 	}
 
 }

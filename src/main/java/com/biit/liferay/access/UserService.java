@@ -1,6 +1,8 @@
 package com.biit.liferay.access;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
@@ -10,6 +12,7 @@ import com.biit.liferay.log.LiferayAuthenticationClientLogger;
 import com.biit.liferay.security.BasicEncryptionMethod;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.http.UserServiceSoap;
 import com.liferay.portal.service.http.UserServiceSoapServiceLocator;
@@ -58,13 +61,13 @@ public class UserService extends ServiceAccess {
 	public User getUserByEmailAddress(Company companySoap, String emailAddress) throws RemoteException,
 			NotConnectedToWebServiceException {
 		emailAddress = emailAddress.toLowerCase();
-		//Look up user in the pool.
+		// Look up user in the pool.
 		User user = userPool.getUserByEmailAddress(emailAddress);
 		if (user != null) {
 			return user;
 		}
-		
-		////Look up user in the liferay.
+
+		// //Look up user in the liferay.
 		checkConnection();
 		user = ((UserServiceSoap) getServiceSoap()).getUserByEmailAddress(companySoap.getCompanyId(), emailAddress);
 		userPool.addUser(user);
@@ -84,13 +87,13 @@ public class UserService extends ServiceAccess {
 	public User getUserById(long userId) throws RemoteException, NotConnectedToWebServiceException,
 			UserDoesNotExistException {
 		if (userId >= 0) {
-			//Look up user in the pool.
+			// Look up user in the pool.
 			User user = userPool.getUserById(userId);
 			if (user != null) {
 				return user;
 			}
-			
-			//Read from Liferay.
+
+			// Read from Liferay.
 			checkConnection();
 			try {
 				user = ((UserServiceSoap) getServiceSoap()).getUserById(userId);
@@ -124,14 +127,14 @@ public class UserService extends ServiceAccess {
 	public User getUserByScreenName(Company companySoap, String screenName) throws RemoteException,
 			NotConnectedToWebServiceException {
 		screenName = screenName.toLowerCase();
-		
-		//Look up user in the pool. 
+
+		// Look up user in the pool.
 		User user = userPool.getUserByScreenName(screenName);
 		if (user != null) {
 			return user;
 		}
-		
-		//Read from liferay.
+
+		// Read from liferay.
 		checkConnection();
 		user = ((UserServiceSoap) getServiceSoap()).getUserByScreenName(companySoap.getCompanyId(), screenName);
 		userPool.addUser(user);
@@ -207,7 +210,7 @@ public class UserService extends ServiceAccess {
 	public void deleteUser(User user) throws RemoteException, NotConnectedToWebServiceException {
 		checkConnection();
 		((UserServiceSoap) getServiceSoap()).deleteUser(user.getUserId());
-		userPool.deleteUser(user);
+		userPool.removeUser(user);
 		LiferayAuthenticationClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName()
 				+ "' deleted.");
 	}
@@ -229,4 +232,39 @@ public class UserService extends ServiceAccess {
 		LiferayAuthenticationClientLogger.info(this.getClass().getName(),
 				"User has change its password '" + user.getScreenName() + "'.");
 	}
+
+	/**
+	 * Add a list of users to a group. For testing use only.
+	 * 
+	 * @param users
+	 * @param group
+	 * @throws RemoteException
+	 * @throws NotConnectedToWebServiceException
+	 */
+	public void addUsersToGroup(List<User> users, UserGroup group) throws RemoteException,
+			NotConnectedToWebServiceException {
+		if (users != null && users.size() > 0 && group != null) {
+			checkConnection();
+			long[] userIds = new long[users.size()];
+			for (int i = 0; i < users.size(); i++) {
+				userIds[i] = users.get(i).getUserId();
+			}
+			((UserServiceSoap) getServiceSoap()).addUserGroupUsers(group.getUserGroupId(), userIds);
+		}
+	}
+
+	/**
+	 * Add a user to a group. For testing use only.
+	 * 
+	 * @param users
+	 * @param group
+	 * @throws RemoteException
+	 * @throws NotConnectedToWebServiceException
+	 */
+	public void addUserToGroup(User user, UserGroup group) throws RemoteException, NotConnectedToWebServiceException {
+		List<User> users = new ArrayList<User>();
+		users.add(user);
+		addUsersToGroup(users, group);
+	}
+
 }
