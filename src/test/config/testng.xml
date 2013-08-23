@@ -9,11 +9,14 @@
 				<include name="basicSecurityMethodTest" />
 				<include name="roleAccess" />
 				<include name="clearData" />
+				<include name="password" />
 			</run>
 		</groups>
 		<classes>
 			<class name="com.biit.liferay.access.AccessTest" />
+			<class name="com.biit.liferay.access.AccessUtilsTest" />
 			<class name="com.biit.liferaysecurity.BasicSecurityMethodTest" />
 		</classes>
 	</test>
 </suite>
+
