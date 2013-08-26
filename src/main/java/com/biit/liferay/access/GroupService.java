@@ -38,7 +38,7 @@ public class GroupService extends ServiceAccess {
 	}
 
 	/**
-	 * Add a role to a list of groups.
+	 * Add a role to a list of groups. For testing only.
 	 * 
 	 * @param role
 	 * @param userGroups
@@ -58,7 +58,7 @@ public class GroupService extends ServiceAccess {
 	}
 
 	/**
-	 * Add a role to a group.
+	 * Add a role to a group. For testing only.
 	 * 
 	 * @param role
 	 * @param userGroup

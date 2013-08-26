@@ -9,7 +9,7 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 
-public class UserRolesPool {
+public class RolesPool {
 
 	private final static long EXPIRATION_TIME = 30000;// 30 seconds
 
@@ -19,7 +19,7 @@ public class UserRolesPool {
 	private Hashtable<String, Long> groupTime; // user id -> time.
 	private Hashtable<String, List<Role>> rolesByGroup; // Roles by group.
 
-	public UserRolesPool() {
+	public RolesPool() {
 		userTime = new Hashtable<Long, Long>();
 		groupTime = new Hashtable<String, Long>();
 		rolesByUser = new Hashtable<Long, List<Role>>();

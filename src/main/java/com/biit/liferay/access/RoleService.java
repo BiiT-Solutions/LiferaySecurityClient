@@ -21,10 +21,10 @@ import com.liferay.portal.service.http.UserServiceSoap;
 public class RoleService extends ServiceAccess {
 	private final static String SERVICE_ROLE_NAME = "Portal_RoleService";
 	private final static RoleService instance = new RoleService();
-	private UserRolesPool rolePool;
+	private RolesPool rolePool;
 
 	private RoleService() {
-		rolePool = new UserRolesPool();
+		rolePool = new RolesPool();
 	}
 
 	public static RoleService getInstance() {
@@ -161,42 +161,6 @@ public class RoleService extends ServiceAccess {
 		roles.add(role);
 		addUserRoles(user, roles);
 	}
-
-	/**
-	 * Add a list of roles to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param roles
-	 * @throws RemoteException
-	 * @throws NotConnectedToWebServiceException
-	 */
-	/*public void addUserGroupRoles(UserGroup usergroup, List<Role> roles) throws RemoteException,
-			NotConnectedToWebServiceException {
-		if (usergroup != null && roles != null && roles.size() > 0) {
-			checkConnection();
-			long rolesIds[] = new long[roles.size()];
-			for (int i = 0; i < roles.size(); i++) {
-				rolesIds[i] = roles.get(i).getRoleId();
-			}
-			((RoleServiceSoap) getServiceSoap()).add(usergroup.getUserGroupId(), rolesIds);
-			rolePool.addUserGroupRoles(usergroup, roles);
-		}
-	}*/
-
-	/**
-	 * Add a role to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param role
-	 * @throws RemoteException
-	 * @throws NotConnectedToWebServiceException
-	 */
-	/*public void addUserGroupRole(UserGroup usergroup, Role role) throws RemoteException,
-			NotConnectedToWebServiceException {
-		List<Role> roles = new ArrayList<Role>();
-		roles.add(role);
-		addUserGroupRoles(usergroup, roles);
-	}*/
 
 	/**
 	 * Removes the role from the user. For testing use only.
