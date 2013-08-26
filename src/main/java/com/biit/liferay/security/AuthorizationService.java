@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
-import com.biit.liferay.access.GroupService;
+import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.RoleService;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.log.LiferayAuthenticationClientLogger;
@@ -21,8 +21,8 @@ public abstract class AuthorizationService {
 			if (RoleService.getInstance().isNotConnected()) {
 				RoleService.getInstance().connectToWebService();
 			}
-			if (GroupService.getInstance().isNotConnected()) {
-				GroupService.getInstance().connectToWebService();
+			if (UserGroupService.getInstance().isNotConnected()) {
+				UserGroupService.getInstance().connectToWebService();
 			}
 		} catch (ServiceException se) {
 			LiferayAuthenticationClientLogger
@@ -82,7 +82,7 @@ public abstract class AuthorizationService {
 	public List<UserGroup> getUserGroups(User user) {
 		if (user != null) {
 			try {
-				return GroupService.getInstance().getUserUserGroups(user);
+				return UserGroupService.getInstance().getUserUserGroups(user);
 			} catch (RemoteException e) {
 				LiferayAuthenticationClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the user's groups from " + user.getEmailAddress() + "'");

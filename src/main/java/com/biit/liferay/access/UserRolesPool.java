@@ -21,6 +21,7 @@ public class UserRolesPool {
 
 	public UserRolesPool() {
 		userTime = new Hashtable<Long, Long>();
+		groupTime = new Hashtable<String, Long>();
 		rolesByUser = new Hashtable<Long, List<Role>>();
 		rolesByGroup = new Hashtable<String, List<Role>>();
 	}

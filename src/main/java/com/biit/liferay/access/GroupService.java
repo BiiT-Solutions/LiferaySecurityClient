@@ -7,133 +7,67 @@ import java.util.List;
 import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
-import com.liferay.portal.model.User;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.model.UserGroup;
-import com.liferay.portal.service.http.UserGroupServiceSoap;
-import com.liferay.portal.service.http.UserGroupServiceSoapServiceLocator;
+import com.liferay.portal.service.http.GroupServiceSoap;
+import com.liferay.portal.service.http.GroupServiceSoapServiceLocator;
 
-/**
- * This class allows to manage group from Liferay portal.
- */
 public class GroupService extends ServiceAccess {
-	private final static String SERVICE_GROUP_NAME = "Portal_UserGroupService";
+	private final static String SERVICE_GROUP_NAME = "Portal_GroupService";
 	private final static GroupService instance = new GroupService();
-	private UserGroupsPool groupPool;
 
 	private GroupService() {
-		groupPool = new UserGroupsPool();
+
 	}
 
 	public static GroupService getInstance() {
 		return instance;
 	}
 
+	@Override
+	public void connectToWebService(String loginUser, String password) throws ServiceException {
+		// Locate the Role service
+		GroupServiceSoapServiceLocator locatorRole = new GroupServiceSoapServiceLocator();
+		setServiceSoap(locatorRole.getPortal_GroupService(AccessUtils.getLiferayUrl(loginUser, password,
+				getServiceName())));
+	}
+
+	@Override
 	public String getServiceName() {
 		return SERVICE_GROUP_NAME;
 	}
 
-	@Override
-	public void connectToWebService(String loginUser, String password) throws ServiceException {
-		// Locate the Role service
-		UserGroupServiceSoapServiceLocator locatorGroup = new UserGroupServiceSoapServiceLocator();
-		setServiceSoap(locatorGroup.getPortal_UserGroupService(AccessUtils.getLiferayUrl(loginUser, password,
-				getServiceName())));
-	}
-
 	/**
-	 * Get group information using the group's name.
+	 * Add a role to a list of groups.
 	 * 
-	 * @param userGroupId
-	 *            id of the group
-	 * @return group information
-	 * @throws RemoteException
-	 *             if there is any communication problem.
-	 * @throws NotConnectedToWebServiceException
-	 */
-	public UserGroup getUserGroup(long userGroupId) throws RemoteException, NotConnectedToWebServiceException {
-		checkConnection();
-		return ((UserGroupServiceSoap) getServiceSoap()).getUserGroup(userGroupId);
-	}
-
-	/**
-	 * Get group information using the group's name.
-	 * 
-	 * @param name
-	 *            name of the group
-	 * @return group information
-	 * @throws RemoteException
-	 *             if there is any communication problem.
-	 * @throws NotConnectedToWebServiceException
-	 */
-	public UserGroup getUserGroup(String name) throws RemoteException, NotConnectedToWebServiceException {
-		if (name != null && name.length() > 0) {
-			checkConnection();
-			return ((UserGroupServiceSoap) getServiceSoap()).getUserGroup(name);
-		}
-		return null;
-	}
-
-	/**
-	 * Creates a new group on Liferay. For testing use only.
-	 * 
-	 * @param name
-	 *            name of the new group.
-	 * @param description
-	 *            description of the new group.
-	 * @return
+	 * @param role
+	 * @param userGroups
 	 * @throws NotConnectedToWebServiceException
 	 * @throws RemoteException
 	 */
-	public UserGroup addGroup(String name, String description) throws NotConnectedToWebServiceException,
+	public void addRoleGroups(Role role, List<UserGroup> userGroups) throws NotConnectedToWebServiceException,
 			RemoteException {
-		if (name != null && name.length() > 0) {
+		if (userGroups != null && role != null && userGroups.size() > 0) {
 			checkConnection();
-			return ((UserGroupServiceSoap) getServiceSoap()).addUserGroup(name, description);
+			long userGroupsIds[] = new long[userGroups.size()];
+			for (int i = 0; i < userGroups.size(); i++) {
+				userGroupsIds[i] = userGroups.get(i).getUserGroupId();
+			}
+			((GroupServiceSoap) getServiceSoap()).addRoleGroups(role.getRoleId(), userGroupsIds);
 		}
-		return null;
 	}
 
 	/**
-	 * Get a list of groups where the user belongs to.
+	 * Add a role to a group.
 	 * 
-	 * @param user
-	 * @return group information
+	 * @param role
+	 * @param userGroup
 	 * @throws RemoteException
-	 *             if there is any communication problem.
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public List<UserGroup> getUserUserGroups(User user) throws RemoteException, NotConnectedToWebServiceException {
+	public void addRoleGroup(Role role, UserGroup userGroup) throws RemoteException, NotConnectedToWebServiceException {
 		List<UserGroup> groups = new ArrayList<UserGroup>();
-
-		// Look up user in the pool.
-		if (user != null) {
-			List<UserGroup> usergroups = groupPool.getGroupByUser(user);
-			if (usergroups != null) {
-				return usergroups;
-			}
-			checkConnection();
-			UserGroup[] arrayOfGroups = ((UserGroupServiceSoap) getServiceSoap()).getUserUserGroups(user.getUserId());
-			for (int i = 0; i < arrayOfGroups.length; i++) {
-				groups.add(arrayOfGroups[i]);
-			}
-			groupPool.addUserGroups(user, groups);
-		}
-		return groups;
+		groups.add(userGroup);
+		addRoleGroups(role, groups);
 	}
-	
-	/**
-	 * Removes a group from Liferay portal. For testing use only.
-	 * 
-	 * @param group
-	 * @throws NotConnectedToWebServiceException
-	 * @throws RemoteException
-	 */
-	public void deleteGroup(UserGroup group) throws NotConnectedToWebServiceException, RemoteException {
-		if (group != null) {
-			checkConnection();
-			((UserGroupServiceSoap) getServiceSoap()).deleteUserGroup(group.getUserGroupId());
-			groupPool.removeUserGroup(group);
-		}
-	}
-
 }

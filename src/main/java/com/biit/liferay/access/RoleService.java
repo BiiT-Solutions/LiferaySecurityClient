@@ -108,7 +108,7 @@ public class RoleService extends ServiceAccess {
 		if (name != null && name.length() > 0) {
 			checkConnection();
 			return ((RoleServiceSoap) getServiceSoap()).addRole(name, new String[0], new String[0], new String[0],
-					new String[0], 0);
+					new String[0], 1);
 		}
 		return null;
 	}
@@ -170,7 +170,7 @@ public class RoleService extends ServiceAccess {
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public void addUserGroupRoles(UserGroup usergroup, List<Role> roles) throws RemoteException,
+	/*public void addUserGroupRoles(UserGroup usergroup, List<Role> roles) throws RemoteException,
 			NotConnectedToWebServiceException {
 		if (usergroup != null && roles != null && roles.size() > 0) {
 			checkConnection();
@@ -181,7 +181,7 @@ public class RoleService extends ServiceAccess {
 			((RoleServiceSoap) getServiceSoap()).add(usergroup.getUserGroupId(), rolesIds);
 			rolePool.addUserGroupRoles(usergroup, roles);
 		}
-	}
+	}*/
 
 	/**
 	 * Add a role to a user. For testing use only.
@@ -191,12 +191,12 @@ public class RoleService extends ServiceAccess {
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public void addUserGroupRole(UserGroup usergroup, Role role) throws RemoteException,
+	/*public void addUserGroupRole(UserGroup usergroup, Role role) throws RemoteException,
 			NotConnectedToWebServiceException {
 		List<Role> roles = new ArrayList<Role>();
 		roles.add(role);
 		addUserGroupRoles(usergroup, roles);
-	}
+	}*/
 
 	/**
 	 * Removes the role from the user. For testing use only.
