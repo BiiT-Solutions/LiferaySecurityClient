@@ -7,17 +7,22 @@ import java.util.List;
 import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.access.exceptions.UserDoesNotExistException;
 import com.liferay.portal.model.Role;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.http.GroupServiceSoap;
 import com.liferay.portal.service.http.GroupServiceSoapServiceLocator;
+import com.liferay.portal.service.http.UserGroupServiceSoap;
+import com.liferay.portal.service.http.UserServiceSoap;
 
 public class GroupService extends ServiceAccess {
 	private final static String SERVICE_GROUP_NAME = "Portal_GroupService";
 	private final static GroupService instance = new GroupService();
+	private GroupPool groupPool;
 
 	private GroupService() {
-
+		groupPool = new GroupPool();
 	}
 
 	public static GroupService getInstance() {
@@ -35,6 +40,43 @@ public class GroupService extends ServiceAccess {
 	@Override
 	public String getServiceName() {
 		return SERVICE_GROUP_NAME;
+	}
+
+	/**
+	 * Get group information using the group's primary key.
+	 * 
+	 * @param groupId
+	 *            group's primary key.
+	 * @return a group.
+	 * @throws RemoteException
+	 *             if there is any communication problem.
+	 * @throws NotConnectedToWebServiceException
+	 */
+	public UserGroup getUserGroupById(long groupId) throws RemoteException, NotConnectedToWebServiceException,
+			UserDoesNotExistException {
+		if (groupId >= 0) {
+			// Look up user in the pool.
+			UserGroup group = groupPool.getGroupById(groupId);
+			if (group != null) {
+				return group;
+			}
+
+			// Read from Liferay.
+			checkConnection();
+			try {
+				group = ((UserGroupServiceSoap) getServiceSoap()).getUserGroup(groupId);
+				groupPool.addGroup(group);
+				return group;
+			} catch (RemoteException re) {
+				if (re.getLocalizedMessage().contains("No Group exists with the primary key")) {
+					throw new UserDoesNotExistException("Group with id '" + groupId + "' does not exists.");
+				} else {
+					re.printStackTrace();
+					throw re;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

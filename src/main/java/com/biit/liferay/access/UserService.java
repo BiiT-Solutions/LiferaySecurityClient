@@ -101,7 +101,7 @@ public class UserService extends ServiceAccess {
 				return user;
 			} catch (RemoteException re) {
 				if (re.getLocalizedMessage().contains("No User exists with the primary key")) {
-					throw new UserDoesNotExistException("User does not exists.");
+					throw new UserDoesNotExistException("User with id '" + userId + "' does not exists.");
 				} else {
 					re.printStackTrace();
 					throw re;
