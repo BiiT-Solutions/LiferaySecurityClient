@@ -1,10 +1,12 @@
 package com.biit.liferay.security;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.CompanyService;
+import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.configuration.ConfigurationReader;
@@ -12,18 +14,23 @@ import com.biit.liferay.log.LiferayAuthenticationClientLogger;
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
 import com.biit.liferay.security.exceptions.LiferayConnectionException;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroup;
 
 public class AuthenticationService {
 	private final static AuthenticationService instance = new AuthenticationService();
 
 	private AuthenticationService() {
 		try {
-			// Connect if not connected the fist time used.
+			// Connect if it is not connected the fist time used.
 			if (UserService.getInstance().isNotConnected()) {
 				UserService.getInstance().connectToWebService();
 			}
 			if (CompanyService.getInstance().isNotConnected()) {
 				CompanyService.getInstance().connectToWebService();
+			}
+			// Connect if not connected the fist time used.
+			if (UserGroupService.getInstance().isNotConnected()) {
+				UserGroupService.getInstance().connectToWebService();
 			}
 		} catch (ServiceException se) {
 			LiferayAuthenticationClientLogger
@@ -80,5 +87,16 @@ public class AuthenticationService {
 		BasicEncryptionMethod.getInstance().validatePassword(password, user.getPassword());
 		LiferayAuthenticationClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'");
 		return user;
+	}
+
+	public boolean isInGroup(UserGroup group, User user) throws RemoteException, NotConnectedToWebServiceException {
+		List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(user);
+		for (UserGroup userGroup : userGroups) {
+			if (userGroup.getUserGroupId() == group.getUserGroupId()) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

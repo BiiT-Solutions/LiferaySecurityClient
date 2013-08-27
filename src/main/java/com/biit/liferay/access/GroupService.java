@@ -9,12 +9,10 @@ import javax.xml.rpc.ServiceException;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.UserDoesNotExistException;
 import com.liferay.portal.model.Role;
-import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.http.GroupServiceSoap;
 import com.liferay.portal.service.http.GroupServiceSoapServiceLocator;
 import com.liferay.portal.service.http.UserGroupServiceSoap;
-import com.liferay.portal.service.http.UserServiceSoap;
 
 public class GroupService extends ServiceAccess {
 	private final static String SERVICE_GROUP_NAME = "Portal_GroupService";
