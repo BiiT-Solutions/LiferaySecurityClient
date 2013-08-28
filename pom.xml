@@ -5,7 +5,7 @@
 	<groupId>com.biit.liferay</groupId>
 	<artifactId>security-ws-client</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.4</version>
+	<version>0.1.0</version>
 	<name>Liferay Authentication Client with Web Services</name>
 	<description>Obtain users, groups and roles information from liferay</description>
 

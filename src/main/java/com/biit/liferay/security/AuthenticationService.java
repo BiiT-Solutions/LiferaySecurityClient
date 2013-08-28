@@ -9,6 +9,7 @@ import com.biit.liferay.access.CompanyService;
 import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.access.exceptions.UserDoesNotExistException;
 import com.biit.liferay.configuration.ConfigurationReader;
 import com.biit.liferay.log.LiferayAuthenticationClientLogger;
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
@@ -90,13 +91,42 @@ public class AuthenticationService {
 	}
 
 	public boolean isInGroup(UserGroup group, User user) throws RemoteException, NotConnectedToWebServiceException {
-		List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(user);
-		for (UserGroup userGroup : userGroups) {
-			if (userGroup.getUserGroupId() == group.getUserGroupId()) {
-				return true;
+		if (group != null && user != null) {
+			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(user);
+			for (UserGroup userGroup : userGroups) {
+				if (userGroup.getUserGroupId() == group.getUserGroupId()) {
+					return true;
+				}
 			}
 		}
-
 		return false;
+	}
+
+	/**
+	 * Get first group of user.
+	 * 
+	 * @param user
+	 * @return
+	 * @throws RemoteException
+	 * @throws NotConnectedToWebServiceException
+	 */
+	public UserGroup getDefaultGroup(User user) throws RemoteException, NotConnectedToWebServiceException {
+		if (user != null) {
+			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(user);
+			if (userGroups != null && userGroups.size() > 0) {
+				return userGroups.get(0);
+			}
+		}
+		return null;
+	}
+
+	public User getUserById(long userId) throws RemoteException, NotConnectedToWebServiceException,
+			UserDoesNotExistException {
+		return UserService.getInstance().getUserById(userId);
+	}
+
+	public void updatePassword(User user, String plainTextPassword) throws RemoteException,
+			NotConnectedToWebServiceException {
+		UserService.getInstance().updatePassword(user, plainTextPassword);
 	}
 }
