@@ -7,7 +7,7 @@ import java.util.List;
 import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
-import com.biit.liferay.access.exceptions.UserDoesNotExistException;
+import com.biit.liferay.access.exceptions.UserGroupDoesNotExistException;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.http.GroupServiceSoap;
@@ -51,7 +51,7 @@ public class GroupService extends ServiceAccess {
 	 * @throws NotConnectedToWebServiceException
 	 */
 	public UserGroup getUserGroupById(long groupId) throws RemoteException, NotConnectedToWebServiceException,
-			UserDoesNotExistException {
+			UserGroupDoesNotExistException {
 		if (groupId >= 0) {
 			// Look up user in the pool.
 			UserGroup group = groupPool.getGroupById(groupId);
@@ -67,7 +67,7 @@ public class GroupService extends ServiceAccess {
 				return group;
 			} catch (RemoteException re) {
 				if (re.getLocalizedMessage().contains("No Group exists with the primary key")) {
-					throw new UserDoesNotExistException("Group with id '" + groupId + "' does not exists.");
+					throw new UserGroupDoesNotExistException("Group with id '" + groupId + "' does not exists.");
 				} else {
 					re.printStackTrace();
 					throw re;
