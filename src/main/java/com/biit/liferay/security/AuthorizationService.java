@@ -6,10 +6,10 @@ import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
-import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.RoleService;
+import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
-import com.biit.liferay.log.LiferayAuthenticationClientLogger;
+import com.biit.liferay.log.LiferayClientLogger;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
@@ -25,7 +25,7 @@ public abstract class AuthorizationService {
 				UserGroupService.getInstance().connectToWebService();
 			}
 		} catch (ServiceException se) {
-			LiferayAuthenticationClientLogger
+			LiferayClientLogger
 					.fatal(AuthenticationService.class.getName(),
 							"Cannot connect to RoleService and/or GroupService. Please, configure the file 'liferay.conf' correctly.");
 		}
@@ -36,8 +36,6 @@ public abstract class AuthorizationService {
 			if (getUserActivitiesAllowed(user).contains(activity)) {
 				return true;
 			}
-			LiferayAuthenticationClientLogger.debug(AuthorizationService.class.getName(), "Activity " + activity
-					+ " not authorized to " + user.getEmailAddress());
 		}
 		return false;
 	}
@@ -67,13 +65,13 @@ public abstract class AuthorizationService {
 			try {
 				return RoleService.getInstance().getUserRoles(user);
 			} catch (RemoteException e) {
-				LiferayAuthenticationClientLogger.error(AuthorizationService.class.getName(),
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the user's roles from '" + user.getEmailAddress() + "'");
-				LiferayAuthenticationClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (NotConnectedToWebServiceException e) {
-				LiferayAuthenticationClientLogger.error(AuthorizationService.class.getName(),
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the user's roles from '" + user.getEmailAddress() + "'");
-				LiferayAuthenticationClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
 		return new ArrayList<Role>();
@@ -84,13 +82,13 @@ public abstract class AuthorizationService {
 			try {
 				return UserGroupService.getInstance().getUserUserGroups(user);
 			} catch (RemoteException e) {
-				LiferayAuthenticationClientLogger.error(AuthorizationService.class.getName(),
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the user's groups from " + user.getEmailAddress() + "'");
-				LiferayAuthenticationClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (NotConnectedToWebServiceException e) {
-				LiferayAuthenticationClientLogger.error(AuthorizationService.class.getName(),
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the user's groups from " + user.getEmailAddress() + "'");
-				LiferayAuthenticationClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
 		return new ArrayList<UserGroup>();
@@ -101,13 +99,13 @@ public abstract class AuthorizationService {
 			try {
 				return RoleService.getInstance().getGroupRoles(group);
 			} catch (RemoteException e) {
-				LiferayAuthenticationClientLogger.error(AuthorizationService.class.getName(),
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the group's roles from " + group.getName() + "'");
-				LiferayAuthenticationClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (NotConnectedToWebServiceException e) {
-				LiferayAuthenticationClientLogger.error(AuthorizationService.class.getName(),
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the group's roles from " + group.getName() + "'");
-				LiferayAuthenticationClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
 		return new ArrayList<Role>();

@@ -11,7 +11,7 @@ import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.UserDoesNotExistException;
 import com.biit.liferay.configuration.ConfigurationReader;
-import com.biit.liferay.log.LiferayAuthenticationClientLogger;
+import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
 import com.biit.liferay.security.exceptions.LiferayConnectionException;
 import com.liferay.portal.model.User;
@@ -34,7 +34,7 @@ public class AuthenticationService {
 				UserGroupService.getInstance().connectToWebService();
 			}
 		} catch (ServiceException se) {
-			LiferayAuthenticationClientLogger
+			LiferayClientLogger
 					.fatal(AuthenticationService.class.getName(),
 							"Cannot connect to UserService and/or CompanyService. Please, configure the file 'liferay.conf' correctly.");
 		}
@@ -70,7 +70,7 @@ public class AuthenticationService {
 							ConfigurationReader.getInstance().getVirtualHost()), userMail);
 		} catch (RemoteException e) {
 			if (e.getLocalizedMessage().contains("No User exists with the key")) {
-				LiferayAuthenticationClientLogger.warning(this.getClass().getName(),
+				LiferayClientLogger.warning(this.getClass().getName(),
 						"Attempt to loggin failed with user '" + userMail + "'.");
 				throw new InvalidCredentialsException("User does not exist.");
 			} else if (e.getLocalizedMessage().contains("Connection refused: connect")) {
@@ -80,13 +80,13 @@ public class AuthenticationService {
 						+ ConfigurationReader.getInstance().getConnectionPort()
 						+ "'.\n Check configuration at 'liferay.conf' file");
 			} else {
-				LiferayAuthenticationClientLogger.errorMessage(this.getClass().getName(), e);
+				LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 				throw e;
 			}
 		}
 
 		BasicEncryptionMethod.getInstance().validatePassword(password, user.getPassword());
-		LiferayAuthenticationClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'");
+		LiferayClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'");
 		return user;
 	}
 

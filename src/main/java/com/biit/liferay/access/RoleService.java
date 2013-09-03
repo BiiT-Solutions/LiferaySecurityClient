@@ -7,7 +7,7 @@ import java.util.List;
 import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
-import com.biit.liferay.log.LiferayAuthenticationClientLogger;
+import com.biit.liferay.log.LiferayClientLogger;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
@@ -174,7 +174,7 @@ public class RoleService extends ServiceAccess {
 		checkConnection();
 		((UserServiceSoap) getServiceSoap()).deleteRoleUser(role.getRoleId(), user.getUserId());
 		rolePool.removeUserRole(user, role);
-		LiferayAuthenticationClientLogger.info(this.getClass().getName(), "Role '" + role.getName() + "' for user '"
+		LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getName() + "' for user '"
 				+ user.getScreenName() + "' deleted.");
 	}
 }

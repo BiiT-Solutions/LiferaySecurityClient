@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.biit.liferay</groupId>
 	<artifactId>security-ws-client</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 	<name>Liferay Authentication Client with Web Services</name>
 	<description>Obtain users, groups and roles information from liferay</description>
 
@@ -16,6 +16,7 @@
 		<plugin.exec.version>1.2.1</plugin.exec.version>
 		<org.testng.version>6.8</org.testng.version>
 		<biit-common-utils.version>0.0.1</biit-common-utils.version>
+		<biit-liferay-common-utils.version>0.1.0</biit-liferay-common-utils.version>
 	</properties>
 
 	<build>
@@ -41,6 +42,13 @@
 	</distributionManagement>
 
 	<dependencies>
+		<!-- Basic Liferay Access -->
+		<dependency>
+			<groupId>com.biit.liferay</groupId>
+			<artifactId>common</artifactId>
+			<version>${biit-liferay-common-utils.version}</version>
+		</dependency>
+		<!-- Log -->
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>

@@ -8,7 +8,7 @@ import javax.xml.rpc.ServiceException;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.UserDoesNotExistException;
-import com.biit.liferay.log.LiferayAuthenticationClientLogger;
+import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.liferay.security.BasicEncryptionMethod;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
@@ -211,7 +211,7 @@ public class UserService extends ServiceAccess {
 		checkConnection();
 		((UserServiceSoap) getServiceSoap()).deleteUser(user.getUserId());
 		userPool.removeUser(user);
-		LiferayAuthenticationClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName()
+		LiferayClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName()
 				+ "' deleted.");
 	}
 
@@ -229,7 +229,7 @@ public class UserService extends ServiceAccess {
 		((UserServiceSoap) getServiceSoap()).updatePassword(user.getUserId(), plainTextPassword, plainTextPassword,
 				false);
 		user.setPassword(BasicEncryptionMethod.getInstance().encryptPassword(plainTextPassword));
-		LiferayAuthenticationClientLogger.info(this.getClass().getName(),
+		LiferayClientLogger.info(this.getClass().getName(),
 				"User has change its password '" + user.getScreenName() + "'.");
 	}
 
