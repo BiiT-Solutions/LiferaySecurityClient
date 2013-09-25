@@ -48,18 +48,6 @@
 			<artifactId>common</artifactId>
 			<version>${biit-liferay-common-utils.version}</version>
 		</dependency>
-		<!-- Log -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
-		</dependency>
-		<!-- File access -->
-		<dependency>
-			<groupId>com.biit</groupId>
-			<artifactId>common-utils</artifactId>
-			<version>${biit-common-utils.version}</version>
-		</dependency>
 		<!-- Axis WS access -->
 		<dependency>
 			<groupId>commons-discovery</groupId>

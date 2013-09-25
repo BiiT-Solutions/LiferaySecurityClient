@@ -10,7 +10,7 @@ import com.liferay.portal.model.UserGroup;
 
 public class UserGroupsPool {
 
-	private final static long EXPIRATION_TIME = 30000;// 30 seconds
+	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
 	private Hashtable<Long, Long> userTime; // group name -> time.
 	private Hashtable<Long, List<UserGroup>> groupsByUser; // user id -> user.

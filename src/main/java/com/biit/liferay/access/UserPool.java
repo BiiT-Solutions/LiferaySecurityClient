@@ -7,7 +7,7 @@ import com.liferay.portal.model.User;
 
 public class UserPool {
 
-	private final static long EXPIRATION_TIME = 30000;// 30 seconds
+	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
 	private Hashtable<Long, Long> time; // user id -> time.
 	private Hashtable<Long, User> users; // user id -> user.
