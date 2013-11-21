@@ -67,7 +67,7 @@ public class UserService extends ServiceAccess {
 			return user;
 		}
 
-		// //Look up user in the liferay.
+		// Look up user in the liferay.
 		checkConnection();
 		user = ((UserServiceSoap) getServiceSoap()).getUserByEmailAddress(companySoap.getCompanyId(), emailAddress);
 		userPool.addUser(user);
