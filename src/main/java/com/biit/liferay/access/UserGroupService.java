@@ -35,6 +35,7 @@ public class UserGroupService extends ServiceAccess {
 	@Override
 	public void connectToWebService(String loginUser, String password) throws ServiceException {
 		// Locate the Role service
+		System.out.println(AccessUtils.getLiferayUrl(loginUser, password, getServiceName()));
 		UserGroupServiceSoapServiceLocator locatorGroup = new UserGroupServiceSoapServiceLocator();
 		setServiceSoap(locatorGroup.getPortal_UserGroupService(AccessUtils.getLiferayUrl(loginUser, password,
 				getServiceName())));

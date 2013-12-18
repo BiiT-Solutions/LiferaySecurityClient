@@ -211,8 +211,7 @@ public class UserService extends ServiceAccess {
 		checkConnection();
 		((UserServiceSoap) getServiceSoap()).deleteUser(user.getUserId());
 		userPool.removeUser(user);
-		LiferayClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName()
-				+ "' deleted.");
+		LiferayClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName() + "' deleted.");
 	}
 
 	/**
@@ -229,8 +228,8 @@ public class UserService extends ServiceAccess {
 		((UserServiceSoap) getServiceSoap()).updatePassword(user.getUserId(), plainTextPassword, plainTextPassword,
 				false);
 		user.setPassword(BasicEncryptionMethod.getInstance().encryptPassword(plainTextPassword));
-		LiferayClientLogger.info(this.getClass().getName(),
-				"User has change its password '" + user.getScreenName() + "'.");
+		LiferayClientLogger.info(this.getClass().getName(), "User has change its password '" + user.getScreenName()
+				+ "'.");
 	}
 
 	/**
