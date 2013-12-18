@@ -50,6 +50,12 @@ public class CompanyServiceSoapProxy implements com.liferay.portal.service.http.
     return companyServiceSoap.addCompany(webId, virtualHost, mx, shardName, system, maxUsers, active);
   }
   
+  public com.liferay.portal.model.Company deleteCompany(long companyId) throws java.rmi.RemoteException{
+    if (companyServiceSoap == null)
+      _initCompanyServiceSoapProxy();
+    return companyServiceSoap.deleteCompany(companyId);
+  }
+  
   public void deleteLogo(long companyId) throws java.rmi.RemoteException{
     if (companyServiceSoap == null)
       _initCompanyServiceSoapProxy();
@@ -108,6 +114,12 @@ public class CompanyServiceSoapProxy implements com.liferay.portal.service.http.
     if (companyServiceSoap == null)
       _initCompanyServiceSoapProxy();
     companyServiceSoap.updateDisplay(companyId, languageId, timeZoneId);
+  }
+  
+  public com.liferay.portal.model.Company updateLogo(long companyId, byte[] bytes) throws java.rmi.RemoteException{
+    if (companyServiceSoap == null)
+      _initCompanyServiceSoapProxy();
+    return companyServiceSoap.updateLogo(companyId, bytes);
   }
   
   public void updateSecurity(long companyId, java.lang.String authType, boolean autoLogin, boolean sendPassword, boolean strangers, boolean strangersWithMx, boolean strangersVerify, boolean siteLogo) throws java.rmi.RemoteException{

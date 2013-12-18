@@ -8,8 +8,8 @@
 package com.liferay.portal.service.http;
 
 public interface UserGroupRoleServiceSoap extends java.rmi.Remote {
-    public void addUserGroupRoles(java.lang.Long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException;
-    public void addUserGroupRoles(long userId, long groupId, java.lang.Long[] roleIds) throws java.rmi.RemoteException;
-    public void deleteUserGroupRoles(java.lang.Long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException;
-    public void deleteUserGroupRoles(long userId, long groupId, java.lang.Long[] roleIds) throws java.rmi.RemoteException;
+    public void addUserGroupRoles(long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException;
+    public void addUserGroupRoles(long userId, long groupId, long[] roleIds) throws java.rmi.RemoteException;
+    public void deleteUserGroupRoles(long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException;
+    public void deleteUserGroupRoles(long userId, long groupId, long[] roleIds) throws java.rmi.RemoteException;
 }

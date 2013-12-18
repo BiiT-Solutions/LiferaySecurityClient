@@ -44,25 +44,25 @@ public class UserGroupRoleServiceSoapProxy implements com.liferay.portal.service
     return userGroupRoleServiceSoap;
   }
   
-  public void addUserGroupRoles(java.lang.Long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException{
+  public void addUserGroupRoles(long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException{
     if (userGroupRoleServiceSoap == null)
       _initUserGroupRoleServiceSoapProxy();
     userGroupRoleServiceSoap.addUserGroupRoles(userIds, groupId, roleId);
   }
   
-  public void addUserGroupRoles(long userId, long groupId, java.lang.Long[] roleIds) throws java.rmi.RemoteException{
+  public void addUserGroupRoles(long userId, long groupId, long[] roleIds) throws java.rmi.RemoteException{
     if (userGroupRoleServiceSoap == null)
       _initUserGroupRoleServiceSoapProxy();
     userGroupRoleServiceSoap.addUserGroupRoles(userId, groupId, roleIds);
   }
   
-  public void deleteUserGroupRoles(java.lang.Long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException{
+  public void deleteUserGroupRoles(long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException{
     if (userGroupRoleServiceSoap == null)
       _initUserGroupRoleServiceSoapProxy();
     userGroupRoleServiceSoap.deleteUserGroupRoles(userIds, groupId, roleId);
   }
   
-  public void deleteUserGroupRoles(long userId, long groupId, java.lang.Long[] roleIds) throws java.rmi.RemoteException{
+  public void deleteUserGroupRoles(long userId, long groupId, long[] roleIds) throws java.rmi.RemoteException{
     if (userGroupRoleServiceSoap == null)
       _initUserGroupRoleServiceSoapProxy();
     userGroupRoleServiceSoap.deleteUserGroupRoles(userId, groupId, roleIds);

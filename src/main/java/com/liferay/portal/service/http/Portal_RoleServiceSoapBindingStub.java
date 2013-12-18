@@ -16,7 +16,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
     static org.apache.axis.description.OperationDesc [] _operations;
 
     static {
-        _operations = new org.apache.axis.description.OperationDesc[14];
+        _operations = new org.apache.axis.description.OperationDesc[15];
         _initOperationDesc1();
         _initOperationDesc2();
     }
@@ -46,6 +46,35 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         _operations[0] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("addRole");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "className"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "classPK"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "name"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "titleMapLanguageIds"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_string"), java.lang.String[].class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "titleMapValues"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_string"), java.lang.String[].class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "descriptionMapLanguageIds"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_string"), java.lang.String[].class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "descriptionMapValues"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_string"), java.lang.String[].class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "type"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "subtype"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "serviceContext"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://service.portal.liferay.com", "ServiceContext"), com.liferay.portal.service.ServiceContext.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "RoleSoap"));
+        oper.setReturnClass(com.liferay.portal.model.Role.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "addRoleReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.RPC);
+        oper.setUse(org.apache.axis.constants.Use.ENCODED);
+        _operations[1] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
         oper.setName("addUserRoles");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "userId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
         oper.addParameter(param);
@@ -54,7 +83,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         oper.setReturnType(org.apache.axis.encoding.XMLType.AXIS_VOID);
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[1] = oper;
+        _operations[2] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("deleteRole");
@@ -63,7 +92,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         oper.setReturnType(org.apache.axis.encoding.XMLType.AXIS_VOID);
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[2] = oper;
+        _operations[3] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getGroupRoles");
@@ -74,7 +103,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         oper.setReturnQName(new javax.xml.namespace.QName("", "getGroupRolesReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[3] = oper;
+        _operations[4] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getRole");
@@ -85,7 +114,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         oper.setReturnQName(new javax.xml.namespace.QName("", "getRoleReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[4] = oper;
+        _operations[5] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getRole");
@@ -98,7 +127,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         oper.setReturnQName(new javax.xml.namespace.QName("", "getRoleReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[5] = oper;
+        _operations[6] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getUserGroupGroupRoles");
@@ -111,7 +140,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         oper.setReturnQName(new javax.xml.namespace.QName("", "getUserGroupGroupRolesReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[6] = oper;
+        _operations[7] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getUserGroupRoles");
@@ -124,28 +153,17 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         oper.setReturnQName(new javax.xml.namespace.QName("", "getUserGroupRolesReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[7] = oper;
+        _operations[8] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getUserRelatedRoles");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "userId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "groups"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_tns2_GroupSoap"), com.liferay.portal.model.GroupSoap[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "groups"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_tns2_GroupSoap"), com.liferay.portal.model.Group[].class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_tns2_RoleSoap"));
         oper.setReturnClass(com.liferay.portal.model.Role[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getUserRelatedRolesReturn"));
-        oper.setStyle(org.apache.axis.constants.Style.RPC);
-        oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[8] = oper;
-
-        oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("getUserRoles");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "userId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
-        oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_tns2_RoleSoap"));
-        oper.setReturnClass(com.liferay.portal.model.Role[].class);
-        oper.setReturnQName(new javax.xml.namespace.QName("", "getUserRolesReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
         _operations[9] = oper;
@@ -155,6 +173,17 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
     private static void _initOperationDesc2(){
         org.apache.axis.description.OperationDesc oper;
         org.apache.axis.description.ParameterDesc param;
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("getUserRoles");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "userId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_tns2_RoleSoap"));
+        oper.setReturnClass(com.liferay.portal.model.Role[].class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "getUserRolesReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.RPC);
+        oper.setUse(org.apache.axis.constants.Use.ENCODED);
+        _operations[10] = oper;
+
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("hasUserRole");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "userId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
@@ -170,7 +199,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         oper.setReturnQName(new javax.xml.namespace.QName("", "hasUserRoleReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[10] = oper;
+        _operations[11] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("hasUserRoles");
@@ -187,7 +216,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         oper.setReturnQName(new javax.xml.namespace.QName("", "hasUserRolesReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[11] = oper;
+        _operations[12] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("unsetUserRoles");
@@ -198,7 +227,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         oper.setReturnType(org.apache.axis.encoding.XMLType.AXIS_VOID);
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[12] = oper;
+        _operations[13] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("updateRole");
@@ -216,12 +245,14 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "subtype"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "serviceContext"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://service.portal.liferay.com", "ServiceContext"), com.liferay.portal.service.ServiceContext.class, false, false);
+        oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "RoleSoap"));
         oper.setReturnClass(com.liferay.portal.model.Role.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "updateRoleReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        _operations[13] = oper;
+        _operations[14] = oper;
 
     }
 
@@ -256,7 +287,14 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
             qName = new javax.xml.namespace.QName("http://model.portal.liferay.com", "GroupSoap");
             cachedSerQNames.add(qName);
-            cls = com.liferay.portal.model.GroupSoap.class;
+            cls = com.liferay.portal.model.Group.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://model.portal.liferay.com", "PortletPreferencesIds");
+            cachedSerQNames.add(qName);
+            cls = com.liferay.portal.model.PortletPreferencesIds.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -268,9 +306,44 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
+            qName = new javax.xml.namespace.QName("http://service.portal.liferay.com", "ServiceContext");
+            cachedSerQNames.add(qName);
+            cls = com.liferay.portal.service.ServiceContext.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://theme.portal.liferay.com", "PortletDisplay");
+            cachedSerQNames.add(qName);
+            cls = com.liferay.portal.theme.PortletDisplay.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://theme.portal.liferay.com", "ThemeDisplay");
+            cachedSerQNames.add(qName);
+            cls = com.liferay.portal.theme.ThemeDisplay.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://util.kernel.portal.liferay.com", "StringBundler");
+            cachedSerQNames.add(qName);
+            cls = com.liferay.portal.kernel.util.StringBundler.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://xml.apache.org/xml-soap", "mapItem");
+            cachedSerQNames.add(qName);
+            cls = org.apache.xml.xml_soap.MapItem.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
             qName = new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_tns2_GroupSoap");
             cachedSerQNames.add(qName);
-            cls = com.liferay.portal.model.GroupSoap[].class;
+            cls = com.liferay.portal.model.Group[].class;
             cachedSerClasses.add(cls);
             qName = new javax.xml.namespace.QName("http://model.portal.liferay.com", "GroupSoap");
             qName2 = null;
@@ -282,6 +355,15 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             cls = com.liferay.portal.model.Role[].class;
             cachedSerClasses.add(cls);
             qName = new javax.xml.namespace.QName("http://model.portal.liferay.com", "RoleSoap");
+            qName2 = null;
+            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
+            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
+
+            qName = new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_anyType");
+            cachedSerQNames.add(qName);
+            cls = java.lang.Object[].class;
+            cachedSerClasses.add(cls);
+            qName = new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "anyType");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
@@ -402,12 +484,43 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
 }
     }
 
-    public void addUserRoles(long userId, long[] roleIds) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.Role addRole(java.lang.String className, long classPK, java.lang.String name, java.lang.String[] titleMapLanguageIds, java.lang.String[] titleMapValues, java.lang.String[] descriptionMapLanguageIds, java.lang.String[] descriptionMapValues, int type, java.lang.String subtype, com.liferay.portal.service.ServiceContext serviceContext) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[1]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "addRole"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {className, new java.lang.Long(classPK), name, titleMapLanguageIds, titleMapValues, descriptionMapLanguageIds, descriptionMapValues, new java.lang.Integer(type), subtype, serviceContext});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (com.liferay.portal.model.Role) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (com.liferay.portal.model.Role) org.apache.axis.utils.JavaUtils.convert(_resp, com.liferay.portal.model.Role.class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public void addUserRoles(long userId, long[] roleIds) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[2]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -431,7 +544,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[2]);
+        _call.setOperation(_operations[3]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -455,7 +568,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[3]);
+        _call.setOperation(_operations[4]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -486,7 +599,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[4]);
+        _call.setOperation(_operations[5]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -517,7 +630,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[5]);
+        _call.setOperation(_operations[6]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -548,7 +661,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[6]);
+        _call.setOperation(_operations[7]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -579,7 +692,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[7]);
+        _call.setOperation(_operations[8]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -605,12 +718,12 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
 }
     }
 
-    public com.liferay.portal.model.Role[] getUserRelatedRoles(long userId, com.liferay.portal.model.GroupSoap[] groups) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.Role[] getUserRelatedRoles(long userId, com.liferay.portal.model.Group[] groups) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[8]);
+        _call.setOperation(_operations[9]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -641,7 +754,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[9]);
+        _call.setOperation(_operations[10]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -672,7 +785,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[10]);
+        _call.setOperation(_operations[11]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -703,7 +816,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[11]);
+        _call.setOperation(_operations[12]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -734,7 +847,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[12]);
+        _call.setOperation(_operations[13]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -753,12 +866,12 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
 }
     }
 
-    public com.liferay.portal.model.Role updateRole(long roleId, java.lang.String name, java.lang.String[] titleMapLanguageIds, java.lang.String[] titleMapValues, java.lang.String[] descriptionMapLanguageIds, java.lang.String[] descriptionMapValues, java.lang.String subtype) throws java.rmi.RemoteException {
+    public com.liferay.portal.model.Role updateRole(long roleId, java.lang.String name, java.lang.String[] titleMapLanguageIds, java.lang.String[] titleMapValues, java.lang.String[] descriptionMapLanguageIds, java.lang.String[] descriptionMapValues, java.lang.String subtype, com.liferay.portal.service.ServiceContext serviceContext) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[13]);
+        _call.setOperation(_operations[14]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
@@ -766,7 +879,7 @@ public class Portal_RoleServiceSoapBindingStub extends org.apache.axis.client.St
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {new java.lang.Long(roleId), name, titleMapLanguageIds, titleMapValues, descriptionMapLanguageIds, descriptionMapValues, subtype});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {new java.lang.Long(roleId), name, titleMapLanguageIds, titleMapValues, descriptionMapLanguageIds, descriptionMapValues, subtype, serviceContext});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;

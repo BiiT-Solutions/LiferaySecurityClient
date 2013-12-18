@@ -10,7 +10,7 @@ public class GroupPool {
 	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
 	private Hashtable<Long, Long> time; // group id -> time.
-	private Hashtable<Long, UserGroup> groups; // groupid -> user.
+	private Hashtable<Long, UserGroup> groups; // groupid -> UserSoap.
 
 	public GroupPool() {
 		time = new Hashtable<Long, Long>();

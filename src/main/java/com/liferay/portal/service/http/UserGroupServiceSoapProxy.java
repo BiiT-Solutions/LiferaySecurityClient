@@ -62,6 +62,12 @@ public class UserGroupServiceSoapProxy implements com.liferay.portal.service.htt
     return userGroupServiceSoap.addUserGroup(name, description);
   }
   
+  public com.liferay.portal.model.UserGroup addUserGroup(java.lang.String name, java.lang.String description, com.liferay.portal.service.ServiceContext serviceContext) throws java.rmi.RemoteException{
+    if (userGroupServiceSoap == null)
+      _initUserGroupServiceSoapProxy();
+    return userGroupServiceSoap.addUserGroup(name, description, serviceContext);
+  }
+  
   public void deleteUserGroup(long userGroupId) throws java.rmi.RemoteException{
     if (userGroupServiceSoap == null)
       _initUserGroupServiceSoapProxy();
@@ -102,6 +108,12 @@ public class UserGroupServiceSoapProxy implements com.liferay.portal.service.htt
     if (userGroupServiceSoap == null)
       _initUserGroupServiceSoapProxy();
     return userGroupServiceSoap.updateUserGroup(userGroupId, name, description);
+  }
+  
+  public com.liferay.portal.model.UserGroup updateUserGroup(long userGroupId, java.lang.String name, java.lang.String description, com.liferay.portal.service.ServiceContext serviceContext) throws java.rmi.RemoteException{
+    if (userGroupServiceSoap == null)
+      _initUserGroupServiceSoapProxy();
+    return userGroupServiceSoap.updateUserGroup(userGroupId, name, description, serviceContext);
   }
   
   

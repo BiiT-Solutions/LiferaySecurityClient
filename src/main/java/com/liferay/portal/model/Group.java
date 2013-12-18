@@ -7,7 +7,7 @@
 
 package com.liferay.portal.model;
 
-public class GroupSoap  implements java.io.Serializable {
+public class Group  implements java.io.Serializable {
     private boolean active;
 
     private long classNameId;
@@ -26,22 +26,32 @@ public class GroupSoap  implements java.io.Serializable {
 
     private long liveGroupId;
 
+    private boolean manualMembership;
+
+    private int membershipRestriction;
+
     private java.lang.String name;
 
     private long parentGroupId;
 
     private long primaryKey;
 
+    private int remoteStagingGroupCount;
+
     private boolean site;
+
+    private java.lang.String treePath;
 
     private int type;
 
     private java.lang.String typeSettings;
 
-    public GroupSoap() {
+    private java.lang.String uuid;
+
+    public Group() {
     }
 
-    public GroupSoap(
+    public Group(
            boolean active,
            long classNameId,
            long classPK,
@@ -51,12 +61,17 @@ public class GroupSoap  implements java.io.Serializable {
            java.lang.String friendlyURL,
            long groupId,
            long liveGroupId,
+           boolean manualMembership,
+           int membershipRestriction,
            java.lang.String name,
            long parentGroupId,
            long primaryKey,
+           int remoteStagingGroupCount,
            boolean site,
+           java.lang.String treePath,
            int type,
-           java.lang.String typeSettings) {
+           java.lang.String typeSettings,
+           java.lang.String uuid) {
            this.active = active;
            this.classNameId = classNameId;
            this.classPK = classPK;
@@ -66,12 +81,17 @@ public class GroupSoap  implements java.io.Serializable {
            this.friendlyURL = friendlyURL;
            this.groupId = groupId;
            this.liveGroupId = liveGroupId;
+           this.manualMembership = manualMembership;
+           this.membershipRestriction = membershipRestriction;
            this.name = name;
            this.parentGroupId = parentGroupId;
            this.primaryKey = primaryKey;
+           this.remoteStagingGroupCount = remoteStagingGroupCount;
            this.site = site;
+           this.treePath = treePath;
            this.type = type;
            this.typeSettings = typeSettings;
+           this.uuid = uuid;
     }
 
 
@@ -256,6 +276,46 @@ public class GroupSoap  implements java.io.Serializable {
 
 
     /**
+     * Gets the manualMembership value for this GroupSoap.
+     * 
+     * @return manualMembership
+     */
+    public boolean isManualMembership() {
+        return manualMembership;
+    }
+
+
+    /**
+     * Sets the manualMembership value for this GroupSoap.
+     * 
+     * @param manualMembership
+     */
+    public void setManualMembership(boolean manualMembership) {
+        this.manualMembership = manualMembership;
+    }
+
+
+    /**
+     * Gets the membershipRestriction value for this GroupSoap.
+     * 
+     * @return membershipRestriction
+     */
+    public int getMembershipRestriction() {
+        return membershipRestriction;
+    }
+
+
+    /**
+     * Sets the membershipRestriction value for this GroupSoap.
+     * 
+     * @param membershipRestriction
+     */
+    public void setMembershipRestriction(int membershipRestriction) {
+        this.membershipRestriction = membershipRestriction;
+    }
+
+
+    /**
      * Gets the name value for this GroupSoap.
      * 
      * @return name
@@ -316,6 +376,26 @@ public class GroupSoap  implements java.io.Serializable {
 
 
     /**
+     * Gets the remoteStagingGroupCount value for this GroupSoap.
+     * 
+     * @return remoteStagingGroupCount
+     */
+    public int getRemoteStagingGroupCount() {
+        return remoteStagingGroupCount;
+    }
+
+
+    /**
+     * Sets the remoteStagingGroupCount value for this GroupSoap.
+     * 
+     * @param remoteStagingGroupCount
+     */
+    public void setRemoteStagingGroupCount(int remoteStagingGroupCount) {
+        this.remoteStagingGroupCount = remoteStagingGroupCount;
+    }
+
+
+    /**
      * Gets the site value for this GroupSoap.
      * 
      * @return site
@@ -332,6 +412,26 @@ public class GroupSoap  implements java.io.Serializable {
      */
     public void setSite(boolean site) {
         this.site = site;
+    }
+
+
+    /**
+     * Gets the treePath value for this GroupSoap.
+     * 
+     * @return treePath
+     */
+    public java.lang.String getTreePath() {
+        return treePath;
+    }
+
+
+    /**
+     * Sets the treePath value for this GroupSoap.
+     * 
+     * @param treePath
+     */
+    public void setTreePath(java.lang.String treePath) {
+        this.treePath = treePath;
     }
 
 
@@ -374,10 +474,30 @@ public class GroupSoap  implements java.io.Serializable {
         this.typeSettings = typeSettings;
     }
 
+
+    /**
+     * Gets the uuid value for this GroupSoap.
+     * 
+     * @return uuid
+     */
+    public java.lang.String getUuid() {
+        return uuid;
+    }
+
+
+    /**
+     * Sets the uuid value for this GroupSoap.
+     * 
+     * @param uuid
+     */
+    public void setUuid(java.lang.String uuid) {
+        this.uuid = uuid;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof GroupSoap)) return false;
-        GroupSoap other = (GroupSoap) obj;
+        if (!(obj instanceof Group)) return false;
+        Group other = (Group) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -399,16 +519,25 @@ public class GroupSoap  implements java.io.Serializable {
               this.friendlyURL.equals(other.getFriendlyURL()))) &&
             this.groupId == other.getGroupId() &&
             this.liveGroupId == other.getLiveGroupId() &&
+            this.manualMembership == other.isManualMembership() &&
+            this.membershipRestriction == other.getMembershipRestriction() &&
             ((this.name==null && other.getName()==null) || 
              (this.name!=null &&
               this.name.equals(other.getName()))) &&
             this.parentGroupId == other.getParentGroupId() &&
             this.primaryKey == other.getPrimaryKey() &&
+            this.remoteStagingGroupCount == other.getRemoteStagingGroupCount() &&
             this.site == other.isSite() &&
+            ((this.treePath==null && other.getTreePath()==null) || 
+             (this.treePath!=null &&
+              this.treePath.equals(other.getTreePath()))) &&
             this.type == other.getType() &&
             ((this.typeSettings==null && other.getTypeSettings()==null) || 
              (this.typeSettings!=null &&
-              this.typeSettings.equals(other.getTypeSettings())));
+              this.typeSettings.equals(other.getTypeSettings()))) &&
+            ((this.uuid==null && other.getUuid()==null) || 
+             (this.uuid!=null &&
+              this.uuid.equals(other.getUuid())));
         __equalsCalc = null;
         return _equals;
     }
@@ -433,15 +562,24 @@ public class GroupSoap  implements java.io.Serializable {
         }
         _hashCode += new Long(getGroupId()).hashCode();
         _hashCode += new Long(getLiveGroupId()).hashCode();
+        _hashCode += (isManualMembership() ? Boolean.TRUE : Boolean.FALSE).hashCode();
+        _hashCode += getMembershipRestriction();
         if (getName() != null) {
             _hashCode += getName().hashCode();
         }
         _hashCode += new Long(getParentGroupId()).hashCode();
         _hashCode += new Long(getPrimaryKey()).hashCode();
+        _hashCode += getRemoteStagingGroupCount();
         _hashCode += (isSite() ? Boolean.TRUE : Boolean.FALSE).hashCode();
+        if (getTreePath() != null) {
+            _hashCode += getTreePath().hashCode();
+        }
         _hashCode += getType();
         if (getTypeSettings() != null) {
             _hashCode += getTypeSettings().hashCode();
+        }
+        if (getUuid() != null) {
+            _hashCode += getUuid().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -449,7 +587,7 @@ public class GroupSoap  implements java.io.Serializable {
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(GroupSoap.class, true);
+        new org.apache.axis.description.TypeDesc(Group.class, true);
 
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "GroupSoap"));
@@ -508,6 +646,18 @@ public class GroupSoap  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("manualMembership");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "manualMembership"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("membershipRestriction");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "membershipRestriction"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("name");
         elemField.setXmlName(new javax.xml.namespace.QName("", "name"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
@@ -526,10 +676,22 @@ public class GroupSoap  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("remoteStagingGroupCount");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "remoteStagingGroupCount"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("site");
         elemField.setXmlName(new javax.xml.namespace.QName("", "site"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("treePath");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "treePath"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
+        elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("type");
@@ -540,6 +702,12 @@ public class GroupSoap  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("typeSettings");
         elemField.setXmlName(new javax.xml.namespace.QName("", "typeSettings"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("uuid");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "uuid"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);

@@ -44,6 +44,8 @@ public class Address  implements java.io.Serializable {
 
     private java.lang.String userName;
 
+    private java.lang.String uuid;
+
     private java.lang.String zip;
 
     public Address() {
@@ -68,6 +70,7 @@ public class Address  implements java.io.Serializable {
            int typeId,
            long userId,
            java.lang.String userName,
+           java.lang.String uuid,
            java.lang.String zip) {
            this.addressId = addressId;
            this.city = city;
@@ -87,6 +90,7 @@ public class Address  implements java.io.Serializable {
            this.typeId = typeId;
            this.userId = userId;
            this.userName = userName;
+           this.uuid = uuid;
            this.zip = zip;
     }
 
@@ -452,6 +456,26 @@ public class Address  implements java.io.Serializable {
 
 
     /**
+     * Gets the uuid value for this AddressSoap.
+     * 
+     * @return uuid
+     */
+    public java.lang.String getUuid() {
+        return uuid;
+    }
+
+
+    /**
+     * Sets the uuid value for this AddressSoap.
+     * 
+     * @param uuid
+     */
+    public void setUuid(java.lang.String uuid) {
+        this.uuid = uuid;
+    }
+
+
+    /**
      * Gets the zip value for this AddressSoap.
      * 
      * @return zip
@@ -514,6 +538,9 @@ public class Address  implements java.io.Serializable {
             ((this.userName==null && other.getUserName()==null) || 
              (this.userName!=null &&
               this.userName.equals(other.getUserName()))) &&
+            ((this.uuid==null && other.getUuid()==null) || 
+             (this.uuid!=null &&
+              this.uuid.equals(other.getUuid()))) &&
             ((this.zip==null && other.getZip()==null) || 
              (this.zip!=null &&
               this.zip.equals(other.getZip())));
@@ -559,6 +586,9 @@ public class Address  implements java.io.Serializable {
         _hashCode += new Long(getUserId()).hashCode();
         if (getUserName() != null) {
             _hashCode += getUserName().hashCode();
+        }
+        if (getUuid() != null) {
+            _hashCode += getUuid().hashCode();
         }
         if (getZip() != null) {
             _hashCode += getZip().hashCode();
@@ -678,6 +708,12 @@ public class Address  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("userName");
         elemField.setXmlName(new javax.xml.namespace.QName("", "userName"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("uuid");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "uuid"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);

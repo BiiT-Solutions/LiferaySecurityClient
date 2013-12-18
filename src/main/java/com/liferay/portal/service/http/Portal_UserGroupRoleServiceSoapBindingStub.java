@@ -25,7 +25,7 @@ public class Portal_UserGroupRoleServiceSoapBindingStub extends org.apache.axis.
         org.apache.axis.description.ParameterDesc param;
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("addUserGroupRoles");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "userIds"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_long"), java.lang.Long[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "userIds"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_long"), long[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "groupId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
         oper.addParameter(param);
@@ -42,7 +42,7 @@ public class Portal_UserGroupRoleServiceSoapBindingStub extends org.apache.axis.
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "groupId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "roleIds"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_long"), java.lang.Long[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "roleIds"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_long"), long[].class, false, false);
         oper.addParameter(param);
         oper.setReturnType(org.apache.axis.encoding.XMLType.AXIS_VOID);
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -51,7 +51,7 @@ public class Portal_UserGroupRoleServiceSoapBindingStub extends org.apache.axis.
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("deleteUserGroupRoles");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "userIds"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_long"), java.lang.Long[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "userIds"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_long"), long[].class, false, false);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "groupId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
         oper.addParameter(param);
@@ -68,7 +68,7 @@ public class Portal_UserGroupRoleServiceSoapBindingStub extends org.apache.axis.
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "groupId"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), long.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "roleIds"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_long"), java.lang.Long[].class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "roleIds"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_long"), long[].class, false, false);
         oper.addParameter(param);
         oper.setReturnType(org.apache.axis.encoding.XMLType.AXIS_VOID);
         oper.setStyle(org.apache.axis.constants.Style.RPC);
@@ -108,9 +108,9 @@ public class Portal_UserGroupRoleServiceSoapBindingStub extends org.apache.axis.
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
             qName = new javax.xml.namespace.QName("urn:http.service.portal.liferay.com", "ArrayOf_xsd_long");
             cachedSerQNames.add(qName);
-            cls = java.lang.Long[].class;
+            cls = long[].class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "long");
+            qName = new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
@@ -182,7 +182,7 @@ public class Portal_UserGroupRoleServiceSoapBindingStub extends org.apache.axis.
         }
     }
 
-    public void addUserGroupRoles(java.lang.Long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException {
+    public void addUserGroupRoles(long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -206,7 +206,7 @@ public class Portal_UserGroupRoleServiceSoapBindingStub extends org.apache.axis.
 }
     }
 
-    public void addUserGroupRoles(long userId, long groupId, java.lang.Long[] roleIds) throws java.rmi.RemoteException {
+    public void addUserGroupRoles(long userId, long groupId, long[] roleIds) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -230,7 +230,7 @@ public class Portal_UserGroupRoleServiceSoapBindingStub extends org.apache.axis.
 }
     }
 
-    public void deleteUserGroupRoles(java.lang.Long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException {
+    public void deleteUserGroupRoles(long[] userIds, long groupId, long roleId) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -254,7 +254,7 @@ public class Portal_UserGroupRoleServiceSoapBindingStub extends org.apache.axis.
 }
     }
 
-    public void deleteUserGroupRoles(long userId, long groupId, java.lang.Long[] roleIds) throws java.rmi.RemoteException {
+    public void deleteUserGroupRoles(long userId, long groupId, long[] roleIds) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }

@@ -31,18 +31,18 @@ public class CompanyService extends ServiceAccess {
 
 	@Override
 	public void connectToWebService(String loginUser, String password) throws ServiceException {
-		// Locate the User service
+		// Locate the UserSoap service
 		CompanyServiceSoapServiceLocator locatorCompany = new CompanyServiceSoapServiceLocator();
 		setServiceSoap(locatorCompany.getPortal_CompanyService(AccessUtils.getLiferayUrl(loginUser, password,
 				SERVICE_COMPANY_NAME)));
 	}
 
 	/**
-	 * Returns the company with the virtual host name.
+	 * Returns the CompanySoap with the virtual host name.
 	 * 
 	 * @param virtualHost
-	 *            the company's virtual host name.
-	 * @return Returns the company with the virtual host name.
+	 *            the CompanySoap's virtual host name.
+	 * @return Returns the CompanySoap with the virtual host name.
 	 * @throws RemoteException
 	 *             if there is a communication problem
 	 * @throws NotConnectedToWebServiceException
@@ -55,11 +55,11 @@ public class CompanyService extends ServiceAccess {
 	}
 
 	/**
-	 * Returns the company with the virtual host name.
+	 * Returns the CompanySoap with the virtual host name.
 	 * 
 	 * @param companyId
-	 *            the primary key of the company
-	 * @return Returns the company with the virtual host name.
+	 *            the primary key of the CompanySoap
+	 * @return Returns the CompanySoap with the virtual host name.
 	 * @throws RemoteException
 	 *             if there is a communication problem
 	 * @throws NotConnectedToWebServiceException
@@ -70,11 +70,11 @@ public class CompanyService extends ServiceAccess {
 	}
 
 	/**
-	 * Returns the company with the web domain.
+	 * Returns the CompanySoap with the web domain.
 	 * 
 	 * @param webId
-	 *            The company's web domain
-	 * @return Returns the company with the virtual host name.
+	 *            The CompanySoap's web domain
+	 * @return Returns the CompanySoap with the virtual host name.
 	 * @throws RemoteException
 	 *             if there is a communication problem
 	 * @throws NotConnectedToWebServiceException

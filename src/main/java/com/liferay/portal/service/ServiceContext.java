@@ -42,6 +42,8 @@ public class ServiceContext  implements java.io.Serializable {
 
     private java.util.HashMap expandoBridgeAttributes;
 
+    private boolean failOnPortalException;
+
     private java.util.Calendar formDate;
 
     private java.lang.String[] groupPermissions;
@@ -60,9 +62,19 @@ public class ServiceContext  implements java.io.Serializable {
 
     private java.lang.String layoutURL;
 
+    private java.lang.Object liferayPortletRequest;
+
+    private java.lang.Object liferayPortletResponse;
+
     private java.lang.Object locale;
 
     private java.util.Calendar modifiedDate;
+
+    private java.lang.String pathFriendlyURLPrivateGroup;
+
+    private java.lang.String pathFriendlyURLPrivateUser;
+
+    private java.lang.String pathFriendlyURLPublic;
 
     private java.lang.String pathMain;
 
@@ -80,11 +92,19 @@ public class ServiceContext  implements java.io.Serializable {
 
     private java.lang.Object request;
 
+    private java.lang.Object response;
+
     private java.lang.String rootPortletId;
+
+    private java.lang.Object scopeGroup;
 
     private long scopeGroupId;
 
     private boolean signedIn;
+
+    private com.liferay.portal.theme.ThemeDisplay themeDisplay;
+
+    private java.lang.Object timeZone;
 
     private java.lang.String userAgent;
 
@@ -117,6 +137,7 @@ public class ServiceContext  implements java.io.Serializable {
            java.lang.String currentURL,
            boolean deriveDefaultPermissions,
            java.util.HashMap expandoBridgeAttributes,
+           boolean failOnPortalException,
            java.util.Calendar formDate,
            java.lang.String[] groupPermissions,
            long guestOrUserId,
@@ -126,8 +147,13 @@ public class ServiceContext  implements java.io.Serializable {
            java.lang.String languageId,
            java.lang.String layoutFullURL,
            java.lang.String layoutURL,
+           java.lang.Object liferayPortletRequest,
+           java.lang.Object liferayPortletResponse,
            java.lang.Object locale,
            java.util.Calendar modifiedDate,
+           java.lang.String pathFriendlyURLPrivateGroup,
+           java.lang.String pathFriendlyURLPrivateUser,
+           java.lang.String pathFriendlyURLPublic,
            java.lang.String pathMain,
            long plid,
            java.lang.String portalURL,
@@ -136,9 +162,13 @@ public class ServiceContext  implements java.io.Serializable {
            java.lang.String remoteAddr,
            java.lang.String remoteHost,
            java.lang.Object request,
+           java.lang.Object response,
            java.lang.String rootPortletId,
+           java.lang.Object scopeGroup,
            long scopeGroupId,
            boolean signedIn,
+           com.liferay.portal.theme.ThemeDisplay themeDisplay,
+           java.lang.Object timeZone,
            java.lang.String userAgent,
            java.lang.String userDisplayURL,
            long userId,
@@ -161,6 +191,7 @@ public class ServiceContext  implements java.io.Serializable {
            this.currentURL = currentURL;
            this.deriveDefaultPermissions = deriveDefaultPermissions;
            this.expandoBridgeAttributes = expandoBridgeAttributes;
+           this.failOnPortalException = failOnPortalException;
            this.formDate = formDate;
            this.groupPermissions = groupPermissions;
            this.guestOrUserId = guestOrUserId;
@@ -170,8 +201,13 @@ public class ServiceContext  implements java.io.Serializable {
            this.languageId = languageId;
            this.layoutFullURL = layoutFullURL;
            this.layoutURL = layoutURL;
+           this.liferayPortletRequest = liferayPortletRequest;
+           this.liferayPortletResponse = liferayPortletResponse;
            this.locale = locale;
            this.modifiedDate = modifiedDate;
+           this.pathFriendlyURLPrivateGroup = pathFriendlyURLPrivateGroup;
+           this.pathFriendlyURLPrivateUser = pathFriendlyURLPrivateUser;
+           this.pathFriendlyURLPublic = pathFriendlyURLPublic;
            this.pathMain = pathMain;
            this.plid = plid;
            this.portalURL = portalURL;
@@ -180,9 +216,13 @@ public class ServiceContext  implements java.io.Serializable {
            this.remoteAddr = remoteAddr;
            this.remoteHost = remoteHost;
            this.request = request;
+           this.response = response;
            this.rootPortletId = rootPortletId;
+           this.scopeGroup = scopeGroup;
            this.scopeGroupId = scopeGroupId;
            this.signedIn = signedIn;
+           this.themeDisplay = themeDisplay;
+           this.timeZone = timeZone;
            this.userAgent = userAgent;
            this.userDisplayURL = userDisplayURL;
            this.userId = userId;
@@ -532,6 +572,26 @@ public class ServiceContext  implements java.io.Serializable {
 
 
     /**
+     * Gets the failOnPortalException value for this ServiceContext.
+     * 
+     * @return failOnPortalException
+     */
+    public boolean isFailOnPortalException() {
+        return failOnPortalException;
+    }
+
+
+    /**
+     * Sets the failOnPortalException value for this ServiceContext.
+     * 
+     * @param failOnPortalException
+     */
+    public void setFailOnPortalException(boolean failOnPortalException) {
+        this.failOnPortalException = failOnPortalException;
+    }
+
+
+    /**
      * Gets the formDate value for this ServiceContext.
      * 
      * @return formDate
@@ -712,6 +772,46 @@ public class ServiceContext  implements java.io.Serializable {
 
 
     /**
+     * Gets the liferayPortletRequest value for this ServiceContext.
+     * 
+     * @return liferayPortletRequest
+     */
+    public java.lang.Object getLiferayPortletRequest() {
+        return liferayPortletRequest;
+    }
+
+
+    /**
+     * Sets the liferayPortletRequest value for this ServiceContext.
+     * 
+     * @param liferayPortletRequest
+     */
+    public void setLiferayPortletRequest(java.lang.Object liferayPortletRequest) {
+        this.liferayPortletRequest = liferayPortletRequest;
+    }
+
+
+    /**
+     * Gets the liferayPortletResponse value for this ServiceContext.
+     * 
+     * @return liferayPortletResponse
+     */
+    public java.lang.Object getLiferayPortletResponse() {
+        return liferayPortletResponse;
+    }
+
+
+    /**
+     * Sets the liferayPortletResponse value for this ServiceContext.
+     * 
+     * @param liferayPortletResponse
+     */
+    public void setLiferayPortletResponse(java.lang.Object liferayPortletResponse) {
+        this.liferayPortletResponse = liferayPortletResponse;
+    }
+
+
+    /**
      * Gets the locale value for this ServiceContext.
      * 
      * @return locale
@@ -748,6 +848,66 @@ public class ServiceContext  implements java.io.Serializable {
      */
     public void setModifiedDate(java.util.Calendar modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+
+    /**
+     * Gets the pathFriendlyURLPrivateGroup value for this ServiceContext.
+     * 
+     * @return pathFriendlyURLPrivateGroup
+     */
+    public java.lang.String getPathFriendlyURLPrivateGroup() {
+        return pathFriendlyURLPrivateGroup;
+    }
+
+
+    /**
+     * Sets the pathFriendlyURLPrivateGroup value for this ServiceContext.
+     * 
+     * @param pathFriendlyURLPrivateGroup
+     */
+    public void setPathFriendlyURLPrivateGroup(java.lang.String pathFriendlyURLPrivateGroup) {
+        this.pathFriendlyURLPrivateGroup = pathFriendlyURLPrivateGroup;
+    }
+
+
+    /**
+     * Gets the pathFriendlyURLPrivateUser value for this ServiceContext.
+     * 
+     * @return pathFriendlyURLPrivateUser
+     */
+    public java.lang.String getPathFriendlyURLPrivateUser() {
+        return pathFriendlyURLPrivateUser;
+    }
+
+
+    /**
+     * Sets the pathFriendlyURLPrivateUser value for this ServiceContext.
+     * 
+     * @param pathFriendlyURLPrivateUser
+     */
+    public void setPathFriendlyURLPrivateUser(java.lang.String pathFriendlyURLPrivateUser) {
+        this.pathFriendlyURLPrivateUser = pathFriendlyURLPrivateUser;
+    }
+
+
+    /**
+     * Gets the pathFriendlyURLPublic value for this ServiceContext.
+     * 
+     * @return pathFriendlyURLPublic
+     */
+    public java.lang.String getPathFriendlyURLPublic() {
+        return pathFriendlyURLPublic;
+    }
+
+
+    /**
+     * Sets the pathFriendlyURLPublic value for this ServiceContext.
+     * 
+     * @param pathFriendlyURLPublic
+     */
+    public void setPathFriendlyURLPublic(java.lang.String pathFriendlyURLPublic) {
+        this.pathFriendlyURLPublic = pathFriendlyURLPublic;
     }
 
 
@@ -912,6 +1072,26 @@ public class ServiceContext  implements java.io.Serializable {
 
 
     /**
+     * Gets the response value for this ServiceContext.
+     * 
+     * @return response
+     */
+    public java.lang.Object getResponse() {
+        return response;
+    }
+
+
+    /**
+     * Sets the response value for this ServiceContext.
+     * 
+     * @param response
+     */
+    public void setResponse(java.lang.Object response) {
+        this.response = response;
+    }
+
+
+    /**
      * Gets the rootPortletId value for this ServiceContext.
      * 
      * @return rootPortletId
@@ -928,6 +1108,26 @@ public class ServiceContext  implements java.io.Serializable {
      */
     public void setRootPortletId(java.lang.String rootPortletId) {
         this.rootPortletId = rootPortletId;
+    }
+
+
+    /**
+     * Gets the scopeGroup value for this ServiceContext.
+     * 
+     * @return scopeGroup
+     */
+    public java.lang.Object getScopeGroup() {
+        return scopeGroup;
+    }
+
+
+    /**
+     * Sets the scopeGroup value for this ServiceContext.
+     * 
+     * @param scopeGroup
+     */
+    public void setScopeGroup(java.lang.Object scopeGroup) {
+        this.scopeGroup = scopeGroup;
     }
 
 
@@ -968,6 +1168,46 @@ public class ServiceContext  implements java.io.Serializable {
      */
     public void setSignedIn(boolean signedIn) {
         this.signedIn = signedIn;
+    }
+
+
+    /**
+     * Gets the themeDisplay value for this ServiceContext.
+     * 
+     * @return themeDisplay
+     */
+    public com.liferay.portal.theme.ThemeDisplay getThemeDisplay() {
+        return themeDisplay;
+    }
+
+
+    /**
+     * Sets the themeDisplay value for this ServiceContext.
+     * 
+     * @param themeDisplay
+     */
+    public void setThemeDisplay(com.liferay.portal.theme.ThemeDisplay themeDisplay) {
+        this.themeDisplay = themeDisplay;
+    }
+
+
+    /**
+     * Gets the timeZone value for this ServiceContext.
+     * 
+     * @return timeZone
+     */
+    public java.lang.Object getTimeZone() {
+        return timeZone;
+    }
+
+
+    /**
+     * Sets the timeZone value for this ServiceContext.
+     * 
+     * @param timeZone
+     */
+    public void setTimeZone(java.lang.Object timeZone) {
+        this.timeZone = timeZone;
     }
 
 
@@ -1117,6 +1357,7 @@ public class ServiceContext  implements java.io.Serializable {
             ((this.expandoBridgeAttributes==null && other.getExpandoBridgeAttributes()==null) || 
              (this.expandoBridgeAttributes!=null &&
               this.expandoBridgeAttributes.equals(other.getExpandoBridgeAttributes()))) &&
+            this.failOnPortalException == other.isFailOnPortalException() &&
             ((this.formDate==null && other.getFormDate()==null) || 
              (this.formDate!=null &&
               this.formDate.equals(other.getFormDate()))) &&
@@ -1140,12 +1381,27 @@ public class ServiceContext  implements java.io.Serializable {
             ((this.layoutURL==null && other.getLayoutURL()==null) || 
              (this.layoutURL!=null &&
               this.layoutURL.equals(other.getLayoutURL()))) &&
+            ((this.liferayPortletRequest==null && other.getLiferayPortletRequest()==null) || 
+             (this.liferayPortletRequest!=null &&
+              this.liferayPortletRequest.equals(other.getLiferayPortletRequest()))) &&
+            ((this.liferayPortletResponse==null && other.getLiferayPortletResponse()==null) || 
+             (this.liferayPortletResponse!=null &&
+              this.liferayPortletResponse.equals(other.getLiferayPortletResponse()))) &&
             ((this.locale==null && other.getLocale()==null) || 
              (this.locale!=null &&
               this.locale.equals(other.getLocale()))) &&
             ((this.modifiedDate==null && other.getModifiedDate()==null) || 
              (this.modifiedDate!=null &&
               this.modifiedDate.equals(other.getModifiedDate()))) &&
+            ((this.pathFriendlyURLPrivateGroup==null && other.getPathFriendlyURLPrivateGroup()==null) || 
+             (this.pathFriendlyURLPrivateGroup!=null &&
+              this.pathFriendlyURLPrivateGroup.equals(other.getPathFriendlyURLPrivateGroup()))) &&
+            ((this.pathFriendlyURLPrivateUser==null && other.getPathFriendlyURLPrivateUser()==null) || 
+             (this.pathFriendlyURLPrivateUser!=null &&
+              this.pathFriendlyURLPrivateUser.equals(other.getPathFriendlyURLPrivateUser()))) &&
+            ((this.pathFriendlyURLPublic==null && other.getPathFriendlyURLPublic()==null) || 
+             (this.pathFriendlyURLPublic!=null &&
+              this.pathFriendlyURLPublic.equals(other.getPathFriendlyURLPublic()))) &&
             ((this.pathMain==null && other.getPathMain()==null) || 
              (this.pathMain!=null &&
               this.pathMain.equals(other.getPathMain()))) &&
@@ -1168,11 +1424,23 @@ public class ServiceContext  implements java.io.Serializable {
             ((this.request==null && other.getRequest()==null) || 
              (this.request!=null &&
               this.request.equals(other.getRequest()))) &&
+            ((this.response==null && other.getResponse()==null) || 
+             (this.response!=null &&
+              this.response.equals(other.getResponse()))) &&
             ((this.rootPortletId==null && other.getRootPortletId()==null) || 
              (this.rootPortletId!=null &&
               this.rootPortletId.equals(other.getRootPortletId()))) &&
+            ((this.scopeGroup==null && other.getScopeGroup()==null) || 
+             (this.scopeGroup!=null &&
+              this.scopeGroup.equals(other.getScopeGroup()))) &&
             this.scopeGroupId == other.getScopeGroupId() &&
             this.signedIn == other.isSignedIn() &&
+            ((this.themeDisplay==null && other.getThemeDisplay()==null) || 
+             (this.themeDisplay!=null &&
+              this.themeDisplay.equals(other.getThemeDisplay()))) &&
+            ((this.timeZone==null && other.getTimeZone()==null) || 
+             (this.timeZone!=null &&
+              this.timeZone.equals(other.getTimeZone()))) &&
             ((this.userAgent==null && other.getUserAgent()==null) || 
              (this.userAgent!=null &&
               this.userAgent.equals(other.getUserAgent()))) &&
@@ -1262,6 +1530,7 @@ public class ServiceContext  implements java.io.Serializable {
         if (getExpandoBridgeAttributes() != null) {
             _hashCode += getExpandoBridgeAttributes().hashCode();
         }
+        _hashCode += (isFailOnPortalException() ? Boolean.TRUE : Boolean.FALSE).hashCode();
         if (getFormDate() != null) {
             _hashCode += getFormDate().hashCode();
         }
@@ -1301,11 +1570,26 @@ public class ServiceContext  implements java.io.Serializable {
         if (getLayoutURL() != null) {
             _hashCode += getLayoutURL().hashCode();
         }
+        if (getLiferayPortletRequest() != null) {
+            _hashCode += getLiferayPortletRequest().hashCode();
+        }
+        if (getLiferayPortletResponse() != null) {
+            _hashCode += getLiferayPortletResponse().hashCode();
+        }
         if (getLocale() != null) {
             _hashCode += getLocale().hashCode();
         }
         if (getModifiedDate() != null) {
             _hashCode += getModifiedDate().hashCode();
+        }
+        if (getPathFriendlyURLPrivateGroup() != null) {
+            _hashCode += getPathFriendlyURLPrivateGroup().hashCode();
+        }
+        if (getPathFriendlyURLPrivateUser() != null) {
+            _hashCode += getPathFriendlyURLPrivateUser().hashCode();
+        }
+        if (getPathFriendlyURLPublic() != null) {
+            _hashCode += getPathFriendlyURLPublic().hashCode();
         }
         if (getPathMain() != null) {
             _hashCode += getPathMain().hashCode();
@@ -1329,11 +1613,23 @@ public class ServiceContext  implements java.io.Serializable {
         if (getRequest() != null) {
             _hashCode += getRequest().hashCode();
         }
+        if (getResponse() != null) {
+            _hashCode += getResponse().hashCode();
+        }
         if (getRootPortletId() != null) {
             _hashCode += getRootPortletId().hashCode();
         }
+        if (getScopeGroup() != null) {
+            _hashCode += getScopeGroup().hashCode();
+        }
         _hashCode += new Long(getScopeGroupId()).hashCode();
         _hashCode += (isSignedIn() ? Boolean.TRUE : Boolean.FALSE).hashCode();
+        if (getThemeDisplay() != null) {
+            _hashCode += getThemeDisplay().hashCode();
+        }
+        if (getTimeZone() != null) {
+            _hashCode += getTimeZone().hashCode();
+        }
         if (getUserAgent() != null) {
             _hashCode += getUserAgent().hashCode();
         }
@@ -1458,6 +1754,12 @@ public class ServiceContext  implements java.io.Serializable {
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("failOnPortalException");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "failOnPortalException"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("formDate");
         elemField.setXmlName(new javax.xml.namespace.QName("", "formDate"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"));
@@ -1512,6 +1814,18 @@ public class ServiceContext  implements java.io.Serializable {
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("liferayPortletRequest");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "liferayPortletRequest"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "anyType"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("liferayPortletResponse");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "liferayPortletResponse"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "anyType"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("locale");
         elemField.setXmlName(new javax.xml.namespace.QName("", "locale"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "anyType"));
@@ -1521,6 +1835,24 @@ public class ServiceContext  implements java.io.Serializable {
         elemField.setFieldName("modifiedDate");
         elemField.setXmlName(new javax.xml.namespace.QName("", "modifiedDate"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("pathFriendlyURLPrivateGroup");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "pathFriendlyURLPrivateGroup"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("pathFriendlyURLPrivateUser");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "pathFriendlyURLPrivateUser"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("pathFriendlyURLPublic");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "pathFriendlyURLPublic"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
@@ -1572,9 +1904,21 @@ public class ServiceContext  implements java.io.Serializable {
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("response");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "response"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "anyType"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("rootPortletId");
         elemField.setXmlName(new javax.xml.namespace.QName("", "rootPortletId"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("scopeGroup");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "scopeGroup"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "anyType"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
@@ -1588,6 +1932,18 @@ public class ServiceContext  implements java.io.Serializable {
         elemField.setXmlName(new javax.xml.namespace.QName("", "signedIn"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("themeDisplay");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "themeDisplay"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://theme.portal.liferay.com", "ThemeDisplay"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("timeZone");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "timeZone"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "anyType"));
+        elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("userAgent");

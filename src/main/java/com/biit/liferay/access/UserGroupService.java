@@ -34,8 +34,7 @@ public class UserGroupService extends ServiceAccess {
 
 	@Override
 	public void connectToWebService(String loginUser, String password) throws ServiceException {
-		// Locate the Role service
-		System.out.println(AccessUtils.getLiferayUrl(loginUser, password, getServiceName()));
+		// Locate the RoleSoap service
 		UserGroupServiceSoapServiceLocator locatorGroup = new UserGroupServiceSoapServiceLocator();
 		setServiceSoap(locatorGroup.getPortal_UserGroupService(AccessUtils.getLiferayUrl(loginUser, password,
 				getServiceName())));
@@ -95,29 +94,29 @@ public class UserGroupService extends ServiceAccess {
 	}
 
 	/**
-	 * Get a list of groups where the user belongs to.
+	 * Get a list of groups where the UserSoap belongs to.
 	 * 
-	 * @param user
+	 * @param UserSoap
 	 * @return group information
 	 * @throws RemoteException
 	 *             if there is any communication problem.
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public List<UserGroup> getUserUserGroups(User user) throws RemoteException, NotConnectedToWebServiceException {
+	public List<UserGroup> getUserUserGroups(User UserSoap) throws RemoteException, NotConnectedToWebServiceException {
 		List<UserGroup> groups = new ArrayList<UserGroup>();
 
-		// Look up user in the pool.
-		if (user != null) {
-			List<UserGroup> usergroups = groupPool.getGroupByUser(user);
+		// Look up UserSoap in the pool.
+		if (UserSoap != null) {
+			List<UserGroup> usergroups = groupPool.getGroupByUser(UserSoap);
 			if (usergroups != null) {
 				return usergroups;
 			}
 			checkConnection();
-			UserGroup[] arrayOfGroups = ((UserGroupServiceSoap) getServiceSoap()).getUserUserGroups(user.getUserId());
+			UserGroup[] arrayOfGroups = ((UserGroupServiceSoap) getServiceSoap()).getUserUserGroups(UserSoap.getUserId());
 			for (int i = 0; i < arrayOfGroups.length; i++) {
 				groups.add(arrayOfGroups[i]);
 			}
-			groupPool.addUserGroups(user, groups);
+			groupPool.addUserGroups(UserSoap, groups);
 		}
 		return groups;
 	}

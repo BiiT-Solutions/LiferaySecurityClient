@@ -31,63 +31,63 @@ public abstract class AuthorizationService {
 		}
 	}
 
-	public boolean isAuthorizedActivity(User user, String activity) {
-		if (user != null) {
-			if (getUserActivitiesAllowed(user).contains(activity)) {
+	public boolean isAuthorizedActivity(User UserSoap, String activity) {
+		if (UserSoap != null) {
+			if (getUserActivitiesAllowed(UserSoap).contains(activity)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private List<String> getUserActivitiesAllowed(User user) {
+	private List<String> getUserActivitiesAllowed(User UserSoap) {
 		List<String> activities = new ArrayList<String>();
-		if (user != null) {
-			List<Role> roles = getUserRoles(user);
-			List<UserGroup> userGroups = getUserGroups(user);
+		if (UserSoap != null) {
+			List<Role> roles = getUserRoles(UserSoap);
+			List<UserGroup> userGroups = getUserGroups(UserSoap);
 
 			// Add roles obtained by group.
 			for (UserGroup group : userGroups) {
 				roles.addAll(getUserGroupRoles(group));
 			}
 
-			// Activities by role.
-			for (Role role : roles) {
-				List<String> roleActivities = getRoleActivities(role);
+			// Activities by RoleSoap.
+			for (Role RoleSoap : roles) {
+				List<String> roleActivities = getRoleActivities(RoleSoap);
 				activities.addAll(roleActivities);
 			}
 		}
 		return activities;
 	}
 
-	public List<Role> getUserRoles(User user) {
-		if (user != null) {
+	public List<Role> getUserRoles(User UserSoap) {
+		if (UserSoap != null) {
 			try {
-				return RoleService.getInstance().getUserRoles(user);
+				return RoleService.getInstance().getUserRoles(UserSoap);
 			} catch (RemoteException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the user's roles from '" + user.getEmailAddress() + "'");
+						"Error retrieving the UserSoap's roles from '" + UserSoap.getEmailAddress() + "'");
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (NotConnectedToWebServiceException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the user's roles from '" + user.getEmailAddress() + "'");
+						"Error retrieving the UserSoap's roles from '" + UserSoap.getEmailAddress() + "'");
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
 		return new ArrayList<Role>();
 	}
 
-	public List<UserGroup> getUserGroups(User user) {
-		if (user != null) {
+	public List<UserGroup> getUserGroups(User UserSoap) {
+		if (UserSoap != null) {
 			try {
-				return UserGroupService.getInstance().getUserUserGroups(user);
+				return UserGroupService.getInstance().getUserUserGroups(UserSoap);
 			} catch (RemoteException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the user's groups from " + user.getEmailAddress() + "'");
+						"Error retrieving the UserSoap's groups from " + UserSoap.getEmailAddress() + "'");
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (NotConnectedToWebServiceException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the user's groups from " + user.getEmailAddress() + "'");
+						"Error retrieving the UserSoap's groups from " + UserSoap.getEmailAddress() + "'");
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
@@ -111,5 +111,5 @@ public abstract class AuthorizationService {
 		return new ArrayList<Role>();
 	}
 
-	public abstract List<String> getRoleActivities(Role role);
+	public abstract List<String> getRoleActivities(Role RoleSoap);
 }

@@ -22,7 +22,7 @@ public class GroupServiceSoapServiceLocator extends org.apache.axis.client.Servi
     }
 
     // Use to get a proxy class for Portal_GroupService
-    private java.lang.String Portal_GroupService_address = "http://localhost:8080/lportal-6.1.1/api/axis/Portal_GroupService";
+    private java.lang.String Portal_GroupService_address = "http://localhost:8080/api/axis/Portal_GroupService";
 
     public java.lang.String getPortal_GroupServiceAddress() {
         return Portal_GroupService_address;

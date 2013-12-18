@@ -34,6 +34,8 @@ public class Phone  implements java.io.Serializable {
 
     private java.lang.String userName;
 
+    private java.lang.String uuid;
+
     public Phone() {
     }
 
@@ -50,7 +52,8 @@ public class Phone  implements java.io.Serializable {
            long primaryKey,
            int typeId,
            long userId,
-           java.lang.String userName) {
+           java.lang.String userName,
+           java.lang.String uuid) {
            this.classNameId = classNameId;
            this.classPK = classPK;
            this.companyId = companyId;
@@ -64,6 +67,7 @@ public class Phone  implements java.io.Serializable {
            this.typeId = typeId;
            this.userId = userId;
            this.userName = userName;
+           this.uuid = uuid;
     }
 
 
@@ -326,6 +330,26 @@ public class Phone  implements java.io.Serializable {
         this.userName = userName;
     }
 
+
+    /**
+     * Gets the uuid value for this PhoneSoap.
+     * 
+     * @return uuid
+     */
+    public java.lang.String getUuid() {
+        return uuid;
+    }
+
+
+    /**
+     * Sets the uuid value for this PhoneSoap.
+     * 
+     * @param uuid
+     */
+    public void setUuid(java.lang.String uuid) {
+        this.uuid = uuid;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof Phone)) return false;
@@ -360,7 +384,10 @@ public class Phone  implements java.io.Serializable {
             this.userId == other.getUserId() &&
             ((this.userName==null && other.getUserName()==null) || 
              (this.userName!=null &&
-              this.userName.equals(other.getUserName())));
+              this.userName.equals(other.getUserName()))) &&
+            ((this.uuid==null && other.getUuid()==null) || 
+             (this.uuid!=null &&
+              this.uuid.equals(other.getUuid())));
         __equalsCalc = null;
         return _equals;
     }
@@ -394,6 +421,9 @@ public class Phone  implements java.io.Serializable {
         _hashCode += new Long(getUserId()).hashCode();
         if (getUserName() != null) {
             _hashCode += getUserName().hashCode();
+        }
+        if (getUuid() != null) {
+            _hashCode += getUuid().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -480,6 +510,12 @@ public class Phone  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("userName");
         elemField.setXmlName(new javax.xml.namespace.QName("", "userName"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("uuid");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "uuid"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);

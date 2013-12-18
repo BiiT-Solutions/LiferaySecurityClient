@@ -14,6 +14,7 @@ import com.biit.liferay.configuration.ConfigurationReader;
 import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
 import com.biit.liferay.security.exceptions.LiferayConnectionException;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 
@@ -45,7 +46,7 @@ public class AuthenticationService {
 	}
 
 	/**
-	 * Obtains a liferay user by the mail and the password.
+	 * Obtains a liferay UserSoap by the mail and the password.
 	 * 
 	 * @param userMail
 	 * @param password
@@ -56,23 +57,23 @@ public class AuthenticationService {
 	 * @throws NotConnectedToWebServiceException
 	 * @throws LiferayConnectionException
 	 */
-	public User authenticate(String userMail, String password) throws InvalidCredentialsException, ServiceException,
-			RemoteException, NotConnectedToWebServiceException, LiferayConnectionException {
+	public User authenticate(String userMail, String password, Company company) throws InvalidCredentialsException,
+			ServiceException, RemoteException, NotConnectedToWebServiceException, LiferayConnectionException {
 		// Login fails if either the username or password is null
 		if (userMail == null || password == null) {
 			throw new InvalidCredentialsException("No fields filled up.");
 		}
 
-		User user = null;
+		User UserSoap = null;
 		try {
-			user = UserService.getInstance().getUserByEmailAddress(
+			UserSoap = UserService.getInstance().getUserByEmailAddress(
 					CompanyService.getInstance().getCompanyByVirtualHost(
 							ConfigurationReader.getInstance().getVirtualHost()), userMail);
 		} catch (RemoteException e) {
-			if (e.getLocalizedMessage().contains("No User exists with the key")) {
-				LiferayClientLogger.warning(this.getClass().getName(),
-						"Attempt to loggin failed with user '" + userMail + "'.");
-				throw new InvalidCredentialsException("User does not exist.");
+			if (e.getLocalizedMessage().contains("No UserSoap exists with the key")) {
+				LiferayClientLogger.warning(this.getClass().getName(), "Attempt to loggin failed with UserSoap '"
+						+ userMail + "'.");
+				throw new InvalidCredentialsException("UserSoap does not exist.");
 			} else if (e.getLocalizedMessage().contains("Connection refused: connect")) {
 				throw new LiferayConnectionException("Error connecting to Liferay service with '"
 						+ ConfigurationReader.getInstance().getUser() + "@"
@@ -85,16 +86,16 @@ public class AuthenticationService {
 			}
 		}
 
-		BasicEncryptionMethod.getInstance().validatePassword(password, user.getPassword());
-		LiferayClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'");
-		return user;
+		BasicEncryptionMethod.getInstance().validatePassword(password, UserSoap.getPassword(), company);
+		LiferayClientLogger.info(this.getClass().getName(), "Access granted to UserSoap '" + userMail + "'");
+		return UserSoap;
 	}
 
-	public boolean isInGroup(UserGroup group, User user) throws RemoteException, NotConnectedToWebServiceException {
-		if (group != null && user != null) {
-			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(user);
-			for (UserGroup userGroup : userGroups) {
-				if (userGroup.getUserGroupId() == group.getUserGroupId()) {
+	public boolean isInGroup(UserGroup group, User UserSoap) throws RemoteException, NotConnectedToWebServiceException {
+		if (group != null && UserSoap != null) {
+			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(UserSoap);
+			for (UserGroup UserGroupSoap : userGroups) {
+				if (UserGroupSoap.getUserGroupId() == group.getUserGroupId()) {
 					return true;
 				}
 			}
@@ -103,16 +104,16 @@ public class AuthenticationService {
 	}
 
 	/**
-	 * Get first group of user.
+	 * Get first group of UserSoap.
 	 * 
-	 * @param user
+	 * @param UserSoap
 	 * @return
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public UserGroup getDefaultGroup(User user) throws RemoteException, NotConnectedToWebServiceException {
-		if (user != null) {
-			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(user);
+	public UserGroup getDefaultGroup(User UserSoap) throws RemoteException, NotConnectedToWebServiceException {
+		if (UserSoap != null) {
+			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(UserSoap);
 			if (userGroups != null && userGroups.size() > 0) {
 				return userGroups.get(0);
 			}
@@ -125,8 +126,8 @@ public class AuthenticationService {
 		return UserService.getInstance().getUserById(userId);
 	}
 
-	public void updatePassword(User user, String plainTextPassword) throws RemoteException,
+	public void updatePassword(User UserSoap, String plainTextPassword, Company company) throws RemoteException,
 			NotConnectedToWebServiceException {
-		UserService.getInstance().updatePassword(user, plainTextPassword);
+		UserService.getInstance().updatePassword(UserSoap, plainTextPassword, company);
 	}
 }

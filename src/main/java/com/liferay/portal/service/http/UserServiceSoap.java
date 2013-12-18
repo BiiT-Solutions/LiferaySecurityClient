@@ -23,7 +23,6 @@ public interface UserServiceSoap extends java.rmi.Remote {
     public void deleteUser(long userId) throws java.rmi.RemoteException;
     public int getCompanyUsersCount(long companyId) throws java.rmi.RemoteException;
     public com.liferay.portal.model.User[] getCompanyUsers(long companyId, int start, int end) throws java.rmi.RemoteException;
-    public long getDefaultUserId(long companyId) throws java.rmi.RemoteException;
     public long[] getGroupUserIds(long groupId) throws java.rmi.RemoteException;
     public com.liferay.portal.model.User[] getGroupUsers(long groupId) throws java.rmi.RemoteException;
     public long[] getOrganizationUserIds(long organizationId) throws java.rmi.RemoteException;

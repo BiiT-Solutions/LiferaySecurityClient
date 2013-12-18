@@ -134,12 +134,6 @@ public class UserServiceSoapProxy implements com.liferay.portal.service.http.Use
     return userServiceSoap.getCompanyUsers(companyId, start, end);
   }
   
-  public long getDefaultUserId(long companyId) throws java.rmi.RemoteException{
-    if (userServiceSoap == null)
-      _initUserServiceSoapProxy();
-    return userServiceSoap.getDefaultUserId(companyId);
-  }
-  
   public long[] getGroupUserIds(long groupId) throws java.rmi.RemoteException{
     if (userServiceSoap == null)
       _initUserServiceSoapProxy();

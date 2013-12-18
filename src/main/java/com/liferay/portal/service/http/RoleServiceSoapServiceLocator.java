@@ -22,7 +22,7 @@ public class RoleServiceSoapServiceLocator extends org.apache.axis.client.Servic
     }
 
     // Use to get a proxy class for Portal_RoleService
-    private java.lang.String Portal_RoleService_address = "http://localhost:8080/lportal-6.1.1/api/axis/Portal_RoleService";
+    private java.lang.String Portal_RoleService_address = "http://localhost:8080/api/axis/Portal_RoleService";
 
     public java.lang.String getPortal_RoleServiceAddress() {
         return Portal_RoleService_address;

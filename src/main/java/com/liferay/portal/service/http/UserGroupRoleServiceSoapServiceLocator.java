@@ -22,7 +22,7 @@ public class UserGroupRoleServiceSoapServiceLocator extends org.apache.axis.clie
     }
 
     // Use to get a proxy class for Portal_UserGroupRoleService
-    private java.lang.String Portal_UserGroupRoleService_address = "http://localhost:8080/lportal-6.1.1/api/axis/Portal_UserGroupRoleService";
+    private java.lang.String Portal_UserGroupRoleService_address = "http://localhost:8080/api/axis/Portal_UserGroupRoleService";
 
     public java.lang.String getPortal_UserGroupRoleServiceAddress() {
         return Portal_UserGroupRoleService_address;

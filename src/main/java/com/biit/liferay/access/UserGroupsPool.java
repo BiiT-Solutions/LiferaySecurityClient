@@ -13,14 +13,14 @@ public class UserGroupsPool {
 	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
 	private Hashtable<Long, Long> userTime; // group name -> time.
-	private Hashtable<Long, List<UserGroup>> groupsByUser; // user id -> user.
+	private Hashtable<Long, List<UserGroup>> groupsByUser; // UserSoap id -> UserSoap.
 
 	public UserGroupsPool() {
 		userTime = new Hashtable<Long, Long>();
 		groupsByUser = new Hashtable<Long, List<UserGroup>>();
 	}
 
-	public List<UserGroup> getGroupByUser(User user) {
+	public List<UserGroup> getGroupByUser(User UserSoap) {
 		long now = System.currentTimeMillis();
 		Long userId = null;
 		if (userTime.size() > 0) {
@@ -32,7 +32,7 @@ public class UserGroupsPool {
 					removeUserGroups(userId);
 					userId = null;
 				} else {
-					if (user.getUserId() == userId) {
+					if (UserSoap.getUserId() == userId) {
 						return groupsByUser.get(userId);
 					}
 				}
@@ -46,19 +46,19 @@ public class UserGroupsPool {
 		groupsByUser.remove(userId);
 	}
 
-	public void removeUserGroups(User user) {
-		if (user != null) {
-			removeUserGroups(user.getUserId());
+	public void removeUserGroups(User UserSoap) {
+		if (UserSoap != null) {
+			removeUserGroups(UserSoap.getUserId());
 		}
 	}
 
-	public void addUserGroups(User user, List<UserGroup> groups) {
-		if (user != null && groups != null && groups.size() > 0) {
-			userTime.put(user.getUserId(), System.currentTimeMillis());
-			List<UserGroup> userGroups = groupsByUser.get(user.getUserId());
+	public void addUserGroups(User UserSoap, List<UserGroup> groups) {
+		if (UserSoap != null && groups != null && groups.size() > 0) {
+			userTime.put(UserSoap.getUserId(), System.currentTimeMillis());
+			List<UserGroup> userGroups = groupsByUser.get(UserSoap.getUserId());
 			if (userGroups == null) {
 				userGroups = new ArrayList<UserGroup>();
-				groupsByUser.put(user.getUserId(), userGroups);
+				groupsByUser.put(UserSoap.getUserId(), userGroups);
 			}
 
 			for (UserGroup group : groups) {

@@ -30,6 +30,8 @@ public class Website  implements java.io.Serializable {
 
     private java.lang.String userName;
 
+    private java.lang.String uuid;
+
     private long websiteId;
 
     public Website() {
@@ -47,6 +49,7 @@ public class Website  implements java.io.Serializable {
            java.lang.String url,
            long userId,
            java.lang.String userName,
+           java.lang.String uuid,
            long websiteId) {
            this.classNameId = classNameId;
            this.classPK = classPK;
@@ -59,6 +62,7 @@ public class Website  implements java.io.Serializable {
            this.url = url;
            this.userId = userId;
            this.userName = userName;
+           this.uuid = uuid;
            this.websiteId = websiteId;
     }
 
@@ -284,6 +288,26 @@ public class Website  implements java.io.Serializable {
 
 
     /**
+     * Gets the uuid value for this WebsiteSoap.
+     * 
+     * @return uuid
+     */
+    public java.lang.String getUuid() {
+        return uuid;
+    }
+
+
+    /**
+     * Sets the uuid value for this WebsiteSoap.
+     * 
+     * @param uuid
+     */
+    public void setUuid(java.lang.String uuid) {
+        this.uuid = uuid;
+    }
+
+
+    /**
      * Gets the websiteId value for this WebsiteSoap.
      * 
      * @return websiteId
@@ -333,6 +357,9 @@ public class Website  implements java.io.Serializable {
             ((this.userName==null && other.getUserName()==null) || 
              (this.userName!=null &&
               this.userName.equals(other.getUserName()))) &&
+            ((this.uuid==null && other.getUuid()==null) || 
+             (this.uuid!=null &&
+              this.uuid.equals(other.getUuid()))) &&
             this.websiteId == other.getWebsiteId();
         __equalsCalc = null;
         return _equals;
@@ -363,6 +390,9 @@ public class Website  implements java.io.Serializable {
         _hashCode += new Long(getUserId()).hashCode();
         if (getUserName() != null) {
             _hashCode += getUserName().hashCode();
+        }
+        if (getUuid() != null) {
+            _hashCode += getUuid().hashCode();
         }
         _hashCode += new Long(getWebsiteId()).hashCode();
         __hashCodeCalc = false;
@@ -438,6 +468,12 @@ public class Website  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("userName");
         elemField.setXmlName(new javax.xml.namespace.QName("", "userName"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("uuid");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "uuid"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);

@@ -7,12 +7,16 @@
 
 package com.liferay.portal.model;
 
-public class OrganizationSoap  implements java.io.Serializable {
+public class Organization  implements java.io.Serializable {
     private java.lang.String comments;
 
     private long companyId;
 
     private long countryId;
+
+    private java.util.Calendar createDate;
+
+    private java.util.Calendar modifiedDate;
 
     private java.lang.String name;
 
@@ -32,13 +36,21 @@ public class OrganizationSoap  implements java.io.Serializable {
 
     private java.lang.String type;
 
-    public OrganizationSoap() {
+    private long userId;
+
+    private java.lang.String userName;
+
+    private java.lang.String uuid;
+
+    public Organization() {
     }
 
-    public OrganizationSoap(
+    public Organization(
            java.lang.String comments,
            long companyId,
            long countryId,
+           java.util.Calendar createDate,
+           java.util.Calendar modifiedDate,
            java.lang.String name,
            long organizationId,
            long parentOrganizationId,
@@ -47,10 +59,15 @@ public class OrganizationSoap  implements java.io.Serializable {
            long regionId,
            int statusId,
            java.lang.String treePath,
-           java.lang.String type) {
+           java.lang.String type,
+           long userId,
+           java.lang.String userName,
+           java.lang.String uuid) {
            this.comments = comments;
            this.companyId = companyId;
            this.countryId = countryId;
+           this.createDate = createDate;
+           this.modifiedDate = modifiedDate;
            this.name = name;
            this.organizationId = organizationId;
            this.parentOrganizationId = parentOrganizationId;
@@ -60,6 +77,9 @@ public class OrganizationSoap  implements java.io.Serializable {
            this.statusId = statusId;
            this.treePath = treePath;
            this.type = type;
+           this.userId = userId;
+           this.userName = userName;
+           this.uuid = uuid;
     }
 
 
@@ -120,6 +140,46 @@ public class OrganizationSoap  implements java.io.Serializable {
      */
     public void setCountryId(long countryId) {
         this.countryId = countryId;
+    }
+
+
+    /**
+     * Gets the createDate value for this OrganizationSoap.
+     * 
+     * @return createDate
+     */
+    public java.util.Calendar getCreateDate() {
+        return createDate;
+    }
+
+
+    /**
+     * Sets the createDate value for this OrganizationSoap.
+     * 
+     * @param createDate
+     */
+    public void setCreateDate(java.util.Calendar createDate) {
+        this.createDate = createDate;
+    }
+
+
+    /**
+     * Gets the modifiedDate value for this OrganizationSoap.
+     * 
+     * @return modifiedDate
+     */
+    public java.util.Calendar getModifiedDate() {
+        return modifiedDate;
+    }
+
+
+    /**
+     * Sets the modifiedDate value for this OrganizationSoap.
+     * 
+     * @param modifiedDate
+     */
+    public void setModifiedDate(java.util.Calendar modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
 
@@ -302,10 +362,70 @@ public class OrganizationSoap  implements java.io.Serializable {
         this.type = type;
     }
 
+
+    /**
+     * Gets the userId value for this OrganizationSoap.
+     * 
+     * @return userId
+     */
+    public long getUserId() {
+        return userId;
+    }
+
+
+    /**
+     * Sets the userId value for this OrganizationSoap.
+     * 
+     * @param userId
+     */
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+
+    /**
+     * Gets the userName value for this OrganizationSoap.
+     * 
+     * @return userName
+     */
+    public java.lang.String getUserName() {
+        return userName;
+    }
+
+
+    /**
+     * Sets the userName value for this OrganizationSoap.
+     * 
+     * @param userName
+     */
+    public void setUserName(java.lang.String userName) {
+        this.userName = userName;
+    }
+
+
+    /**
+     * Gets the uuid value for this OrganizationSoap.
+     * 
+     * @return uuid
+     */
+    public java.lang.String getUuid() {
+        return uuid;
+    }
+
+
+    /**
+     * Sets the uuid value for this OrganizationSoap.
+     * 
+     * @param uuid
+     */
+    public void setUuid(java.lang.String uuid) {
+        this.uuid = uuid;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof OrganizationSoap)) return false;
-        OrganizationSoap other = (OrganizationSoap) obj;
+        if (!(obj instanceof Organization)) return false;
+        Organization other = (Organization) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -319,6 +439,12 @@ public class OrganizationSoap  implements java.io.Serializable {
               this.comments.equals(other.getComments()))) &&
             this.companyId == other.getCompanyId() &&
             this.countryId == other.getCountryId() &&
+            ((this.createDate==null && other.getCreateDate()==null) || 
+             (this.createDate!=null &&
+              this.createDate.equals(other.getCreateDate()))) &&
+            ((this.modifiedDate==null && other.getModifiedDate()==null) || 
+             (this.modifiedDate!=null &&
+              this.modifiedDate.equals(other.getModifiedDate()))) &&
             ((this.name==null && other.getName()==null) || 
              (this.name!=null &&
               this.name.equals(other.getName()))) &&
@@ -333,7 +459,14 @@ public class OrganizationSoap  implements java.io.Serializable {
               this.treePath.equals(other.getTreePath()))) &&
             ((this.type==null && other.getType()==null) || 
              (this.type!=null &&
-              this.type.equals(other.getType())));
+              this.type.equals(other.getType()))) &&
+            this.userId == other.getUserId() &&
+            ((this.userName==null && other.getUserName()==null) || 
+             (this.userName!=null &&
+              this.userName.equals(other.getUserName()))) &&
+            ((this.uuid==null && other.getUuid()==null) || 
+             (this.uuid!=null &&
+              this.uuid.equals(other.getUuid())));
         __equalsCalc = null;
         return _equals;
     }
@@ -350,6 +483,12 @@ public class OrganizationSoap  implements java.io.Serializable {
         }
         _hashCode += new Long(getCompanyId()).hashCode();
         _hashCode += new Long(getCountryId()).hashCode();
+        if (getCreateDate() != null) {
+            _hashCode += getCreateDate().hashCode();
+        }
+        if (getModifiedDate() != null) {
+            _hashCode += getModifiedDate().hashCode();
+        }
         if (getName() != null) {
             _hashCode += getName().hashCode();
         }
@@ -365,13 +504,20 @@ public class OrganizationSoap  implements java.io.Serializable {
         if (getType() != null) {
             _hashCode += getType().hashCode();
         }
+        _hashCode += new Long(getUserId()).hashCode();
+        if (getUserName() != null) {
+            _hashCode += getUserName().hashCode();
+        }
+        if (getUuid() != null) {
+            _hashCode += getUuid().hashCode();
+        }
         __hashCodeCalc = false;
         return _hashCode;
     }
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(OrganizationSoap.class, true);
+        new org.apache.axis.description.TypeDesc(Organization.class, true);
 
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://model.portal.liferay.com", "OrganizationSoap"));
@@ -392,6 +538,18 @@ public class OrganizationSoap  implements java.io.Serializable {
         elemField.setXmlName(new javax.xml.namespace.QName("", "countryId"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
         elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("createDate");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "createDate"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("modifiedDate");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "modifiedDate"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"));
+        elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("name");
@@ -444,6 +602,24 @@ public class OrganizationSoap  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("type");
         elemField.setXmlName(new javax.xml.namespace.QName("", "type"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("userId");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "userId"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("userName");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "userName"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("uuid");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "uuid"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);

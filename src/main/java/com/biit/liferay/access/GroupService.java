@@ -29,7 +29,7 @@ public class GroupService extends ServiceAccess {
 
 	@Override
 	public void connectToWebService(String loginUser, String password) throws ServiceException {
-		// Locate the Role service
+		// Locate the RoleSoap service
 		GroupServiceSoapServiceLocator locatorRole = new GroupServiceSoapServiceLocator();
 		setServiceSoap(locatorRole.getPortal_GroupService(AccessUtils.getLiferayUrl(loginUser, password,
 				getServiceName())));
@@ -53,7 +53,7 @@ public class GroupService extends ServiceAccess {
 	public UserGroup getUserGroupById(long groupId) throws RemoteException, NotConnectedToWebServiceException,
 			UserGroupDoesNotExistException {
 		if (groupId >= 0) {
-			// Look up user in the pool.
+			// Look up UserSoap in the pool.
 			UserGroup group = groupPool.getGroupById(groupId);
 			if (group != null) {
 				return group;
@@ -78,36 +78,36 @@ public class GroupService extends ServiceAccess {
 	}
 
 	/**
-	 * Add a role to a list of groups. For testing only.
+	 * Add a RoleSoap to a list of groups. For testing only.
 	 * 
-	 * @param role
+	 * @param RoleSoap
 	 * @param userGroups
 	 * @throws NotConnectedToWebServiceException
 	 * @throws RemoteException
 	 */
-	public void addRoleGroups(Role role, List<UserGroup> userGroups) throws NotConnectedToWebServiceException,
+	public void addRoleGroups(Role RoleSoap, List<UserGroup> userGroups) throws NotConnectedToWebServiceException,
 			RemoteException {
-		if (userGroups != null && role != null && userGroups.size() > 0) {
+		if (userGroups != null && RoleSoap != null && userGroups.size() > 0) {
 			checkConnection();
 			long userGroupsIds[] = new long[userGroups.size()];
 			for (int i = 0; i < userGroups.size(); i++) {
 				userGroupsIds[i] = userGroups.get(i).getUserGroupId();
 			}
-			((GroupServiceSoap) getServiceSoap()).addRoleGroups(role.getRoleId(), userGroupsIds);
+			((GroupServiceSoap) getServiceSoap()).addRoleGroups(RoleSoap.getRoleId(), userGroupsIds);
 		}
 	}
 
 	/**
-	 * Add a role to a group. For testing only.
+	 * Add a RoleSoap to a group. For testing only.
 	 * 
-	 * @param role
-	 * @param userGroup
+	 * @param RoleSoap
+	 * @param UserGroupSoap
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public void addRoleGroup(Role role, UserGroup userGroup) throws RemoteException, NotConnectedToWebServiceException {
+	public void addRoleGroup(Role RoleSoap, UserGroup UserGroupSoap) throws RemoteException, NotConnectedToWebServiceException {
 		List<UserGroup> groups = new ArrayList<UserGroup>();
-		groups.add(userGroup);
-		addRoleGroups(role, groups);
+		groups.add(UserGroupSoap);
+		addRoleGroups(RoleSoap, groups);
 	}
 }

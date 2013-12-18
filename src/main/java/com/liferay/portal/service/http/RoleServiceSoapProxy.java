@@ -50,6 +50,12 @@ public class RoleServiceSoapProxy implements com.liferay.portal.service.http.Rol
     return roleServiceSoap.addRole(name, titleMapLanguageIds, titleMapValues, descriptionMapLanguageIds, descriptionMapValues, type);
   }
   
+  public com.liferay.portal.model.Role addRole(java.lang.String className, long classPK, java.lang.String name, java.lang.String[] titleMapLanguageIds, java.lang.String[] titleMapValues, java.lang.String[] descriptionMapLanguageIds, java.lang.String[] descriptionMapValues, int type, java.lang.String subtype, com.liferay.portal.service.ServiceContext serviceContext) throws java.rmi.RemoteException{
+    if (roleServiceSoap == null)
+      _initRoleServiceSoapProxy();
+    return roleServiceSoap.addRole(className, classPK, name, titleMapLanguageIds, titleMapValues, descriptionMapLanguageIds, descriptionMapValues, type, subtype, serviceContext);
+  }
+  
   public void addUserRoles(long userId, long[] roleIds) throws java.rmi.RemoteException{
     if (roleServiceSoap == null)
       _initRoleServiceSoapProxy();
@@ -92,7 +98,7 @@ public class RoleServiceSoapProxy implements com.liferay.portal.service.http.Rol
     return roleServiceSoap.getUserGroupRoles(userId, groupId);
   }
   
-  public com.liferay.portal.model.Role[] getUserRelatedRoles(long userId, com.liferay.portal.model.GroupSoap[] groups) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.Role[] getUserRelatedRoles(long userId, com.liferay.portal.model.Group[] groups) throws java.rmi.RemoteException{
     if (roleServiceSoap == null)
       _initRoleServiceSoapProxy();
     return roleServiceSoap.getUserRelatedRoles(userId, groups);
@@ -122,10 +128,10 @@ public class RoleServiceSoapProxy implements com.liferay.portal.service.http.Rol
     roleServiceSoap.unsetUserRoles(userId, roleIds);
   }
   
-  public com.liferay.portal.model.Role updateRole(long roleId, java.lang.String name, java.lang.String[] titleMapLanguageIds, java.lang.String[] titleMapValues, java.lang.String[] descriptionMapLanguageIds, java.lang.String[] descriptionMapValues, java.lang.String subtype) throws java.rmi.RemoteException{
+  public com.liferay.portal.model.Role updateRole(long roleId, java.lang.String name, java.lang.String[] titleMapLanguageIds, java.lang.String[] titleMapValues, java.lang.String[] descriptionMapLanguageIds, java.lang.String[] descriptionMapValues, java.lang.String subtype, com.liferay.portal.service.ServiceContext serviceContext) throws java.rmi.RemoteException{
     if (roleServiceSoap == null)
       _initRoleServiceSoapProxy();
-    return roleServiceSoap.updateRole(roleId, name, titleMapLanguageIds, titleMapValues, descriptionMapLanguageIds, descriptionMapValues, subtype);
+    return roleServiceSoap.updateRole(roleId, name, titleMapLanguageIds, titleMapValues, descriptionMapLanguageIds, descriptionMapValues, subtype, serviceContext);
   }
   
   

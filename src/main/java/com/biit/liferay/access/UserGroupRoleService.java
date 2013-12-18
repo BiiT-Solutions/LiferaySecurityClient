@@ -27,7 +27,7 @@ public class UserGroupRoleService extends ServiceAccess {
 
 	@Override
 	public void connectToWebService(String loginUser, String password) throws ServiceException {
-		// Locate the Role service
+		// Locate the RoleSoap service
 		UserGroupRoleServiceSoapServiceLocator locatorRole = new UserGroupRoleServiceSoapServiceLocator();
 		setServiceSoap(locatorRole.getPortal_UserGroupRoleService(AccessUtils.getLiferayUrl(loginUser, password,
 				getServiceName())));
@@ -39,39 +39,39 @@ public class UserGroupRoleService extends ServiceAccess {
 	}
 
 	/**
-	 * Add a list of roles to a user. For testing use only.
+	 * Add a list of roles to a UserSoap. For testing use only.
 	 * 
-	 * @param user
+	 * @param UserSoap
 	 * @param roles
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public void addUserGroupRoles(User user, UserGroup usergroup, List<Role> roles) throws RemoteException,
+	public void addUserGroupRoles(User UserSoap, UserGroup UserGroupSoap, List<Role> roles) throws RemoteException,
 			NotConnectedToWebServiceException {
-		if (usergroup != null && roles != null && roles.size() > 0) {
+		if (UserGroupSoap != null && roles != null && roles.size() > 0) {
 			checkConnection();
-			Long rolesIds[] = new Long[roles.size()];
+			long rolesIds[] = new long[roles.size()];
 			for (int i = 0; i < roles.size(); i++) {
 				rolesIds[i] = roles.get(i).getRoleId();
 			}
-			((UserGroupRoleServiceSoap) getServiceSoap()).addUserGroupRoles(user.getUserId(),
-					usergroup.getUserGroupId(), rolesIds);
+			((UserGroupRoleServiceSoap) getServiceSoap()).addUserGroupRoles(UserSoap.getUserId(),
+					UserGroupSoap.getUserGroupId(), rolesIds);
 		}
 	}
 
 	/**
-	 * Add a role to a user. For testing use only.
+	 * Add a RoleSoap to a UserSoap. For testing use only.
 	 * 
-	 * @param user
-	 * @param role
+	 * @param UserSoap
+	 * @param RoleSoap
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public void addUserGroupRole(User user, UserGroup usergroup, Role role) throws RemoteException,
+	public void addUserGroupRole(User UserSoap, UserGroup UserGroupSoap, Role RoleSoap) throws RemoteException,
 			NotConnectedToWebServiceException {
 		List<Role> roles = new ArrayList<Role>();
-		roles.add(role);
-		addUserGroupRoles(user, usergroup, roles);
+		roles.add(RoleSoap);
+		addUserGroupRoles(UserSoap, UserGroupSoap, roles);
 	}
 
 }

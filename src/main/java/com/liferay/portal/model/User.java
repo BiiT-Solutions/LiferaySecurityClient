@@ -48,6 +48,8 @@ public class User  implements java.io.Serializable {
 
     private java.lang.String lastName;
 
+    private long ldapServerId;
+
     private boolean lockout;
 
     private java.util.Calendar lockoutDate;
@@ -112,6 +114,7 @@ public class User  implements java.io.Serializable {
            java.util.Calendar lastLoginDate,
            java.lang.String lastLoginIP,
            java.lang.String lastName,
+           long ldapServerId,
            boolean lockout,
            java.util.Calendar lockoutDate,
            java.util.Calendar loginDate,
@@ -152,6 +155,7 @@ public class User  implements java.io.Serializable {
            this.lastLoginDate = lastLoginDate;
            this.lastLoginIP = lastLoginIP;
            this.lastName = lastName;
+           this.ldapServerId = ldapServerId;
            this.lockout = lockout;
            this.lockoutDate = lockoutDate;
            this.loginDate = loginDate;
@@ -572,6 +576,26 @@ public class User  implements java.io.Serializable {
      */
     public void setLastName(java.lang.String lastName) {
         this.lastName = lastName;
+    }
+
+
+    /**
+     * Gets the ldapServerId value for this UserSoap.
+     * 
+     * @return ldapServerId
+     */
+    public long getLdapServerId() {
+        return ldapServerId;
+    }
+
+
+    /**
+     * Sets the ldapServerId value for this UserSoap.
+     * 
+     * @param ldapServerId
+     */
+    public void setLdapServerId(long ldapServerId) {
+        this.ldapServerId = ldapServerId;
     }
 
 
@@ -1030,6 +1054,7 @@ public class User  implements java.io.Serializable {
             ((this.lastName==null && other.getLastName()==null) || 
              (this.lastName!=null &&
               this.lastName.equals(other.getLastName()))) &&
+            this.ldapServerId == other.getLdapServerId() &&
             this.lockout == other.isLockout() &&
             ((this.lockoutDate==null && other.getLockoutDate()==null) || 
              (this.lockoutDate!=null &&
@@ -1131,6 +1156,7 @@ public class User  implements java.io.Serializable {
         if (getLastName() != null) {
             _hashCode += getLastName().hashCode();
         }
+        _hashCode += new Long(getLdapServerId()).hashCode();
         _hashCode += (isLockout() ? Boolean.TRUE : Boolean.FALSE).hashCode();
         if (getLockoutDate() != null) {
             _hashCode += getLockoutDate().hashCode();
@@ -1306,6 +1332,12 @@ public class User  implements java.io.Serializable {
         elemField.setXmlName(new javax.xml.namespace.QName("", "lastName"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
         elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("ldapServerId");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "ldapServerId"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
+        elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("lockout");
