@@ -225,7 +225,7 @@ public class UserService extends ServiceAccess {
 	 * @throws RemoteException
 	 * @throws PasswordEncryptorException
 	 */
-	public void updatePassword(User UserSoap, String plainTextPassword, Company company)
+	public void updatePassword(User UserSoap, String plainTextPassword)
 			throws NotConnectedToWebServiceException, RemoteException, PasswordEncryptorException {
 		checkConnection();
 		((UserServiceSoap) getServiceSoap()).updatePassword(UserSoap.getUserId(), plainTextPassword, plainTextPassword,

@@ -15,7 +15,6 @@ import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
 import com.biit.liferay.security.exceptions.LiferayConnectionException;
 import com.biit.liferay.security.exceptions.PasswordEncryptorException;
-import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 
@@ -88,7 +87,8 @@ public class AuthenticationService {
 			}
 		}
 
-		if (ConfigurationReader.getInstance().getPasswordEncryptationAlgorithm().equals(PasswordEncryptationAlgorithmType.PBKDF2)) {
+		if (ConfigurationReader.getInstance().getPasswordEncryptationAlgorithm()
+				.equals(PasswordEncryptationAlgorithmType.PBKDF2)) {
 			new PBKDF2PasswordEncryptor().validate(password, UserSoap.getPassword());
 		} else {
 			BasicEncryptionMethod.getInstance().validate(password, UserSoap.getPassword());
@@ -133,8 +133,8 @@ public class AuthenticationService {
 		return UserService.getInstance().getUserById(userId);
 	}
 
-	public void updatePassword(User UserSoap, String plainTextPassword, Company company) throws RemoteException,
+	public void updatePassword(User UserSoap, String plainTextPassword) throws RemoteException,
 			NotConnectedToWebServiceException, PasswordEncryptorException {
-		UserService.getInstance().updatePassword(UserSoap, plainTextPassword, company);
+		UserService.getInstance().updatePassword(UserSoap, plainTextPassword);
 	}
 }
