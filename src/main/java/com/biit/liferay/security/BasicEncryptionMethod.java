@@ -7,8 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.axis.encoding.Base64;
 
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
-import com.biit.liferay.security.exceptions.PwdEncryptorException;
-import com.liferay.portal.model.Company;
 
 public class BasicEncryptionMethod implements EncryptionMethod {
 	private static final String DEFAULT_ALGORITHM = "SHA";
@@ -24,11 +22,11 @@ public class BasicEncryptionMethod implements EncryptionMethod {
 	}
 
 	@Override
-	public String encryptPassword(String plainTextPassword, Company company) {
-		return digestBase64(DEFAULT_ALGORITHM, plainTextPassword, company);
+	public String encrypt(String plainTextPassword) {
+		return digestBase64(DEFAULT_ALGORITHM, plainTextPassword);
 	}
 
-	private static String digestBase64(String algorithm, String text, Company company) {
+	private static String digestBase64(String algorithm, String text) {
 		MessageDigest messageDigest;
 		try {
 			messageDigest = MessageDigest.getInstance(algorithm);
@@ -44,9 +42,9 @@ public class BasicEncryptionMethod implements EncryptionMethod {
 	}
 
 	@Override
-	public void validatePassword(String plainTextPassword, String userEncodedPassword, Company company)
+	public void validate(String plainTextPassword, String userEncodedPassword)
 			throws InvalidCredentialsException {
-		String currentEncryptedPassword = encryptPassword(plainTextPassword, company);
+		String currentEncryptedPassword = encrypt(plainTextPassword);
 		if (!currentEncryptedPassword.equals(userEncodedPassword)) {
 			throw new InvalidCredentialsException("Password does not match.");
 		}

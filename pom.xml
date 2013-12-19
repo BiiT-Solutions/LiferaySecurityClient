@@ -16,7 +16,7 @@
 		<plugin.exec.version>1.2.1</plugin.exec.version>
 		<org.testng.version>6.8</org.testng.version>
 		<biit-common-utils.version>0.0.1</biit-common-utils.version>
-		<biit-liferay-common-utils.version>0.1.1</biit-liferay-common-utils.version>
+		<biit-liferay-common-utils.version>0.1.2</biit-liferay-common-utils.version>
 	</properties>
 
 	<build>

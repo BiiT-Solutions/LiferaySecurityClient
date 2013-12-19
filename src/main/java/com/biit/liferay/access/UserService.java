@@ -10,6 +10,8 @@ import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.UserDoesNotExistException;
 import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.liferay.security.BasicEncryptionMethod;
+import com.biit.liferay.security.PBKDF2PasswordEncryptor;
+import com.biit.liferay.security.exceptions.PasswordEncryptorException;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
@@ -221,15 +223,18 @@ public class UserService extends ServiceAccess {
 	 * @param plainTextPassword
 	 * @throws NotConnectedToWebServiceException
 	 * @throws RemoteException
+	 * @throws PasswordEncryptorException
 	 */
 	public void updatePassword(User UserSoap, String plainTextPassword, Company company)
-			throws NotConnectedToWebServiceException, RemoteException {
+			throws NotConnectedToWebServiceException, RemoteException, PasswordEncryptorException {
 		checkConnection();
 		((UserServiceSoap) getServiceSoap()).updatePassword(UserSoap.getUserId(), plainTextPassword, plainTextPassword,
 				false);
-		UserSoap.setPassword(BasicEncryptionMethod.getInstance().encryptPassword(plainTextPassword, company));
-		LiferayClientLogger.info(this.getClass().getName(),
-				"User has change its password '" + UserSoap.getScreenName() + "'.");
+		// UserSoap.setPassword(BasicEncryptionMethod.getInstance().encryptPassword(plainTextPassword,
+		// company));
+		UserSoap.setPassword(new PBKDF2PasswordEncryptor().encrypt(plainTextPassword));
+		LiferayClientLogger.info(this.getClass().getName(), "User has change its password '" + UserSoap.getScreenName()
+				+ "'.");
 	}
 
 	/**

@@ -10,7 +10,7 @@ import javax.crypto.spec.PBEKeySpec;
 import org.apache.axis.encoding.Base64;
 
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
-import com.biit.liferay.security.exceptions.PwdEncryptorException;
+import com.biit.liferay.security.exceptions.PasswordEncryptorException;
 
 public class PBKDF2PasswordEncryptor {
 	public static final String TYPE_PBKDF2 = "PBKDF2";
@@ -24,7 +24,7 @@ public class PBKDF2PasswordEncryptor {
 		return new String[] { TYPE_PBKDF2 };
 	}
 
-	public void validate(String newPasswordPlainText, String oldPasswordEncrypted) throws PwdEncryptorException,
+	public void validate(String newPasswordPlainText, String oldPasswordEncrypted) throws PasswordEncryptorException,
 			InvalidCredentialsException {
 		String newEncPwd = encrypt(newPasswordPlainText, oldPasswordEncrypted);
 
@@ -33,20 +33,20 @@ public class PBKDF2PasswordEncryptor {
 		}
 	}
 
-	public String encrypt(String plainTextPassword) throws PwdEncryptorException {
+	public String encrypt(String plainTextPassword) throws PasswordEncryptorException {
 		return encrypt(plainTextPassword, null);
 	}
 
-	public String encrypt(String plainTextPassword, String oldEncriptedPassword) throws PwdEncryptorException {
+	public String encrypt(String plainTextPassword, String oldEncriptedPassword) throws PasswordEncryptorException {
 		if (plainTextPassword == null) {
-			throw new PwdEncryptorException("Unable to encrypt blank password");
+			throw new PasswordEncryptorException("Unable to encrypt blank password");
 		}
 
 		return doEncrypt(ALGORITHM, plainTextPassword, oldEncriptedPassword);
 	}
 
 	protected String doEncrypt(String algorithm, String plainTextPassword, String encryptedPassword)
-			throws PwdEncryptorException {
+			throws PasswordEncryptorException {
 
 		try {
 			PBKDF2EncryptionConfiguration pbkdf2EncryptionConfiguration = new PBKDF2EncryptionConfiguration();
@@ -78,7 +78,7 @@ public class PBKDF2PasswordEncryptor {
 
 			return Base64.encode(byteBuffer.array());
 		} catch (Exception e) {
-			throw new PwdEncryptorException(e.getMessage(), e);
+			throw new PasswordEncryptorException(e.getMessage(), e);
 		}
 	}
 
@@ -87,7 +87,7 @@ public class PBKDF2PasswordEncryptor {
 		private int _rounds = _ROUNDS;
 		private byte[] _saltBytes = new byte[_SALT_BYTES_LENGTH];
 
-		public void configure(String algorithm, String encryptedPassword) throws PwdEncryptorException {
+		public void configure(String algorithm, String encryptedPassword) throws PasswordEncryptorException {
 
 			if (encryptedPassword == null) {
 				_keySize = _KEY_SIZE;
@@ -102,7 +102,7 @@ public class PBKDF2PasswordEncryptor {
 
 					System.arraycopy(encryptedPasswordBytes, 0, bytes, 0, bytes.length);
 				} catch (Exception e) {
-					throw new PwdEncryptorException("Unable to extract salt from encrypted password " + e.getMessage(),
+					throw new PasswordEncryptorException("Unable to extract salt from encrypted password " + e.getMessage(),
 							e);
 				}
 

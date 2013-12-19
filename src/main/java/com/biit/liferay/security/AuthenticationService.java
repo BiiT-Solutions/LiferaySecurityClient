@@ -14,6 +14,7 @@ import com.biit.liferay.configuration.ConfigurationReader;
 import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
 import com.biit.liferay.security.exceptions.LiferayConnectionException;
+import com.biit.liferay.security.exceptions.PasswordEncryptorException;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
@@ -56,9 +57,10 @@ public class AuthenticationService {
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 * @throws LiferayConnectionException
+	 * @throws PasswordEncryptorException
 	 */
-	public User authenticate(String userMail, String password, Company company) throws InvalidCredentialsException,
-			ServiceException, RemoteException, NotConnectedToWebServiceException, LiferayConnectionException {
+	public User authenticate(String userMail, String password) throws InvalidCredentialsException, ServiceException,
+			RemoteException, NotConnectedToWebServiceException, LiferayConnectionException, PasswordEncryptorException {
 		// Login fails if either the username or password is null
 		if (userMail == null || password == null) {
 			throw new InvalidCredentialsException("No fields filled up.");
@@ -70,10 +72,10 @@ public class AuthenticationService {
 					CompanyService.getInstance().getCompanyByVirtualHost(
 							ConfigurationReader.getInstance().getVirtualHost()), userMail);
 		} catch (RemoteException e) {
-			if (e.getLocalizedMessage().contains("No UserSoap exists with the key")) {
-				LiferayClientLogger.warning(this.getClass().getName(), "Attempt to loggin failed with UserSoap '"
+			if (e.getLocalizedMessage().contains("No User exists with the key")) {
+				LiferayClientLogger.warning(this.getClass().getName(), "Attempt to loggin failed with user '"
 						+ userMail + "'.");
-				throw new InvalidCredentialsException("UserSoap does not exist.");
+				throw new InvalidCredentialsException("User does not exist.");
 			} else if (e.getLocalizedMessage().contains("Connection refused: connect")) {
 				throw new LiferayConnectionException("Error connecting to Liferay service with '"
 						+ ConfigurationReader.getInstance().getUser() + "@"
@@ -86,8 +88,13 @@ public class AuthenticationService {
 			}
 		}
 
-		BasicEncryptionMethod.getInstance().validatePassword(password, UserSoap.getPassword(), company);
-		LiferayClientLogger.info(this.getClass().getName(), "Access granted to UserSoap '" + userMail + "'");
+		if (ConfigurationReader.getInstance().getPasswordEncryptationAlgorithm().equals(PasswordEncryptationAlgorithmType.PBKDF2)) {
+			new PBKDF2PasswordEncryptor().validate(password, UserSoap.getPassword());
+		} else {
+			BasicEncryptionMethod.getInstance().validate(password, UserSoap.getPassword());
+		}
+
+		LiferayClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'");
 		return UserSoap;
 	}
 
@@ -127,7 +134,7 @@ public class AuthenticationService {
 	}
 
 	public void updatePassword(User UserSoap, String plainTextPassword, Company company) throws RemoteException,
-			NotConnectedToWebServiceException {
+			NotConnectedToWebServiceException, PasswordEncryptorException {
 		UserService.getInstance().updatePassword(UserSoap, plainTextPassword, company);
 	}
 }
