@@ -34,7 +34,7 @@ public class CompanyService extends ServiceAccess {
 		// Locate the UserSoap service
 		CompanyServiceSoapServiceLocator locatorCompany = new CompanyServiceSoapServiceLocator();
 		setServiceSoap(locatorCompany.getPortal_CompanyService(AccessUtils.getLiferayUrl(loginUser, password,
-				SERVICE_COMPANY_NAME)));
+				getServiceName())));
 	}
 
 	/**
