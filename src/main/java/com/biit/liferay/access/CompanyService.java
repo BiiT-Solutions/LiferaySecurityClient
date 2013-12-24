@@ -1,19 +1,22 @@
 package com.biit.liferay.access;
 
-import java.rmi.RemoteException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.xml.rpc.ServiceException;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.message.BasicNameValuePair;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.liferay.portal.model.Company;
-import com.liferay.portal.service.http.CompanyServiceSoap;
-import com.liferay.portal.service.http.CompanyServiceSoapServiceLocator;
 
 /**
  * This class allows to obtain a liferay portal instance.
  */
-public class CompanyService extends ServiceAccess {
-	private final static String SERVICE_COMPANY_NAME = "Portal_CompanyService";
+public class CompanyService extends ServiceAccess<Company> {
 	private final static CompanyService instance = new CompanyService();
 
 	private CompanyService() {
@@ -24,34 +27,32 @@ public class CompanyService extends ServiceAccess {
 		return instance;
 	}
 
-	@Override
-	public String getServiceName() {
-		return SERVICE_COMPANY_NAME;
-	}
-
-	@Override
-	public void connectToWebService(String loginUser, String password) throws ServiceException {
-		// Locate the UserSoap service
-		CompanyServiceSoapServiceLocator locatorCompany = new CompanyServiceSoapServiceLocator();
-		setServiceSoap(locatorCompany.getPortal_CompanyService(AccessUtils.getLiferayUrl(loginUser, password,
-				getServiceName())));
-	}
-
 	/**
 	 * Returns the CompanySoap with the virtual host name.
 	 * 
 	 * @param virtualHost
 	 *            the CompanySoap's virtual host name.
 	 * @return Returns the CompanySoap with the virtual host name.
-	 * @throws RemoteException
-	 *             if there is a communication problem
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 * 
 	 */
-	public Company getCompanyByVirtualHost(String virtualHost) throws RemoteException,
-			NotConnectedToWebServiceException {
+	public Company getCompanyByVirtualHost(String virtualHost) throws NotConnectedToWebServiceException,
+			JsonParseException, JsonMappingException, IOException {
 		checkConnection();
-		return ((CompanyServiceSoap) getServiceSoap()).getCompanyByVirtualHost(virtualHost);
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("virtualHost", virtualHost));
+
+		String result = getHttpResponse("company/get-company-by-virtual-host", params);
+		if (result != null) {
+			// A Simple JSON Response Read
+			return decodeFromJason(result, Company.class);
+		}
+
+		return null;
 	}
 
 	/**
@@ -60,13 +61,24 @@ public class CompanyService extends ServiceAccess {
 	 * @param companyId
 	 *            the primary key of the CompanySoap
 	 * @return Returns the CompanySoap with the virtual host name.
-	 * @throws RemoteException
-	 *             if there is a communication problem
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
 	 */
-	public Company getCompanyById(long companyId) throws RemoteException, NotConnectedToWebServiceException {
+	public Company getCompanyById(long companyId) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException {
 		checkConnection();
-		return ((CompanyServiceSoap) getServiceSoap()).getCompanyById(companyId);
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("companyId", companyId + ""));
+
+		String result = getHttpResponse("company/get-company-by-id", params);
+		if (result != null) {
+			// A Simple JSON Response Read
+			return decodeFromJason(result, Company.class);
+		}
+
+		return null;
 	}
 
 	/**
@@ -75,13 +87,24 @@ public class CompanyService extends ServiceAccess {
 	 * @param webId
 	 *            The CompanySoap's web domain
 	 * @return Returns the CompanySoap with the virtual host name.
-	 * @throws RemoteException
-	 *             if there is a communication problem
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
 	 */
-	public Company getCompanyByWebId(String webId) throws RemoteException, NotConnectedToWebServiceException {
+	public Company getCompanyByWebId(String webId) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException {
 		checkConnection();
-		return ((CompanyServiceSoap) getServiceSoap()).getCompanyByWebId(webId);
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("webId ", webId));
+
+		String result = getHttpResponse("company/get-company-by-web-id", params);
+		if (result != null) {
+			// A Simple JSON Response Read
+			return decodeFromJason(result, Company.class);
+		}
+
+		return null;
 	}
 
 }

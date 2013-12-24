@@ -1,29 +1,30 @@
 package com.biit.liferay.access;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.rpc.ServiceException;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.message.BasicNameValuePair;
+import org.omg.IOP.ServiceContext;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.UserDoesNotExistException;
 import com.biit.liferay.log.LiferayClientLogger;
-import com.biit.liferay.security.BasicEncryptionMethod;
 import com.biit.liferay.security.PBKDF2PasswordEncryptor;
 import com.biit.liferay.security.exceptions.PasswordEncryptorException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.http.UserServiceSoap;
-import com.liferay.portal.service.http.UserServiceSoapServiceLocator;
 
 /**
  * This class allows to manage users from Liferay portal.
  */
-public class UserService extends ServiceAccess {
-	private final static String SERVICE_USER_NAME = "Portal_UserService";
+public class UserService extends ServiceAccess<User> {
 	private final static UserService instance = new UserService();
 	private UserPool userPool;
 
@@ -35,135 +36,142 @@ public class UserService extends ServiceAccess {
 		return instance;
 	}
 
-	@Override
-	public void connectToWebService(String loginUser, String password) throws ServiceException {
-		// Locate the UserSoap service
-		UserServiceSoapServiceLocator locatorUser = new UserServiceSoapServiceLocator();
-		setServiceSoap(locatorUser.getPortal_UserService(AccessUtils.getLiferayUrl(loginUser, password,
-				getServiceName())));
-	}
-
-	@Override
-	public String getServiceName() {
-		return SERVICE_USER_NAME;
-	}
-
 	/**
-	 * Get UserSoap information using the email as identificator.
+	 * Get user information using the email as identificator.
 	 * 
 	 * @param companySoap
 	 *            liferay portal where look up for.
 	 * @param emailAddress
-	 *            the email of the UserSoap.
-	 * @return a UserSoap.
-	 * @throws RemoteException
-	 *             if there is any communication problem.
+	 *            the email of the user.
+	 * @return a user.
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
 	 */
-	public User getUserByEmailAddress(Company companySoap, String emailAddress) throws RemoteException,
-			NotConnectedToWebServiceException {
+	public User getUserByEmailAddress(Company companySoap, String emailAddress)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException {
 		emailAddress = emailAddress.toLowerCase();
-		// Look up UserSoap in the pool.
-		User UserSoap = userPool.getUserByEmailAddress(emailAddress);
-		if (UserSoap != null) {
-			return UserSoap;
+		// Look up user in the pool.
+		User user = userPool.getUserByEmailAddress(emailAddress);
+		if (user != null) {
+			return user;
 		}
 
-		// Look up UserSoap in the liferay.
+		// Look up user in the liferay.
 		checkConnection();
-		UserSoap = ((UserServiceSoap) getServiceSoap()).getUserByEmailAddress(companySoap.getCompanyId(), emailAddress);
-		userPool.addUser(UserSoap);
-		return UserSoap;
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("companyId", companySoap.getCompanyId() + ""));
+		params.add(new BasicNameValuePair("emailAddress", emailAddress));
+
+		String result = getHttpResponse("user/get-user-by-email-address", params);
+		if (result != null) {
+			// A Simple JSON Response Read
+			user = decodeFromJason(result, User.class);
+			userPool.addUser(user);
+		}
+
+		return user;
 	}
 
 	/**
-	 * Get UserSoap information using the UserSoap's primary key.
+	 * Get user information using the user's primary key.
 	 * 
 	 * @param userId
-	 *            UserSoap's primary key.
-	 * @return a UserSoap.
-	 * @throws RemoteException
-	 *             if there is any communication problem.
+	 *            user's primary key.
+	 * @return a user.
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
 	 */
-	public User getUserById(long userId) throws RemoteException, NotConnectedToWebServiceException,
-			UserDoesNotExistException {
+	public User getUserById(long userId) throws NotConnectedToWebServiceException, UserDoesNotExistException,
+			ClientProtocolException, IOException {
 		if (userId >= 0) {
-			// Look up UserSoap in the pool.
-			User UserSoap = userPool.getUserById(userId);
-			if (UserSoap != null) {
-				return UserSoap;
+			// Look up user in the pool.
+			User user = userPool.getUserById(userId);
+			if (user != null) {
+				return user;
 			}
 
 			// Read from Liferay.
 			checkConnection();
-			try {
-				UserSoap = ((UserServiceSoap) getServiceSoap()).getUserById(userId);
-				userPool.addUser(UserSoap);
-				return UserSoap;
-			} catch (RemoteException re) {
-				if (re.getLocalizedMessage().contains("No User exists with the primary key")) {
-					throw new UserDoesNotExistException("User with id '" + userId + "' does not exists.");
-				} else {
-					re.printStackTrace();
-					throw re;
-				}
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("userId", userId + ""));
+
+			String result = getHttpResponse("user/get-user-by-id", params);
+			if (result != null) {
+				// A Simple JSON Response Read
+				user = decodeFromJason(result, User.class);
+				userPool.addUser(user);
+				return user;
 			}
 		}
 		return null;
 	}
 
 	/**
-	 * Get UserSoap information using the UserSoap's primary key.
+	 * Get user information using the user's primary key.
 	 * 
 	 * @param companySoap
 	 *            liferay portal where look up for.
 	 * @param screenName
-	 *            is a unique token that identifies a liferay UserSoap from
-	 *            another, so two users cannot use the same screenname.
-	 * @return a UserSoap.
-	 * @throws RemoteException
-	 *             if there is any communication problem.
+	 *            is a unique token that identifies a liferay user from another,
+	 *            so two users cannot use the same screenname.
+	 * @return a user.
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
 	 */
-	public User getUserByScreenName(Company companySoap, String screenName) throws RemoteException,
-			NotConnectedToWebServiceException {
+	public User getUserByScreenName(Company companySoap, String screenName) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException {
 		screenName = screenName.toLowerCase();
 
-		// Look up UserSoap in the pool.
-		User UserSoap = userPool.getUserByScreenName(screenName);
-		if (UserSoap != null) {
-			return UserSoap;
+		// Look up user in the pool.
+		User user = userPool.getUserByScreenName(screenName);
+		if (user != null) {
+			return user;
 		}
 
 		// Read from liferay.
 		checkConnection();
-		UserSoap = ((UserServiceSoap) getServiceSoap()).getUserByScreenName(companySoap.getCompanyId(), screenName);
-		userPool.addUser(UserSoap);
-		return UserSoap;
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("companyId", companySoap.getCompanyId() + ""));
+		params.add(new BasicNameValuePair("screenName", screenName));
+
+		String result = getHttpResponse("user/get-user-by-screen-name", params);
+		if (result != null) {
+			// A Simple JSON Response Read
+			user = decodeFromJason(result, User.class);
+			userPool.addUser(user);
+			return user;
+		}
+
+		return null;
 	}
 
 	/**
-	 * Adds an UserSoap to liferay portal.
+	 * Adds an user to liferay portal.
 	 * 
 	 * @param companySoap
-	 * @param UserSoap
-	 * @return a UserSoap.
+	 * @param user
+	 * @return a user.
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public User addUser(Company companySoap, User UserSoap) throws RemoteException, NotConnectedToWebServiceException {
-		if (UserSoap != null) {
-			return addUser(companySoap, UserSoap.getPassword(), UserSoap.getScreenName(), UserSoap.getEmailAddress(),
-					UserSoap.getFacebookId(), UserSoap.getOpenId(), UserSoap.getTimeZoneId(), UserSoap.getFirstName(),
-					UserSoap.getMiddleName(), UserSoap.getLastName());
+	public User addUser(Company companySoap, User user) throws RemoteException, NotConnectedToWebServiceException {
+		if (user != null) {
+			return addUser(companySoap, user.getPassword(), user.getScreenName(), user.getEmailAddress(),
+					user.getFacebookId(), user.getOpenId(), user.getTimeZoneId(), user.getFirstName(),
+					user.getMiddleName(), user.getLastName());
 		}
 		return null;
 	}
 
 	/**
-	 * Creates an UserSoap into liferay portal. If password and/or screenname
-	 * are not set, they will be auto-generated.
+	 * Creates an user into liferay portal. If password and/or screenname are
+	 * not set, they will be auto-generated.
 	 * 
 	 * @param companySoap
 	 * @param password
@@ -175,7 +183,7 @@ public class UserService extends ServiceAccess {
 	 * @param firstName
 	 * @param middleName
 	 * @param lastName
-	 * @return a UserSoap.
+	 * @return a user.
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 */
@@ -191,50 +199,66 @@ public class UserService extends ServiceAccess {
 		if (screenName == null || screenName.length() == 0) {
 			autoScreenName = true;
 		}
-		User UserSoap = ((UserServiceSoap) getServiceSoap()).addUser(companySoap.getCompanyId(), autoPassword,
-				password, password, autoScreenName, screenName.toLowerCase(), emailAddress.toLowerCase(), facebookId,
-				openId, locale, firstName, middleName, lastName, 0, 0, false, 1, 1, 1970, "", null, null, null, null,
-				false, new ServiceContext());
+		User user = ((UserServiceSoap) getServiceSoap()).addUser(companySoap.getCompanyId(), autoPassword, password,
+				password, autoScreenName, screenName.toLowerCase(), emailAddress.toLowerCase(), facebookId, openId,
+				locale, firstName, middleName, lastName, 0, 0, false, 1, 1, 1970, "", null, null, null, null, false,
+				new ServiceContext());
 
-		if (UserSoap != null) {
-			userPool.addUser(UserSoap);
+		if (user != null) {
+			userPool.addUser(user);
 		}
-		return UserSoap;
+		return user;
 	}
 
 	/**
-	 * Deletes an UserSoap from the database.
+	 * Deletes an user from the database.
 	 * 
-	 * @param UserSoap
-	 * @throws RemoteException
+	 * @param user
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
 	 */
-	public void deleteUser(User UserSoap) throws RemoteException, NotConnectedToWebServiceException {
+	public void removeUser(User user) throws NotConnectedToWebServiceException, ClientProtocolException, IOException {
 		checkConnection();
-		((UserServiceSoap) getServiceSoap()).deleteUser(UserSoap.getUserId());
-		userPool.removeUser(UserSoap);
-		LiferayClientLogger.info(this.getClass().getName(), "User '" + UserSoap.getScreenName() + "' deleted.");
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("userId ", user.getUserId() + ""));
+
+		getHttpResponse("user/delete-user", params);
+
+		userPool.removeUser(user);
+		LiferayClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName() + "' deleted.");
 	}
 
 	/**
-	 * Updates the password of a UserSoap.
+	 * Updates the password of a user.
 	 * 
-	 * @param UserSoap
+	 * @param user
 	 * @param plainTextPassword
 	 * @throws NotConnectedToWebServiceException
-	 * @throws RemoteException
 	 * @throws PasswordEncryptorException
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
-	public void updatePassword(User UserSoap, String plainTextPassword)
-			throws NotConnectedToWebServiceException, RemoteException, PasswordEncryptorException {
+	public void updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
+			PasswordEncryptorException, JsonParseException, JsonMappingException, IOException {
 		checkConnection();
-		((UserServiceSoap) getServiceSoap()).updatePassword(UserSoap.getUserId(), plainTextPassword, plainTextPassword,
-				false);
-		// UserSoap.setPassword(BasicEncryptionMethod.getInstance().encryptPassword(plainTextPassword,
-		// company));
-		UserSoap.setPassword(new PBKDF2PasswordEncryptor().encrypt(plainTextPassword));
-		LiferayClientLogger.info(this.getClass().getName(), "User has change its password '" + UserSoap.getScreenName()
-				+ "'.");
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("userId", user.getUserId() + ""));
+		params.add(new BasicNameValuePair("password1", plainTextPassword));
+		params.add(new BasicNameValuePair("password2", plainTextPassword));
+		params.add(new BasicNameValuePair("passwordReset", "false"));
+
+		String result = getHttpResponse("user/delete-user", params);
+		if (result != null) {
+			// A Simple JSON Response Read
+			User obtainedUser = decodeFromJason(result, User.class);
+			user.setPassword(obtainedUser.getPassword());
+			LiferayClientLogger.info(this.getClass().getName(), "User has change its password '" + user.getScreenName()
+					+ "'.");
+		}
 	}
 
 	/**
@@ -258,17 +282,16 @@ public class UserService extends ServiceAccess {
 	}
 
 	/**
-	 * Add a UserSoap to a group. For testing use only.
+	 * Add a user to a group. For testing use only.
 	 * 
 	 * @param users
 	 * @param group
 	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
 	 */
-	public void addUserToGroup(User UserSoap, UserGroup group) throws RemoteException,
-			NotConnectedToWebServiceException {
+	public void addUserToGroup(User user, UserGroup group) throws RemoteException, NotConnectedToWebServiceException {
 		List<User> users = new ArrayList<User>();
-		users.add(UserSoap);
+		users.add(user);
 		addUsersToGroup(users, group);
 	}
 

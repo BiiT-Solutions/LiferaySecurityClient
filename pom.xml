@@ -5,7 +5,7 @@
 	<groupId>com.biit.liferay</groupId>
 	<artifactId>security-ws-client</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1.2</version>
+	<version>0.2.0</version>
 	<name>Liferay Authentication Client with Web Services</name>
 	<description>Obtain users, groups and roles information from liferay</description>
 
@@ -16,7 +16,8 @@
 		<plugin.exec.version>1.2.1</plugin.exec.version>
 		<org.testng.version>6.8</org.testng.version>
 		<biit-common-utils.version>0.0.1</biit-common-utils.version>
-		<biit-liferay-common-utils.version>0.1.2</biit-liferay-common-utils.version>
+		<biit-liferay-common-utils.version>0.2.0</biit-liferay-common-utils.version>
+		
 	</properties>
 
 	<build>
@@ -48,27 +49,7 @@
 			<artifactId>common</artifactId>
 			<version>${biit-liferay-common-utils.version}</version>
 		</dependency>
-		<!-- Axis WS access -->
-		<dependency>
-			<groupId>commons-discovery</groupId>
-			<artifactId>commons-discovery</artifactId>
-			<version>0.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.axis</groupId>
-			<artifactId>axis-jaxrpc</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>axis</groupId>
-			<artifactId>axis-wsdl4j</artifactId>
-			<version>1.5.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.axis</groupId>
-			<artifactId>axis</artifactId>
-			<version>1.4</version>
-		</dependency>
+		
 		<!-- Testing -->
 		<dependency>
 			<groupId>org.testng</groupId>
