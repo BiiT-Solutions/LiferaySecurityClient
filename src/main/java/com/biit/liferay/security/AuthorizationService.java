@@ -30,7 +30,7 @@ public abstract class AuthorizationService {
 		// "Cannot connect to RoleService and/or GroupService. Please, configure the file 'liferay.conf' correctly.");
 	}
 
-	public boolean isAuthorizedActivity(User UserSoap, String activity) throws ClientProtocolException, IOException, AuthenticationRequired {
+	public boolean isAuthorizedActivity(User UserSoap, String activity) throws IOException, AuthenticationRequired {
 		if (UserSoap != null) {
 			if (getUserActivitiesAllowed(UserSoap).contains(activity)) {
 				return true;
@@ -39,7 +39,7 @@ public abstract class AuthorizationService {
 		return false;
 	}
 
-	private List<String> getUserActivitiesAllowed(User UserSoap) throws ClientProtocolException, IOException, AuthenticationRequired {
+	private List<String> getUserActivitiesAllowed(User UserSoap) throws IOException, AuthenticationRequired {
 		List<String> activities = new ArrayList<String>();
 		if (UserSoap != null) {
 			List<Role> roles = getUserRoles(UserSoap);
@@ -59,7 +59,7 @@ public abstract class AuthorizationService {
 		return activities;
 	}
 
-	public List<Role> getUserRoles(User UserSoap) throws ClientProtocolException, IOException, AuthenticationRequired {
+	public List<Role> getUserRoles(User UserSoap) throws IOException, AuthenticationRequired {
 		if (UserSoap != null) {
 			try {
 				return RoleService.getInstance().getUserRoles(UserSoap);
@@ -76,7 +76,8 @@ public abstract class AuthorizationService {
 		return new ArrayList<Role>();
 	}
 
-	public List<UserGroup> getUserGroups(User UserSoap) throws ClientProtocolException, IOException, AuthenticationRequired {
+	public List<UserGroup> getUserGroups(User UserSoap) throws ClientProtocolException, IOException,
+			AuthenticationRequired {
 		if (UserSoap != null) {
 			try {
 				return UserGroupService.getInstance().getUserUserGroups(UserSoap);
@@ -93,7 +94,8 @@ public abstract class AuthorizationService {
 		return new ArrayList<UserGroup>();
 	}
 
-	public List<Role> getUserGroupRoles(UserGroup group) throws ClientProtocolException, IOException, AuthenticationRequired {
+	public List<Role> getUserGroupRoles(UserGroup group) throws ClientProtocolException, IOException,
+			AuthenticationRequired {
 		if (group != null) {
 			try {
 				return RoleService.getInstance().getGroupRoles(group);

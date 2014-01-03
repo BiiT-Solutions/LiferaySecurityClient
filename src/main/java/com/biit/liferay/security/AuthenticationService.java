@@ -1,14 +1,16 @@
 package com.biit.liferay.security;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.List;
+
+import javax.xml.rpc.ServiceException;
 
 import org.apache.http.client.ClientProtocolException;
 
 import com.biit.liferay.access.CompanyService;
 import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.UserService;
+import com.biit.liferay.access.VerificationService;
 import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.UserDoesNotExistException;
@@ -20,6 +22,7 @@ import com.biit.liferay.security.exceptions.LiferayConnectionException;
 import com.biit.liferay.security.exceptions.PasswordEncryptorException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 
@@ -49,7 +52,7 @@ public class AuthenticationService {
 	}
 
 	/**
-	 * Obtains a liferay UserSoap by the mail and the password.
+	 * Obtains a liferay user by the mail and the password.
 	 * 
 	 * @param userMail
 	 * @param password
@@ -63,54 +66,61 @@ public class AuthenticationService {
 	 * @throws ClientProtocolException
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
-	 * @throws AuthenticationRequired 
-	 * @throws WebServiceAccessError 
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
 	 */
 	public User authenticate(String userMail, String password) throws InvalidCredentialsException,
 			NotConnectedToWebServiceException, LiferayConnectionException, PasswordEncryptorException,
-			JsonParseException, JsonMappingException, ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
+			JsonParseException, JsonMappingException, ClientProtocolException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
 		// Login fails if either the username or password is null
 		if (userMail == null || password == null) {
 			throw new InvalidCredentialsException("No fields filled up.");
 		}
 
-		User UserSoap = null;
-		try {
-			UserSoap = UserService.getInstance().getUserByEmailAddress(
-					CompanyService.getInstance().getCompanyByVirtualHost(
-							ConfigurationReader.getInstance().getVirtualHost()), userMail);
-		} catch (RemoteException e) {
-			if (e.getLocalizedMessage().contains("No User exists with the key")) {
-				LiferayClientLogger.warning(this.getClass().getName(), "Attempt to loggin failed with user '"
-						+ userMail + "'.");
-				throw new InvalidCredentialsException("User does not exist.");
-			} else if (e.getLocalizedMessage().contains("Connection refused: connect")) {
-				throw new LiferayConnectionException("Error connecting to Liferay service with '"
-						+ ConfigurationReader.getInstance().getUser() + "@"
-						+ ConfigurationReader.getInstance().getVirtualHost() + ":"
-						+ ConfigurationReader.getInstance().getConnectionPort()
-						+ "'.\n Check configuration at 'liferay.conf' file");
-			} else {
-				LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-				throw e;
-			}
+		Company company = CompanyService.getInstance().getCompanyByVirtualHost(
+				ConfigurationReader.getInstance().getVirtualHost());
+
+		// Check password.
+		if (!VerificationService.getInstance().testConnection(company, userMail, password)) {
+			throw new InvalidCredentialsException("Invalid user or password.");
 		}
 
-		if (ConfigurationReader.getInstance().getPasswordEncryptationAlgorithm()
-				.equals(PasswordEncryptationAlgorithmType.PBKDF2)) {
-			new PBKDF2PasswordEncryptor().validate(password, UserSoap.getPassword());
-		} else {
-			BasicEncryptionMethod.getInstance().validate(password, UserSoap.getPassword());
+		// Get user information.
+		User user = null;
+		try {
+			user = UserService.getInstance().getUserByEmailAddress(company, userMail);
+		} catch (AuthenticationRequired e) {
+			throw new LiferayConnectionException("Error connecting to Liferay service with '"
+					+ ConfigurationReader.getInstance().getUser() + "@"
+					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
+					+ ConfigurationReader.getInstance().getConnectionPort()
+					+ "'.\n Check configuration at 'liferay.conf' file");
+		} catch (NotConnectedToWebServiceException e) {
+			throw new LiferayConnectionException("Error connecting to Liferay service with '"
+					+ ConfigurationReader.getInstance().getUser() + "@"
+					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
+					+ ConfigurationReader.getInstance().getConnectionPort()
+					+ "'.\n Check configuration at 'liferay.conf' file");
+		} catch (WebServiceAccessError e) {
+			throw new LiferayConnectionException("Error connecting to Liferay service with '"
+					+ ConfigurationReader.getInstance().getUser() + "@"
+					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
+					+ ConfigurationReader.getInstance().getConnectionPort()
+					+ "'.\n Check configuration at 'liferay.conf' file");
+		} catch (Exception e) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+			throw new InvalidCredentialsException("User does not exist or cannot connect to Liferay web services.");
 		}
 
 		LiferayClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'");
-		return UserSoap;
+		return user;
 	}
 
-	public boolean isInGroup(UserGroup group, User UserSoap) throws NotConnectedToWebServiceException,
+	public boolean isInGroup(UserGroup group, User user) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired {
-		if (group != null && UserSoap != null) {
-			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(UserSoap);
+		if (group != null && user != null) {
+			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(user);
 			for (UserGroup UserGroupSoap : userGroups) {
 				if (UserGroupSoap.getUserGroupId() == group.getUserGroupId()) {
 					return true;
@@ -121,19 +131,19 @@ public class AuthenticationService {
 	}
 
 	/**
-	 * Get first group of UserSoap.
+	 * Get first group of user.
 	 * 
-	 * @param UserSoap
+	 * @param user
 	 * @return
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
 	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired 
+	 * @throws AuthenticationRequired
 	 */
-	public UserGroup getDefaultGroup(User UserSoap) throws NotConnectedToWebServiceException, ClientProtocolException,
+	public UserGroup getDefaultGroup(User user) throws NotConnectedToWebServiceException, ClientProtocolException,
 			IOException, AuthenticationRequired {
-		if (UserSoap != null) {
-			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(UserSoap);
+		if (user != null) {
+			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(user);
 			if (userGroups != null && userGroups.size() > 0) {
 				return userGroups.get(0);
 			}
@@ -146,9 +156,9 @@ public class AuthenticationService {
 		return UserService.getInstance().getUserById(userId);
 	}
 
-	public void updatePassword(User UserSoap, String plainTextPassword) throws NotConnectedToWebServiceException,
+	public void updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
 			PasswordEncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
-		UserService.getInstance().updatePassword(UserSoap, plainTextPassword);
+		UserService.getInstance().updatePassword(user, plainTextPassword);
 	}
 }

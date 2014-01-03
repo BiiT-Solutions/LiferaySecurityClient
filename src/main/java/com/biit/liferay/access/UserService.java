@@ -20,7 +20,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.model.Company;
-import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 
@@ -113,7 +112,7 @@ public class UserService extends ServiceAccess<User> {
 			checkConnection();
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("userId", userId + ""));
+			params.add(new BasicNameValuePair("userId", Long.toString(userId)));
 
 			String result = getHttpResponse("user/get-user-by-id", params);
 			if (result != null) {
