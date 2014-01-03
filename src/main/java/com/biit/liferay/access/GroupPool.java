@@ -17,7 +17,28 @@ public class GroupPool {
 		groups = new Hashtable<Long, UserGroup>();
 	}
 
-	public UserGroup getGroupById(long groupId) {
+	public UserGroup getGroup(String name) {
+		long now = System.currentTimeMillis();
+		Long storedObject = null;
+		if (time.size() > 0) {
+			Enumeration<Long> e = time.keys();
+			while (e.hasMoreElements()) {
+				storedObject = e.nextElement();
+				if ((now - time.get(storedObject)) > EXPIRATION_TIME) {
+					// object has expired
+					removeGroup(storedObject);
+					storedObject = null;
+				} else {
+					if (groups.get(storedObject) != null && groups.get(storedObject).getName().equals(name)) {
+						return groups.get(storedObject);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	public UserGroup getGroup(long groupId) {
 		long now = System.currentTimeMillis();
 		Long storedObject = null;
 		if (time.size() > 0) {

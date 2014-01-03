@@ -8,9 +8,13 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.model.Company;
 
 /**
@@ -27,6 +31,15 @@ public class CompanyService extends ServiceAccess<Company> {
 		return instance;
 	}
 
+	@Override
+	public List<Company> decodeListFromJson(String json, Class<Company> objectClass) throws JsonParseException,
+			JsonMappingException, IOException {
+		List<Company> myObjects = new ObjectMapper().readValue(json, new TypeReference<List<Company>>() {
+		});
+
+		return myObjects;
+	}
+
 	/**
 	 * Returns the CompanySoap with the virtual host name.
 	 * 
@@ -37,10 +50,12 @@ public class CompanyService extends ServiceAccess<Company> {
 	 * @throws IOException
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
 	 * 
 	 */
 	public Company getCompanyByVirtualHost(String virtualHost) throws NotConnectedToWebServiceException,
-			JsonParseException, JsonMappingException, IOException {
+			JsonParseException, JsonMappingException, IOException, AuthenticationRequired, WebServiceAccessError {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -49,7 +64,7 @@ public class CompanyService extends ServiceAccess<Company> {
 		String result = getHttpResponse("company/get-company-by-virtual-host", params);
 		if (result != null) {
 			// A Simple JSON Response Read
-			return decodeFromJason(result, Company.class);
+			return decodeFromJson(result, Company.class);
 		}
 
 		return null;
@@ -64,9 +79,11 @@ public class CompanyService extends ServiceAccess<Company> {
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
 	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
 	 */
 	public Company getCompanyById(long companyId) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException {
+			IOException, AuthenticationRequired, WebServiceAccessError {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -75,7 +92,7 @@ public class CompanyService extends ServiceAccess<Company> {
 		String result = getHttpResponse("company/get-company-by-id", params);
 		if (result != null) {
 			// A Simple JSON Response Read
-			return decodeFromJason(result, Company.class);
+			return decodeFromJson(result, Company.class);
 		}
 
 		return null;
@@ -90,9 +107,11 @@ public class CompanyService extends ServiceAccess<Company> {
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
 	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
 	 */
 	public Company getCompanyByWebId(String webId) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException {
+			IOException, AuthenticationRequired, WebServiceAccessError {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -101,7 +120,7 @@ public class CompanyService extends ServiceAccess<Company> {
 		String result = getHttpResponse("company/get-company-by-web-id", params);
 		if (result != null) {
 			// A Simple JSON Response Read
-			return decodeFromJason(result, Company.class);
+			return decodeFromJson(result, Company.class);
 		}
 
 		return null;

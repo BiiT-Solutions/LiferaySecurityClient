@@ -1,20 +1,26 @@
 package com.biit.liferay.access;
 
-import java.rmi.RemoteException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.rpc.ServiceException;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.message.BasicNameValuePair;
 
+import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.log.LiferayClientLogger;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
-import com.liferay.portal.service.http.UserGroupRoleServiceSoap;
-import com.liferay.portal.service.http.UserGroupRoleServiceSoapServiceLocator;
+import com.liferay.portal.model.UserGroupRole;
 
-public class UserGroupRoleService extends ServiceAccess {
-	private final static String SERVICE_USERGROUP_ROLE_NAME = "Portal_UserGroupRoleService";
+public class UserGroupRoleService extends ServiceAccess<UserGroupRole> {
 	private final static UserGroupRoleService instance = new UserGroupRoleService();
 
 	private UserGroupRoleService() {
@@ -26,36 +32,52 @@ public class UserGroupRoleService extends ServiceAccess {
 	}
 
 	@Override
-	public void connectToWebService(String loginUser, String password) throws ServiceException {
-		// Locate the RoleSoap service
-		UserGroupRoleServiceSoapServiceLocator locatorRole = new UserGroupRoleServiceSoapServiceLocator();
-		setServiceSoap(locatorRole.getPortal_UserGroupRoleService(AccessUtils.getLiferayUrl(loginUser, password,
-				getServiceName())));
-	}
+	public List<UserGroupRole> decodeListFromJson(String json, Class<UserGroupRole> objectClass)
+			throws JsonParseException, JsonMappingException, IOException {
+		List<UserGroupRole> myObjects = new ObjectMapper().readValue(json, new TypeReference<List<UserGroupRole>>() {
+		});
 
-	@Override
-	public String getServiceName() {
-		return SERVICE_USERGROUP_ROLE_NAME;
+		return myObjects;
 	}
 
 	/**
 	 * Add a list of roles to a UserSoap. For testing use only.
 	 * 
-	 * @param UserSoap
+	 * @param user
 	 * @param roles
-	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
 	 */
-	public void addUserGroupRoles(User UserSoap, UserGroup UserGroupSoap, List<Role> roles) throws RemoteException,
-			NotConnectedToWebServiceException {
-		if (UserGroupSoap != null && roles != null && roles.size() > 0) {
+	public void addUserGroupRoles(User user, UserGroup userGroup, List<Role> roles)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+		if (userGroup != null && roles != null && roles.size() > 0) {
 			checkConnection();
-			long rolesIds[] = new long[roles.size()];
-			for (int i = 0; i < roles.size(); i++) {
-				rolesIds[i] = roles.get(i).getRoleId();
+
+			String rolesIds = "";
+			if (roles.size() > 0) {
+				rolesIds = "[";
 			}
-			((UserGroupRoleServiceSoap) getServiceSoap()).addUserGroupRoles(UserSoap.getUserId(),
-					UserGroupSoap.getUserGroupId(), rolesIds);
+			for (int i = 0; i < roles.size(); i++) {
+				rolesIds += roles.get(i).getUserId();
+				if (i < roles.size() - 1) {
+					rolesIds += ",";
+				}
+			}
+			if (rolesIds.length() > 0) {
+				rolesIds += "]";
+			}
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("userId", user.getUserId() + ""));
+			params.add(new BasicNameValuePair("groupId", userGroup.getUserGroupId() + ""));
+			params.add(new BasicNameValuePair("roleIds", rolesIds));
+
+			getHttpResponse("usergrouprole/add-user-group-roles", params);
+			LiferayClientLogger.info(this.getClass().getName(), "Roles ids " + rolesIds + " added to group '"
+					+ userGroup.getName() + "' and user '" + user.getUserId() + "'");
+
 		}
 	}
 
@@ -64,11 +86,13 @@ public class UserGroupRoleService extends ServiceAccess {
 	 * 
 	 * @param UserSoap
 	 * @param RoleSoap
-	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
 	 */
-	public void addUserGroupRole(User UserSoap, UserGroup UserGroupSoap, Role RoleSoap) throws RemoteException,
-			NotConnectedToWebServiceException {
+	public void addUserGroupRole(User UserSoap, UserGroup UserGroupSoap, Role RoleSoap)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		List<Role> roles = new ArrayList<Role>();
 		roles.add(RoleSoap);
 		addUserGroupRoles(UserSoap, UserGroupSoap, roles);

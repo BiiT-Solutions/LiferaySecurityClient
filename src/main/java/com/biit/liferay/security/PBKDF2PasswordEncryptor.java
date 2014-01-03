@@ -1,7 +1,6 @@
 package com.biit.liferay.security;
 
 import java.nio.ByteBuffer;
-import java.util.regex.Pattern;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -18,7 +17,6 @@ public class PBKDF2PasswordEncryptor {
 	private static final int _KEY_SIZE = 160;
 	private static final int _ROUNDS = 128000;
 	private static final int _SALT_BYTES_LENGTH = 8;
-	private static Pattern _pattern = Pattern.compile("^.*/?([0-9]+)?/([0-9]+)$");
 
 	public String[] getSupportedAlgorithmTypes() {
 		return new String[] { TYPE_PBKDF2 };
@@ -28,7 +26,7 @@ public class PBKDF2PasswordEncryptor {
 			InvalidCredentialsException {
 		String newEncPwd = encrypt(newPasswordPlainText, oldPasswordEncrypted);
 
-		if (!oldPasswordEncrypted.equals(newEncPwd)) {
+		if (oldPasswordEncrypted == null || !oldPasswordEncrypted.equals(newEncPwd)) {
 			throw new InvalidCredentialsException("Password does not match!");
 		}
 	}
@@ -102,8 +100,8 @@ public class PBKDF2PasswordEncryptor {
 
 					System.arraycopy(encryptedPasswordBytes, 0, bytes, 0, bytes.length);
 				} catch (Exception e) {
-					throw new PasswordEncryptorException("Unable to extract salt from encrypted password " + e.getMessage(),
-							e);
+					throw new PasswordEncryptorException("Unable to extract salt from encrypted password "
+							+ e.getMessage(), e);
 				}
 
 				ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);

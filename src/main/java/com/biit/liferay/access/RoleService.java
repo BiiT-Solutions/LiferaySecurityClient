@@ -1,25 +1,30 @@
 package com.biit.liferay.access;
 
-import java.rmi.RemoteException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import javax.xml.rpc.ServiceException;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.message.BasicNameValuePair;
 
+import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.log.LiferayClientLogger;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
-import com.liferay.portal.service.http.RoleServiceSoap;
-import com.liferay.portal.service.http.RoleServiceSoapServiceLocator;
-import com.liferay.portal.service.http.UserServiceSoap;
 
 /**
  * This class allows to manage roles from Liferay portal.
  */
-public class RoleService extends ServiceAccess {
-	private final static String SERVICE_ROLE_NAME = "Portal_RoleService";
+public class RoleService extends ServiceAccess<Role> {
 	private final static RoleService instance = new RoleService();
 	private RolesPool rolePool;
 
@@ -31,39 +36,46 @@ public class RoleService extends ServiceAccess {
 		return instance;
 	}
 
-	public String getServiceName() {
-		return SERVICE_ROLE_NAME;
-	}
-
 	@Override
-	public void connectToWebService(String loginUser, String password) throws ServiceException {
-		// Locate the RoleSoap service
-		RoleServiceSoapServiceLocator locatorRole = new RoleServiceSoapServiceLocator();
-		setServiceSoap(locatorRole.getPortal_RoleService(AccessUtils.getLiferayUrl(loginUser, password,
-				getServiceName())));
+	public List<Role> decodeListFromJson(String json, Class<Role> objectClass) throws JsonParseException,
+			JsonMappingException, IOException {
+		List<Role> myObjects = new ObjectMapper().readValue(json, new TypeReference<List<Role>>() {
+		});
+		return myObjects;
 	}
 
 	/**
 	 * Get the list of roles for a UserSoap.
 	 * 
-	 * @param UserSoap
+	 * @param user
 	 * @return
-	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
 	 */
-	public List<Role> getUserRoles(User UserSoap) throws RemoteException, NotConnectedToWebServiceException {
+	public List<Role> getUserRoles(User user) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException, AuthenticationRequired {
 		List<Role> roles = new ArrayList<Role>();
-		if (UserSoap != null) {
-			List<Role> userRoles = rolePool.getUserRoles(UserSoap);
+		if (user != null) {
+			List<Role> userRoles = rolePool.getUserRoles(user);
 			if (userRoles != null) {
 				return userRoles;
 			}
 			checkConnection();
-			Role[] arrayOfRoles = ((RoleServiceSoap) getServiceSoap()).getUserRoles(UserSoap.getUserId());
-			for (int i = 0; i < arrayOfRoles.length; i++) {
-				roles.add(arrayOfRoles[i]);
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("userId", user.getUserId() + ""));
+
+			String result = getHttpResponse("role/get-user-roles", params);
+			if (result != null) {
+				// A Simple JSON Response Read
+				roles = decodeListFromJson(result, Role.class);
+				rolePool.addUserRoles(user, roles);
+				return roles;
 			}
-			rolePool.addUserRoles(UserSoap, roles);
+
+			return null;
 		}
 		return roles;
 	}
@@ -73,10 +85,13 @@ public class RoleService extends ServiceAccess {
 	 * 
 	 * @param group
 	 * @return
-	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
 	 */
-	public List<Role> getGroupRoles(UserGroup group) throws RemoteException, NotConnectedToWebServiceException {
+	public List<Role> getGroupRoles(UserGroup group) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException, AuthenticationRequired {
 		List<Role> roles = new ArrayList<Role>();
 		if (group != null) {
 			List<Role> groupRoles = rolePool.getGroupRoles(group);
@@ -84,13 +99,20 @@ public class RoleService extends ServiceAccess {
 				return groupRoles;
 			}
 			checkConnection();
-			if (group != null) {
-				Role[] arrayOfRoles = ((RoleServiceSoap) getServiceSoap()).getGroupRoles(group.getUserGroupId());
-				for (int i = 0; i < arrayOfRoles.length; i++) {
-					roles.add(arrayOfRoles[i]);
-				}
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("groupId", group.getUserGroupId() + ""));
+
+			String result = getHttpResponse("role/get-group-roles", params);
+
+			if (result != null) {
+				// A Simple JSON Response Read
+				roles = decodeListFromJson(result, Role.class);
 				rolePool.addUserGroupRoles(group, roles);
+				return roles;
 			}
+
+			return null;
 		}
 		return roles;
 	}
@@ -102,13 +124,61 @@ public class RoleService extends ServiceAccess {
 	 *            name of the new RoleSoap.
 	 * @return
 	 * @throws NotConnectedToWebServiceException
-	 * @throws RemoteException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
 	 */
-	public Role addRole(String name) throws NotConnectedToWebServiceException, RemoteException {
+	public Role getRole(long roleId) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
+			AuthenticationRequired, WebServiceAccessError {
+		checkConnection();
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("roleId", Long.toString(roleId)));
+
+		String result = getHttpResponse("role/get-role", params);
+		Role role = null;
+		if (result != null) {
+			// A Simple JSON Response Read
+			role = decodeFromJson(result, Role.class);
+			return role;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Creates a new RoleSoap on Liferay. For testing use only.
+	 * 
+	 * @param name
+	 *            name of the new RoleSoap.
+	 * @return
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
+	 */
+	public Role addRole(String name, int type, Map<String, String> titleMap, Map<String, String> descriptionMap)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
 		if (name != null && name.length() > 0) {
 			checkConnection();
-			return ((RoleServiceSoap) getServiceSoap()).addRole(name, new String[0], new String[0], new String[0],
-					new String[0], 1);
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("name", name));
+			params.add(new BasicNameValuePair("titleMap", convertMapToString(titleMap)));
+			params.add(new BasicNameValuePair("descriptionMap", convertMapToString(descriptionMap)));
+			params.add(new BasicNameValuePair("type", Integer.toString(type)));
+
+			String result = getHttpResponse("role/add-role", params);
+			Role role = null;
+			if (result != null) {
+				// A Simple JSON Response Read
+				role = decodeFromJson(result, Role.class);
+				LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getName() + "' added.");
+				return role;
+			}
 		}
 		return null;
 	}
@@ -116,65 +186,163 @@ public class RoleService extends ServiceAccess {
 	/**
 	 * Removes a RoleSoap from Liferay portal. For testing use only.
 	 * 
-	 * @param RoleSoap
+	 * @param role
 	 * @throws NotConnectedToWebServiceException
-	 * @throws RemoteException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
 	 */
-	public void deleteRole(Role RoleSoap) throws NotConnectedToWebServiceException, RemoteException {
-		if (RoleSoap != null) {
+	public void deleteRole(Role role) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
+			AuthenticationRequired {
+		if (role != null) {
 			checkConnection();
-			((RoleServiceSoap) getServiceSoap()).deleteRole(RoleSoap.getRoleId());
-			rolePool.removeRole(RoleSoap);
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("roleId", role.getRoleId() + ""));
+
+			getHttpResponse("role/delete-role", params);
+
+			rolePool.removeRole(role);
+			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getName() + "' deleted.");
+
 		}
 	}
 
 	/**
-	 * Add a list of roles to a UserSoap. For testing use only.
+	 * Add a list of roles to a user. For testing use only.
 	 * 
-	 * @param UserSoap
+	 * @param user
 	 * @param roles
-	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
 	 */
-	public void addUserRoles(User UserSoap, List<Role> roles) throws RemoteException, NotConnectedToWebServiceException {
-		if (UserSoap != null && roles != null && roles.size() > 0) {
+	public void addUserRoles(User user, List<Role> roles) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		if (user != null && roles != null && roles.size() > 0) {
 			checkConnection();
-			long rolesIds[] = new long[roles.size()];
-			for (int i = 0; i < roles.size(); i++) {
-				rolesIds[i] = roles.get(i).getRoleId();
+
+			String rolesIds = "";
+			if (roles.size() > 0) {
+				rolesIds = "[";
 			}
-			((RoleServiceSoap) getServiceSoap()).addUserRoles(UserSoap.getUserId(), rolesIds);
-			rolePool.addUserRoles(UserSoap, roles);
+			for (int i = 0; i < roles.size(); i++) {
+				rolesIds += roles.get(i).getRoleId();
+				if (i < roles.size() - 1) {
+					rolesIds += ",";
+				}
+			}
+			if (rolesIds.length() > 0) {
+				rolesIds += "]";
+			}
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("userId", Long.toString(user.getUserId())));
+			params.add(new BasicNameValuePair("roleIds", rolesIds));
+
+			getHttpResponse("role/add-user-roles", params);
+
+			for (Role role : roles) {
+				rolePool.addUserRole(user, role);
+			}
+
+			LiferayClientLogger.info(this.getClass().getName(),
+					"Roles ids " + rolesIds + " added to user '" + user.getScreenName() + "'");
 		}
 	}
 
 	/**
-	 * Add a RoleSoap to a UserSoap. For testing use only.
+	 * Add a role to a user. For testing use only.
 	 * 
-	 * @param UserSoap
-	 * @param RoleSoap
-	 * @throws RemoteException
+	 * @param user
+	 * @param role
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
 	 */
-	public void addUserRole(User UserSoap, Role RoleSoap) throws RemoteException, NotConnectedToWebServiceException {
+	public void addUserRole(User user, Role role) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException, AuthenticationRequired {
 		List<Role> roles = new ArrayList<Role>();
-		roles.add(RoleSoap);
-		addUserRoles(UserSoap, roles);
+		roles.add(role);
+		addUserRoles(user, roles);
+	}
+
+	/**
+	 * Add a list of users to a role
+	 * 
+	 * @param users
+	 * @param role
+	 * @throws NotConnectedToWebServiceException
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws AuthenticationRequired
+	 */
+	public void addRoleUsers(List<User> users, Role role) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		if (users != null && users != null && users.size() > 0) {
+			checkConnection();
+
+			String userIds = "";
+			if (users.size() > 0) {
+				userIds = "[";
+			}
+			for (int i = 0; i < users.size(); i++) {
+				userIds += users.get(i).getUserId();
+				if (i < users.size() - 1) {
+					userIds += ",";
+				}
+			}
+			if (userIds.length() > 0) {
+				userIds += "]";
+			}
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("roleId", Long.toString(role.getRoleId())));
+			params.add(new BasicNameValuePair("userIds", userIds));
+
+			getHttpResponse("user/add-role-users", params);
+
+			for (User user : users) {
+				rolePool.addUserRole(user, role);
+			}
+
+			LiferayClientLogger.info(this.getClass().getName(),
+					"User ids " + userIds + " added to role '" + role.getName() + "'");
+		}
+	}
+
+	public void addRoleUser(User user, Role role) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException, AuthenticationRequired {
+		List<User> users = new ArrayList<User>();
+		users.add(user);
+		addRoleUsers(users, role);
 	}
 
 	/**
 	 * Removes the RoleSoap from the UserSoap. For testing use only.
 	 * 
-	 * @param RoleSoap
-	 * @param UserSoap
-	 * @throws RemoteException
+	 * @param role
+	 * @param user
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
 	 */
-	public void removeUserRole(User UserSoap, Role RoleSoap) throws RemoteException, NotConnectedToWebServiceException {
+	public void deleteRole(User user, Role role) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException, AuthenticationRequired {
 		checkConnection();
-		((UserServiceSoap) getServiceSoap()).deleteRoleUser(RoleSoap.getRoleId(), UserSoap.getUserId());
-		rolePool.removeUserRole(UserSoap, RoleSoap);
-		LiferayClientLogger.info(this.getClass().getName(), "Role '" + RoleSoap.getName() + "' for User '"
-				+ UserSoap.getScreenName() + "' deleted.");
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("userId", user.getUserId() + ""));
+		params.add(new BasicNameValuePair("roleId", role.getRoleId() + ""));
+
+		getHttpResponse("user/delete-role-user", params);
+
+		rolePool.removeUserRole(user, role);
+
+		LiferayClientLogger.info(this.getClass().getName(),
+				"Role '" + role.getName() + "' of user '" + user.getScreenName() + "' deleted.");
 	}
 }

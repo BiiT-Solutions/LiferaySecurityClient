@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?> 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite thread-count="1" verbose="1" name="WebServiceSuite">
 	<test name="AppfoundationTest" enabled="true" preserve-order="true">
@@ -9,13 +10,13 @@
 				<include name="basicSecurityMethodTest" />
 				<include name="roleAccess" />
 				<include name="clearData" />
-				<include name="password" />
+				<exclude name="password" />
 			</run>
 		</groups>
 		<classes>
 			<class name="com.biit.liferay.access.AccessTest" />
 			<class name="com.biit.liferay.access.AccessUtilsTest" />
-			<class name="com.biit.liferaysecurity.BasicSecurityMethodTest" />
+			<!-- <class name="com.biit.liferaysecurity.BasicSecurityMethodTest" /> -->
 		</classes>
 	</test>
 </suite>

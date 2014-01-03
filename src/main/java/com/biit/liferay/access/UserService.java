@@ -1,23 +1,26 @@
 package com.biit.liferay.access;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
-import org.omg.IOP.ServiceContext;
 
+import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.UserDoesNotExistException;
+import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.log.LiferayClientLogger;
-import com.biit.liferay.security.PBKDF2PasswordEncryptor;
 import com.biit.liferay.security.exceptions.PasswordEncryptorException;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.model.Company;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 
@@ -36,10 +39,19 @@ public class UserService extends ServiceAccess<User> {
 		return instance;
 	}
 
+	@Override
+	public List<User> decodeListFromJson(String json, Class<User> objectClass) throws JsonParseException,
+			JsonMappingException, IOException {
+		List<User> myObjects = new ObjectMapper().readValue(json, new TypeReference<List<User>>() {
+		});
+
+		return myObjects;
+	}
+
 	/**
 	 * Get user information using the email as identificator.
 	 * 
-	 * @param companySoap
+	 * @param company
 	 *            liferay portal where look up for.
 	 * @param emailAddress
 	 *            the email of the user.
@@ -47,9 +59,11 @@ public class UserService extends ServiceAccess<User> {
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
 	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
 	 */
-	public User getUserByEmailAddress(Company companySoap, String emailAddress)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException {
+	public User getUserByEmailAddress(Company company, String emailAddress) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
 		emailAddress = emailAddress.toLowerCase();
 		// Look up user in the pool.
 		User user = userPool.getUserByEmailAddress(emailAddress);
@@ -61,13 +75,13 @@ public class UserService extends ServiceAccess<User> {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("companyId", companySoap.getCompanyId() + ""));
+		params.add(new BasicNameValuePair("companyId", company.getCompanyId() + ""));
 		params.add(new BasicNameValuePair("emailAddress", emailAddress));
 
 		String result = getHttpResponse("user/get-user-by-email-address", params);
 		if (result != null) {
 			// A Simple JSON Response Read
-			user = decodeFromJason(result, User.class);
+			user = decodeFromJson(result, User.class);
 			userPool.addUser(user);
 		}
 
@@ -83,9 +97,11 @@ public class UserService extends ServiceAccess<User> {
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
 	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
 	 */
 	public User getUserById(long userId) throws NotConnectedToWebServiceException, UserDoesNotExistException,
-			ClientProtocolException, IOException {
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
 		if (userId >= 0) {
 			// Look up user in the pool.
 			User user = userPool.getUserById(userId);
@@ -102,7 +118,7 @@ public class UserService extends ServiceAccess<User> {
 			String result = getHttpResponse("user/get-user-by-id", params);
 			if (result != null) {
 				// A Simple JSON Response Read
-				user = decodeFromJason(result, User.class);
+				user = decodeFromJson(result, User.class);
 				userPool.addUser(user);
 				return user;
 			}
@@ -122,9 +138,11 @@ public class UserService extends ServiceAccess<User> {
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
 	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
 	 */
 	public User getUserByScreenName(Company companySoap, String screenName) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException {
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
 		screenName = screenName.toLowerCase();
 
 		// Look up user in the pool.
@@ -143,7 +161,7 @@ public class UserService extends ServiceAccess<User> {
 		String result = getHttpResponse("user/get-user-by-screen-name", params);
 		if (result != null) {
 			// A Simple JSON Response Read
-			user = decodeFromJason(result, User.class);
+			user = decodeFromJson(result, User.class);
 			userPool.addUser(user);
 			return user;
 		}
@@ -152,19 +170,24 @@ public class UserService extends ServiceAccess<User> {
 	}
 
 	/**
-	 * Adds an user to liferay portal.
+	 * Adds an user to Liferay portal.
 	 * 
 	 * @param companySoap
 	 * @param user
 	 * @return a user.
-	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
 	 */
-	public User addUser(Company companySoap, User user) throws RemoteException, NotConnectedToWebServiceException {
+	public User addUser(Company companySoap, User user) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
 		if (user != null) {
 			return addUser(companySoap, user.getPassword(), user.getScreenName(), user.getEmailAddress(),
 					user.getFacebookId(), user.getOpenId(), user.getTimeZoneId(), user.getFirstName(),
-					user.getMiddleName(), user.getLastName());
+					user.getMiddleName(), user.getLastName(), 0, 0, true, 1, 1, 1900, user.getJobTitle(), new long[0],
+					new long[0], new long[0], new long[0], false);
 		}
 		return null;
 	}
@@ -184,12 +207,18 @@ public class UserService extends ServiceAccess<User> {
 	 * @param middleName
 	 * @param lastName
 	 * @return a user.
-	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
 	 */
-	public User addUser(Company companySoap, String password, String screenName, String emailAddress, long facebookId,
-			String openId, String locale, String firstName, String middleName, String lastName) throws RemoteException,
-			NotConnectedToWebServiceException {
+	public User addUser(Company company, String password, String screenName, String emailAddress, long facebookId,
+			String openId, String locale, String firstName, String middleName, String lastName, int prefixId,
+			int sufixId, boolean male, int birthdayDay, int birthdayMonth, int birthdayYear, String jobTitle,
+			long[] groupIds, long[] organizationIds, long[] roleIds, long[] userGroupIds, boolean sendEmail)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
 		checkConnection();
 		boolean autoPassword = false;
 		boolean autoScreenName = false;
@@ -199,14 +228,45 @@ public class UserService extends ServiceAccess<User> {
 		if (screenName == null || screenName.length() == 0) {
 			autoScreenName = true;
 		}
-		User user = ((UserServiceSoap) getServiceSoap()).addUser(companySoap.getCompanyId(), autoPassword, password,
-				password, autoScreenName, screenName.toLowerCase(), emailAddress.toLowerCase(), facebookId, openId,
-				locale, firstName, middleName, lastName, 0, 0, false, 1, 1, 1970, "", null, null, null, null, false,
-				new ServiceContext());
 
-		if (user != null) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("companyId", Long.toString(company.getCompanyId())));
+		params.add(new BasicNameValuePair("autoPassword", Boolean.toString(autoPassword)));
+		params.add(new BasicNameValuePair("password1", password));
+		params.add(new BasicNameValuePair("password2", password));
+		params.add(new BasicNameValuePair("autoScreenName", Boolean.toString(autoScreenName)));
+		params.add(new BasicNameValuePair("screenName", screenName));
+		params.add(new BasicNameValuePair("emailAddress", emailAddress));
+		params.add(new BasicNameValuePair("facebookId", Long.toString(facebookId)));
+		params.add(new BasicNameValuePair("openId", openId));
+		params.add(new BasicNameValuePair("locale", locale));
+		params.add(new BasicNameValuePair("firstName", firstName));
+		params.add(new BasicNameValuePair("middleName", middleName));
+		params.add(new BasicNameValuePair("lastName", lastName));
+		params.add(new BasicNameValuePair("prefixId", Integer.toString(prefixId)));
+		params.add(new BasicNameValuePair("sufixId", Integer.toString(sufixId)));
+		params.add(new BasicNameValuePair("male", Boolean.toString(male)));
+		params.add(new BasicNameValuePair("birthdayMonth", Integer.toString(birthdayMonth)));
+		params.add(new BasicNameValuePair("birthdayDay", Integer.toString(birthdayDay)));
+		params.add(new BasicNameValuePair("birthdayYear", Integer.toString(birthdayYear)));
+		params.add(new BasicNameValuePair("jobTitle", jobTitle));
+		params.add(new BasicNameValuePair("groupIds", Arrays.toString(groupIds)));
+		params.add(new BasicNameValuePair("organizationIds", Arrays.toString(organizationIds)));
+		params.add(new BasicNameValuePair("roleIds", Arrays.toString(roleIds)));
+		params.add(new BasicNameValuePair("userGroupIds", Arrays.toString(userGroupIds)));
+		params.add(new BasicNameValuePair("sendEmail", Boolean.toString(sendEmail)));
+		params.add(new BasicNameValuePair("serviceContext", null));
+
+		String result = getHttpResponse("user/add-user", params);
+		User user = null;
+		if (result != null) {
+			// A Simple JSON Response Read
+			user = decodeFromJson(result, User.class);
 			userPool.addUser(user);
+			LiferayClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName() + "' added.");
+			return user;
 		}
+
 		return user;
 	}
 
@@ -217,12 +277,14 @@ public class UserService extends ServiceAccess<User> {
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
 	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
 	 */
-	public void removeUser(User user) throws NotConnectedToWebServiceException, ClientProtocolException, IOException {
+	public void deleteUser(User user) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
+			AuthenticationRequired {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("userId ", user.getUserId() + ""));
+		params.add(new BasicNameValuePair("userId", user.getUserId() + ""));
 
 		getHttpResponse("user/delete-user", params);
 
@@ -240,9 +302,12 @@ public class UserService extends ServiceAccess<User> {
 	 * @throws IOException
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
 	 */
 	public void updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
-			PasswordEncryptorException, JsonParseException, JsonMappingException, IOException {
+			PasswordEncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -254,7 +319,7 @@ public class UserService extends ServiceAccess<User> {
 		String result = getHttpResponse("user/delete-user", params);
 		if (result != null) {
 			// A Simple JSON Response Read
-			User obtainedUser = decodeFromJason(result, User.class);
+			User obtainedUser = decodeFromJson(result, User.class);
 			user.setPassword(obtainedUser.getPassword());
 			LiferayClientLogger.info(this.getClass().getName(), "User has change its password '" + user.getScreenName()
 					+ "'.");
@@ -266,18 +331,36 @@ public class UserService extends ServiceAccess<User> {
 	 * 
 	 * @param users
 	 * @param group
-	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
 	 */
-	public void addUsersToGroup(List<User> users, UserGroup group) throws RemoteException,
-			NotConnectedToWebServiceException {
+	public void addUsersToGroup(List<User> users, UserGroup group) throws ClientProtocolException, IOException,
+			NotConnectedToWebServiceException, AuthenticationRequired {
 		if (users != null && users.size() > 0 && group != null) {
 			checkConnection();
-			long[] userIds = new long[users.size()];
-			for (int i = 0; i < users.size(); i++) {
-				userIds[i] = users.get(i).getUserId();
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+			String usersId = "";
+			if (users.size() > 0) {
+				usersId = "[";
 			}
-			((UserServiceSoap) getServiceSoap()).addUserGroupUsers(group.getUserGroupId(), userIds);
+			for (int i = 0; i < users.size(); i++) {
+				usersId += users.get(i).getUserId();
+				if (i < users.size() - 1) {
+					usersId += ",";
+				}
+			}
+			if (usersId.length() > 0) {
+				usersId += "]";
+			}
+			params.add(new BasicNameValuePair("userIds", usersId));
+			params.add(new BasicNameValuePair("userGroupId", group.getUserGroupId() + ""));
+
+			getHttpResponse("user/add-user-group-users", params);
+			LiferayClientLogger.info(this.getClass().getName(),
+					"Users ids " + usersId + " added to group '" + group.getName() + "'");
 		}
 	}
 
@@ -286,10 +369,13 @@ public class UserService extends ServiceAccess<User> {
 	 * 
 	 * @param users
 	 * @param group
-	 * @throws RemoteException
 	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
 	 */
-	public void addUserToGroup(User user, UserGroup group) throws RemoteException, NotConnectedToWebServiceException {
+	public void addUserToGroup(User user, UserGroup group) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
 		List<User> users = new ArrayList<User>();
 		users.add(user);
 		addUsersToGroup(users, group);
