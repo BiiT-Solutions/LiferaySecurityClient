@@ -1,11 +1,9 @@
 package com.biit.liferay.access;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
@@ -34,6 +32,7 @@ import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 
 public class VerificationService extends ServiceAccess<User> {
+	private final static String JSON_AUTHENTICATION_REQUIRED_STRING = "Authenticated access required";
 	private final static VerificationService instance = new VerificationService();
 
 	private VerificationService() {
@@ -92,7 +91,7 @@ public class VerificationService extends ServiceAccess<User> {
 		if (response.getEntity() != null) {
 			// A Simple JSON Response Read
 			String result = EntityUtils.toString(response.getEntity());
-			if (result.contains("Authenticated access required")) {
+			if (result.contains(JSON_AUTHENTICATION_REQUIRED_STRING)) {
 				closeClient(httpClient);
 				throw new AuthenticationRequired("Authenticated access required.");
 			}

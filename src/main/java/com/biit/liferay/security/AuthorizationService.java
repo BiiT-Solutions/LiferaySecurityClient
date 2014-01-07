@@ -30,64 +30,64 @@ public abstract class AuthorizationService {
 		// "Cannot connect to RoleService and/or GroupService. Please, configure the file 'liferay.conf' correctly.");
 	}
 
-	public boolean isAuthorizedActivity(User UserSoap, String activity) throws IOException, AuthenticationRequired {
-		if (UserSoap != null) {
-			if (getUserActivitiesAllowed(UserSoap).contains(activity)) {
+	public boolean isAuthorizedActivity(User user, String activity) throws IOException, AuthenticationRequired {
+		if (user != null) {
+			if (getUserActivitiesAllowed(user).contains(activity)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private List<String> getUserActivitiesAllowed(User UserSoap) throws IOException, AuthenticationRequired {
+	private List<String> getUserActivitiesAllowed(User user) throws IOException, AuthenticationRequired {
 		List<String> activities = new ArrayList<String>();
-		if (UserSoap != null) {
-			List<Role> roles = getUserRoles(UserSoap);
-			List<UserGroup> userGroups = getUserGroups(UserSoap);
+		if (user != null) {
+			List<Role> roles = getUserRoles(user);
+			List<UserGroup> userGroups = getUserGroups(user);
 
 			// Add roles obtained by group.
 			for (UserGroup group : userGroups) {
 				roles.addAll(getUserGroupRoles(group));
 			}
 
-			// Activities by RoleSoap.
-			for (Role RoleSoap : roles) {
-				List<String> roleActivities = getRoleActivities(RoleSoap);
+			// Activities by role.
+			for (Role role : roles) {
+				List<String> roleActivities = getRoleActivities(role);
 				activities.addAll(roleActivities);
 			}
 		}
 		return activities;
 	}
 
-	public List<Role> getUserRoles(User UserSoap) throws IOException, AuthenticationRequired {
-		if (UserSoap != null) {
+	public List<Role> getUserRoles(User user) throws IOException, AuthenticationRequired {
+		if (user != null) {
 			try {
-				return RoleService.getInstance().getUserRoles(UserSoap);
+				return RoleService.getInstance().getUserRoles(user);
 			} catch (RemoteException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the UserSoap's roles from '" + UserSoap.getEmailAddress() + "'");
+						"Error retrieving the user's roles from '" + user.getEmailAddress() + "'");
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (NotConnectedToWebServiceException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the UserSoap's roles from '" + UserSoap.getEmailAddress() + "'");
+						"Error retrieving the user's roles from '" + user.getEmailAddress() + "'");
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
 		return new ArrayList<Role>();
 	}
 
-	public List<UserGroup> getUserGroups(User UserSoap) throws ClientProtocolException, IOException,
+	public List<UserGroup> getUserGroups(User user) throws ClientProtocolException, IOException,
 			AuthenticationRequired {
-		if (UserSoap != null) {
+		if (user != null) {
 			try {
-				return UserGroupService.getInstance().getUserUserGroups(UserSoap);
+				return UserGroupService.getInstance().getUserUserGroups(user);
 			} catch (RemoteException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the UserSoap's groups from " + UserSoap.getEmailAddress() + "'");
+						"Error retrieving the user's groups from " + user.getEmailAddress() + "'");
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (NotConnectedToWebServiceException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the UserSoap's groups from " + UserSoap.getEmailAddress() + "'");
+						"Error retrieving the user's groups from " + user.getEmailAddress() + "'");
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
@@ -112,5 +112,5 @@ public abstract class AuthorizationService {
 		return new ArrayList<Role>();
 	}
 
-	public abstract List<String> getRoleActivities(Role RoleSoap);
+	public abstract List<String> getRoleActivities(Role role);
 }

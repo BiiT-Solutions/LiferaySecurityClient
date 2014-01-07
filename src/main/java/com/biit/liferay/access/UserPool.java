@@ -9,8 +9,8 @@ public class UserPool {
 
 	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
-	private Hashtable<Long, Long> time; // UserSoap id -> time.
-	private Hashtable<Long, User> users; // UserSoap id -> UserSoap.
+	private Hashtable<Long, Long> time; // User id -> time.
+	private Hashtable<Long, User> users; // User id -> User.
 
 	public UserPool() {
 		time = new Hashtable<Long, Long>();
@@ -80,10 +80,10 @@ public class UserPool {
 		return null;
 	}
 
-	public void addUser(User UserSoap) {
-		if (UserSoap != null) {
-			time.put(UserSoap.getUserId(), System.currentTimeMillis());
-			users.put(UserSoap.getUserId(), UserSoap);
+	public void addUser(User user) {
+		if (user != null) {
+			time.put(user.getUserId(), System.currentTimeMillis());
+			users.put(user.getUserId(), user);
 		}
 	}
 
@@ -92,9 +92,9 @@ public class UserPool {
 		users.remove(userId);
 	}
 
-	public void removeUser(User UserSoap) {
-		if (UserSoap != null) {
-			removeUser(UserSoap.getUserId());
+	public void removeUser(User user) {
+		if (user != null) {
+			removeUser(user.getUserId());
 		}
 	}
 }

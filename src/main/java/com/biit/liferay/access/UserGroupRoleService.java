@@ -41,7 +41,7 @@ public class UserGroupRoleService extends ServiceAccess<UserGroupRole> {
 	}
 
 	/**
-	 * Add a list of roles to a UserSoap. For testing use only.
+	 * Add a list of roles to a user. For testing use only.
 	 * 
 	 * @param user
 	 * @param roles
@@ -82,20 +82,20 @@ public class UserGroupRoleService extends ServiceAccess<UserGroupRole> {
 	}
 
 	/**
-	 * Add a RoleSoap to a UserSoap. For testing use only.
+	 * Add a role to a user. For testing use only.
 	 * 
-	 * @param UserSoap
-	 * @param RoleSoap
+	 * @param user
+	 * @param role
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public void addUserGroupRole(User UserSoap, UserGroup UserGroupSoap, Role RoleSoap)
+	public void addUserGroupRole(User user, UserGroup UserGroupSoap, Role role)
 			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		List<Role> roles = new ArrayList<Role>();
-		roles.add(RoleSoap);
-		addUserGroupRoles(UserSoap, UserGroupSoap, roles);
+		roles.add(role);
+		addUserGroupRoles(user, UserGroupSoap, roles);
 	}
 
 }

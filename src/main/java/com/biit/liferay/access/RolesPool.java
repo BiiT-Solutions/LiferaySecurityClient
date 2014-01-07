@@ -16,7 +16,7 @@ public class RolesPool {
 	private Hashtable<Long, Long> userTime; // user id -> time.
 	private Hashtable<Long, List<Role>> rolesByUser; // Roles by user.
 
-	private Hashtable<String, Long> groupTime; // user id -> time.
+	private Hashtable<String, Long> groupTime; // Group Name -> time.
 	private Hashtable<String, List<Role>> rolesByGroup; // Roles by group.
 
 	public RolesPool() {
@@ -49,18 +49,18 @@ public class RolesPool {
 
 	public List<Role> getGroupRoles(UserGroup group) {
 		long now = System.currentTimeMillis();
-		String groupId = null;
+		String groupName = null;
 		if (groupTime.size() > 0) {
 			Enumeration<String> e = groupTime.keys();
 			while (e.hasMoreElements()) {
-				groupId = e.nextElement();
-				if ((now - groupTime.get(groupId)) > EXPIRATION_TIME) {
+				groupName = e.nextElement();
+				if ((now - groupTime.get(groupName)) > EXPIRATION_TIME) {
 					// object has expired
-					removeGroupRoles(groupId);
-					groupId = null;
+					removeGroupRoles(groupName);
+					groupName = null;
 				} else {
-					if (group.getName().equals(groupId)) {
-						return rolesByGroup.get(groupId);
+					if (group.getName().equals(groupName)) {
+						return rolesByGroup.get(groupName);
 					}
 				}
 			}
@@ -101,7 +101,7 @@ public class RolesPool {
 	}
 
 	public void addUserGroupRoles(UserGroup group, List<Role> roles) {
-		if (group != null && roles != null && roles.size() > 0) {
+		if (group != null && roles != null) {
 			groupTime.put(group.getName(), System.currentTimeMillis());
 			List<Role> groupRoles = rolesByGroup.get(group.getName());
 			if (groupRoles == null) {

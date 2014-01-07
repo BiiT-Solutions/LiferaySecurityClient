@@ -345,4 +345,64 @@ public class RoleService extends ServiceAccess<Role> {
 		LiferayClientLogger.info(this.getClass().getName(),
 				"Role '" + role.getName() + "' of user '" + user.getScreenName() + "' deleted.");
 	}
+
+	/**
+	 * Add a role to a list of groups. For testing only.
+	 * 
+	 * @param role
+	 * @param userGroups
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 */
+	public void addRoleGroups(Role role, List<UserGroup> userGroups) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		if (userGroups != null && role != null && userGroups.size() > 0) {
+			checkConnection();
+			String groupIds = "";
+			if (userGroups.size() > 0) {
+				groupIds = "[";
+			}
+			for (int i = 0; i < userGroups.size(); i++) {
+				groupIds += userGroups.get(i).getUserGroupId();
+				if (i < userGroups.size() - 1) {
+					groupIds += ",";
+				}
+			}
+			if (groupIds.length() > 0) {
+				groupIds += "]";
+			}
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("roleId", Long.toString(role.getRoleId())));
+			params.add(new BasicNameValuePair("groupIds", groupIds));
+
+			getHttpResponse("group/add-role-groups", params);
+			LiferayClientLogger.info(this.getClass().getName(),
+					"Groups ids " + groupIds + " added to role '" + role.getName() + "'");
+			for (UserGroup group : userGroups) {
+				rolePool.addUserGroupRole(group, role);
+			}
+
+		}
+	}
+
+	/**
+	 * Add a role to a group. For testing only.
+	 * 
+	 * @param role
+	 * @param userGroup
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 */
+	public void addRoleGroup(Role role, UserGroup userGroup) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		List<UserGroup> groups = new ArrayList<UserGroup>();
+		groups.add(userGroup);
+		addRoleGroups(role, groups);
+	}
+
 }

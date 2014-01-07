@@ -28,6 +28,7 @@ import com.liferay.portal.model.UserGroup;
 
 public class AuthenticationService {
 	private final static AuthenticationService instance = new AuthenticationService();
+	private Company company = null;
 
 	private AuthenticationService() {
 		// Connect if it is not connected the fist time used.
@@ -78,11 +79,17 @@ public class AuthenticationService {
 			throw new InvalidCredentialsException("No fields filled up.");
 		}
 
-		Company company = CompanyService.getInstance().getCompanyByVirtualHost(
-				ConfigurationReader.getInstance().getVirtualHost());
+		if (company == null) {
+			company = CompanyService.getInstance().getCompanyByVirtualHost(
+					ConfigurationReader.getInstance().getVirtualHost());
+		}
 
 		// Check password.
-		if (!VerificationService.getInstance().testConnection(company, userMail, password)) {
+		try {
+			if (!VerificationService.getInstance().testConnection(company, userMail, password)) {
+				throw new InvalidCredentialsException("Invalid user or password.");
+			}
+		} catch (AuthenticationRequired ar) {
 			throw new InvalidCredentialsException("Invalid user or password.");
 		}
 

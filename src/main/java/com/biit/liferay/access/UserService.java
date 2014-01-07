@@ -149,6 +149,7 @@ public class UserService extends ServiceAccess<User> {
 		if (user != null) {
 			return user;
 		}
+		
 
 		// Read from liferay.
 		checkConnection();
@@ -323,61 +324,6 @@ public class UserService extends ServiceAccess<User> {
 			LiferayClientLogger.info(this.getClass().getName(), "User has change its password '" + user.getScreenName()
 					+ "'.");
 		}
-	}
-
-	/**
-	 * Add a list of users to a group. For testing use only.
-	 * 
-	 * @param users
-	 * @param group
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 */
-	public void addUsersToGroup(List<User> users, UserGroup group) throws ClientProtocolException, IOException,
-			NotConnectedToWebServiceException, AuthenticationRequired {
-		if (users != null && users.size() > 0 && group != null) {
-			checkConnection();
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-			String usersId = "";
-			if (users.size() > 0) {
-				usersId = "[";
-			}
-			for (int i = 0; i < users.size(); i++) {
-				usersId += users.get(i).getUserId();
-				if (i < users.size() - 1) {
-					usersId += ",";
-				}
-			}
-			if (usersId.length() > 0) {
-				usersId += "]";
-			}
-			params.add(new BasicNameValuePair("userIds", usersId));
-			params.add(new BasicNameValuePair("userGroupId", group.getUserGroupId() + ""));
-
-			getHttpResponse("user/add-user-group-users", params);
-			LiferayClientLogger.info(this.getClass().getName(),
-					"Users ids " + usersId + " added to group '" + group.getName() + "'");
-		}
-	}
-
-	/**
-	 * Add a user to a group. For testing use only.
-	 * 
-	 * @param users
-	 * @param group
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 */
-	public void addUserToGroup(User user, UserGroup group) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired {
-		List<User> users = new ArrayList<User>();
-		users.add(user);
-		addUsersToGroup(users, group);
 	}
 
 }
