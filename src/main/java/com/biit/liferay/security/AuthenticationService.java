@@ -19,7 +19,7 @@ import com.biit.liferay.configuration.ConfigurationReader;
 import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
 import com.biit.liferay.security.exceptions.LiferayConnectionException;
-import com.biit.liferay.security.exceptions.PBKDF2EncryptorException;
+import com.biit.security.exceptions.PBKDF2EncryptorException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.liferay.portal.model.Company;
