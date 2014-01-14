@@ -19,7 +19,7 @@ import com.biit.liferay.configuration.ConfigurationReader;
 import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
 import com.biit.liferay.security.exceptions.LiferayConnectionException;
-import com.biit.liferay.security.exceptions.PasswordEncryptorException;
+import com.biit.liferay.security.exceptions.PBKDF2EncryptorException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.liferay.portal.model.Company;
@@ -62,7 +62,7 @@ public class AuthenticationService {
 	 * @throws ServiceException
 	 * @throws NotConnectedToWebServiceException
 	 * @throws LiferayConnectionException
-	 * @throws PasswordEncryptorException
+	 * @throws PBKDF2EncryptorException
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 * @throws JsonMappingException
@@ -71,7 +71,7 @@ public class AuthenticationService {
 	 * @throws WebServiceAccessError
 	 */
 	public User authenticate(String userMail, String password) throws InvalidCredentialsException,
-			NotConnectedToWebServiceException, LiferayConnectionException, PasswordEncryptorException,
+			NotConnectedToWebServiceException, LiferayConnectionException, PBKDF2EncryptorException,
 			JsonParseException, JsonMappingException, ClientProtocolException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
 		// Login fails if either the username or password is null
@@ -164,7 +164,7 @@ public class AuthenticationService {
 	}
 
 	public void updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
-			PasswordEncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
+			PBKDF2EncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
 		UserService.getInstance().updatePassword(user, plainTextPassword);
 	}

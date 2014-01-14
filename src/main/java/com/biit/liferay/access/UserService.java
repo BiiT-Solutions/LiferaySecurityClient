@@ -14,7 +14,7 @@ import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.UserDoesNotExistException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.log.LiferayClientLogger;
-import com.biit.liferay.security.exceptions.PasswordEncryptorException;
+import com.biit.liferay.security.exceptions.PBKDF2EncryptorException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -298,7 +298,7 @@ public class UserService extends ServiceAccess<User> {
 	 * @param user
 	 * @param plainTextPassword
 	 * @throws NotConnectedToWebServiceException
-	 * @throws PasswordEncryptorException
+	 * @throws PBKDF2EncryptorException
 	 * @throws IOException
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
@@ -306,7 +306,7 @@ public class UserService extends ServiceAccess<User> {
 	 * @throws WebServiceAccessError
 	 */
 	public void updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
-			PasswordEncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
+			PBKDF2EncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
 		checkConnection();
 

@@ -1,5 +1,5 @@
 /**
- * UserSoap.java
+ * user.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
@@ -148,7 +148,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the agreedToTermsOfUse value for this UserSoap.
+	 * Gets the agreedToTermsOfUse value for this user.
 	 * 
 	 * @return agreedToTermsOfUse
 	 */
@@ -157,7 +157,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the agreedToTermsOfUse value for this UserSoap.
+	 * Sets the agreedToTermsOfUse value for this user.
 	 * 
 	 * @param agreedToTermsOfUse
 	 */
@@ -166,7 +166,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the comments value for this UserSoap.
+	 * Gets the comments value for this user.
 	 * 
 	 * @return comments
 	 */
@@ -175,7 +175,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the comments value for this UserSoap.
+	 * Sets the comments value for this user.
 	 * 
 	 * @param comments
 	 */
@@ -184,7 +184,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the companyId value for this UserSoap.
+	 * Gets the companyId value for this user.
 	 * 
 	 * @return companyId
 	 */
@@ -193,7 +193,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the companyId value for this UserSoap.
+	 * Sets the companyId value for this user.
 	 * 
 	 * @param companyId
 	 */
@@ -202,7 +202,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the contactId value for this UserSoap.
+	 * Gets the contactId value for this user.
 	 * 
 	 * @return contactId
 	 */
@@ -211,7 +211,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the contactId value for this UserSoap.
+	 * Sets the contactId value for this user.
 	 * 
 	 * @param contactId
 	 */
@@ -220,7 +220,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the createDate value for this UserSoap.
+	 * Gets the createDate value for this user.
 	 * 
 	 * @return createDate
 	 */
@@ -229,7 +229,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the createDate value for this UserSoap.
+	 * Sets the createDate value for this user.
 	 * 
 	 * @param createDate
 	 */
@@ -238,7 +238,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the defaultUser value for this UserSoap.
+	 * Gets the defaultUser value for this user.
 	 * 
 	 * @return defaultUser
 	 */
@@ -247,7 +247,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the defaultUser value for this UserSoap.
+	 * Sets the defaultUser value for this user.
 	 * 
 	 * @param defaultUser
 	 */
@@ -256,7 +256,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the digest value for this UserSoap.
+	 * Gets the digest value for this user.
 	 * 
 	 * @return digest
 	 */
@@ -265,7 +265,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the digest value for this UserSoap.
+	 * Sets the digest value for this user.
 	 * 
 	 * @param digest
 	 */
@@ -274,7 +274,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the emailAddress value for this UserSoap.
+	 * Gets the emailAddress value for this user.
 	 * 
 	 * @return emailAddress
 	 */
@@ -283,7 +283,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the emailAddress value for this UserSoap.
+	 * Sets the emailAddress value for this user.
 	 * 
 	 * @param emailAddress
 	 */
@@ -292,7 +292,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the emailAddressVerified value for this UserSoap.
+	 * Gets the emailAddressVerified value for this user.
 	 * 
 	 * @return emailAddressVerified
 	 */
@@ -301,7 +301,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the emailAddressVerified value for this UserSoap.
+	 * Sets the emailAddressVerified value for this user.
 	 * 
 	 * @param emailAddressVerified
 	 */
@@ -310,7 +310,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the facebookId value for this UserSoap.
+	 * Gets the facebookId value for this user.
 	 * 
 	 * @return facebookId
 	 */
@@ -319,7 +319,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the facebookId value for this UserSoap.
+	 * Sets the facebookId value for this user.
 	 * 
 	 * @param facebookId
 	 */
@@ -328,7 +328,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the failedLoginAttempts value for this UserSoap.
+	 * Gets the failedLoginAttempts value for this user.
 	 * 
 	 * @return failedLoginAttempts
 	 */
@@ -337,7 +337,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the failedLoginAttempts value for this UserSoap.
+	 * Sets the failedLoginAttempts value for this user.
 	 * 
 	 * @param failedLoginAttempts
 	 */
@@ -346,7 +346,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the firstName value for this UserSoap.
+	 * Gets the firstName value for this user.
 	 * 
 	 * @return firstName
 	 */
@@ -355,7 +355,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the firstName value for this UserSoap.
+	 * Sets the firstName value for this user.
 	 * 
 	 * @param firstName
 	 */
@@ -364,7 +364,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the graceLoginCount value for this UserSoap.
+	 * Gets the graceLoginCount value for this user.
 	 * 
 	 * @return graceLoginCount
 	 */
@@ -373,7 +373,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the graceLoginCount value for this UserSoap.
+	 * Sets the graceLoginCount value for this user.
 	 * 
 	 * @param graceLoginCount
 	 */
@@ -382,7 +382,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the greeting value for this UserSoap.
+	 * Gets the greeting value for this user.
 	 * 
 	 * @return greeting
 	 */
@@ -391,7 +391,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the greeting value for this UserSoap.
+	 * Sets the greeting value for this user.
 	 * 
 	 * @param greeting
 	 */
@@ -400,7 +400,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the jobTitle value for this UserSoap.
+	 * Gets the jobTitle value for this user.
 	 * 
 	 * @return jobTitle
 	 */
@@ -409,7 +409,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the jobTitle value for this UserSoap.
+	 * Sets the jobTitle value for this user.
 	 * 
 	 * @param jobTitle
 	 */
@@ -418,7 +418,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the languageId value for this UserSoap.
+	 * Gets the languageId value for this user.
 	 * 
 	 * @return languageId
 	 */
@@ -427,7 +427,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the languageId value for this UserSoap.
+	 * Sets the languageId value for this user.
 	 * 
 	 * @param languageId
 	 */
@@ -436,7 +436,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the lastFailedLoginDate value for this UserSoap.
+	 * Gets the lastFailedLoginDate value for this user.
 	 * 
 	 * @return lastFailedLoginDate
 	 */
@@ -445,7 +445,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the lastFailedLoginDate value for this UserSoap.
+	 * Sets the lastFailedLoginDate value for this user.
 	 * 
 	 * @param lastFailedLoginDate
 	 */
@@ -454,7 +454,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the lastLoginDate value for this UserSoap.
+	 * Gets the lastLoginDate value for this user.
 	 * 
 	 * @return lastLoginDate
 	 */
@@ -463,7 +463,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the lastLoginDate value for this UserSoap.
+	 * Sets the lastLoginDate value for this user.
 	 * 
 	 * @param lastLoginDate
 	 */
@@ -472,7 +472,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the lastLoginIP value for this UserSoap.
+	 * Gets the lastLoginIP value for this user.
 	 * 
 	 * @return lastLoginIP
 	 */
@@ -481,7 +481,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the lastLoginIP value for this UserSoap.
+	 * Sets the lastLoginIP value for this user.
 	 * 
 	 * @param lastLoginIP
 	 */
@@ -490,7 +490,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the lastName value for this UserSoap.
+	 * Gets the lastName value for this user.
 	 * 
 	 * @return lastName
 	 */
@@ -499,7 +499,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the lastName value for this UserSoap.
+	 * Sets the lastName value for this user.
 	 * 
 	 * @param lastName
 	 */
@@ -508,7 +508,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the ldapServerId value for this UserSoap.
+	 * Gets the ldapServerId value for this user.
 	 * 
 	 * @return ldapServerId
 	 */
@@ -517,7 +517,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the ldapServerId value for this UserSoap.
+	 * Sets the ldapServerId value for this user.
 	 * 
 	 * @param ldapServerId
 	 */
@@ -526,7 +526,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the lockout value for this UserSoap.
+	 * Gets the lockout value for this user.
 	 * 
 	 * @return lockout
 	 */
@@ -535,7 +535,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the lockout value for this UserSoap.
+	 * Sets the lockout value for this user.
 	 * 
 	 * @param lockout
 	 */
@@ -544,7 +544,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the lockoutDate value for this UserSoap.
+	 * Gets the lockoutDate value for this user.
 	 * 
 	 * @return lockoutDate
 	 */
@@ -553,7 +553,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the lockoutDate value for this UserSoap.
+	 * Sets the lockoutDate value for this user.
 	 * 
 	 * @param lockoutDate
 	 */
@@ -562,7 +562,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the loginDate value for this UserSoap.
+	 * Gets the loginDate value for this user.
 	 * 
 	 * @return loginDate
 	 */
@@ -571,7 +571,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the loginDate value for this UserSoap.
+	 * Sets the loginDate value for this user.
 	 * 
 	 * @param loginDate
 	 */
@@ -580,7 +580,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the loginIP value for this UserSoap.
+	 * Gets the loginIP value for this user.
 	 * 
 	 * @return loginIP
 	 */
@@ -589,7 +589,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the loginIP value for this UserSoap.
+	 * Sets the loginIP value for this user.
 	 * 
 	 * @param loginIP
 	 */
@@ -598,7 +598,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the middleName value for this UserSoap.
+	 * Gets the middleName value for this user.
 	 * 
 	 * @return middleName
 	 */
@@ -607,7 +607,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the middleName value for this UserSoap.
+	 * Sets the middleName value for this user.
 	 * 
 	 * @param middleName
 	 */
@@ -616,7 +616,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the modifiedDate value for this UserSoap.
+	 * Gets the modifiedDate value for this user.
 	 * 
 	 * @return modifiedDate
 	 */
@@ -625,7 +625,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the modifiedDate value for this UserSoap.
+	 * Sets the modifiedDate value for this user.
 	 * 
 	 * @param modifiedDate
 	 */
@@ -634,7 +634,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the openId value for this UserSoap.
+	 * Gets the openId value for this user.
 	 * 
 	 * @return openId
 	 */
@@ -643,7 +643,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the openId value for this UserSoap.
+	 * Sets the openId value for this user.
 	 * 
 	 * @param openId
 	 */
@@ -652,7 +652,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the password value for this UserSoap.
+	 * Gets the password value for this user.
 	 * 
 	 * @return password
 	 */
@@ -661,7 +661,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the password value for this UserSoap.
+	 * Sets the password value for this user.
 	 * 
 	 * @param password
 	 */
@@ -670,7 +670,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the passwordEncrypted value for this UserSoap.
+	 * Gets the passwordEncrypted value for this user.
 	 * 
 	 * @return passwordEncrypted
 	 */
@@ -679,7 +679,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the passwordEncrypted value for this UserSoap.
+	 * Sets the passwordEncrypted value for this user.
 	 * 
 	 * @param passwordEncrypted
 	 */
@@ -688,7 +688,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the passwordModifiedDate value for this UserSoap.
+	 * Gets the passwordModifiedDate value for this user.
 	 * 
 	 * @return passwordModifiedDate
 	 */
@@ -697,7 +697,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the passwordModifiedDate value for this UserSoap.
+	 * Sets the passwordModifiedDate value for this user.
 	 * 
 	 * @param passwordModifiedDate
 	 */
@@ -706,7 +706,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the passwordReset value for this UserSoap.
+	 * Gets the passwordReset value for this user.
 	 * 
 	 * @return passwordReset
 	 */
@@ -715,7 +715,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the passwordReset value for this UserSoap.
+	 * Sets the passwordReset value for this user.
 	 * 
 	 * @param passwordReset
 	 */
@@ -724,7 +724,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the portraitId value for this UserSoap.
+	 * Gets the portraitId value for this user.
 	 * 
 	 * @return portraitId
 	 */
@@ -733,7 +733,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the portraitId value for this UserSoap.
+	 * Sets the portraitId value for this user.
 	 * 
 	 * @param portraitId
 	 */
@@ -742,7 +742,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the primaryKey value for this UserSoap.
+	 * Gets the primaryKey value for this user.
 	 * 
 	 * @return primaryKey
 	 */
@@ -751,7 +751,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the primaryKey value for this UserSoap.
+	 * Sets the primaryKey value for this user.
 	 * 
 	 * @param primaryKey
 	 */
@@ -760,7 +760,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the reminderQueryAnswer value for this UserSoap.
+	 * Gets the reminderQueryAnswer value for this user.
 	 * 
 	 * @return reminderQueryAnswer
 	 */
@@ -769,7 +769,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the reminderQueryAnswer value for this UserSoap.
+	 * Sets the reminderQueryAnswer value for this user.
 	 * 
 	 * @param reminderQueryAnswer
 	 */
@@ -778,7 +778,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the reminderQueryQuestion value for this UserSoap.
+	 * Gets the reminderQueryQuestion value for this user.
 	 * 
 	 * @return reminderQueryQuestion
 	 */
@@ -787,7 +787,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the reminderQueryQuestion value for this UserSoap.
+	 * Sets the reminderQueryQuestion value for this user.
 	 * 
 	 * @param reminderQueryQuestion
 	 */
@@ -796,7 +796,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the screenName value for this UserSoap.
+	 * Gets the screenName value for this user.
 	 * 
 	 * @return screenName
 	 */
@@ -805,7 +805,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the screenName value for this UserSoap.
+	 * Sets the screenName value for this user.
 	 * 
 	 * @param screenName
 	 */
@@ -814,7 +814,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the status value for this UserSoap.
+	 * Gets the status value for this user.
 	 * 
 	 * @return status
 	 */
@@ -823,7 +823,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the status value for this UserSoap.
+	 * Sets the status value for this user.
 	 * 
 	 * @param status
 	 */
@@ -832,7 +832,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the timeZoneId value for this UserSoap.
+	 * Gets the timeZoneId value for this user.
 	 * 
 	 * @return timeZoneId
 	 */
@@ -841,7 +841,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the timeZoneId value for this UserSoap.
+	 * Sets the timeZoneId value for this user.
 	 * 
 	 * @param timeZoneId
 	 */
@@ -850,7 +850,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the userId value for this UserSoap.
+	 * Gets the userId value for this user.
 	 * 
 	 * @return userId
 	 */
@@ -859,7 +859,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the userId value for this UserSoap.
+	 * Sets the userId value for this user.
 	 * 
 	 * @param userId
 	 */
@@ -868,7 +868,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Gets the uuid value for this UserSoap.
+	 * Gets the uuid value for this user.
 	 * 
 	 * @return uuid
 	 */
@@ -877,7 +877,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the uuid value for this UserSoap.
+	 * Sets the uuid value for this user.
 	 * 
 	 * @param uuid
 	 */
