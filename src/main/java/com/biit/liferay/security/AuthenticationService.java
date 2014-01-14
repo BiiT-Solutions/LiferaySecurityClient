@@ -3,8 +3,6 @@ package com.biit.liferay.security;
 import java.io.IOException;
 import java.util.List;
 
-import javax.xml.rpc.ServiceException;
-
 import org.apache.http.client.ClientProtocolException;
 
 import com.biit.liferay.access.CompanyService;

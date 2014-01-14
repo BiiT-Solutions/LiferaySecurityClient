@@ -65,13 +65,7 @@
 			<groupId>com.biit.liferay</groupId>
 			<artifactId>common</artifactId>
 			<version>${biit-liferay-common-utils.version}</version>
-		</dependency>
-		<!-- For password encryption -->
-		<dependency>
-			<groupId>axis</groupId>
-			<artifactId>axis</artifactId>
-			<version>1.4</version>
-		</dependency>
+		</dependency>		
 		<!-- Testing -->
 		<dependency>
 			<groupId>org.testng</groupId>
