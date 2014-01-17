@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 
-import org.apache.axis.encoding.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 import com.biit.liferay.security.exceptions.EncryptorException;
 import com.biit.liferay.security.exceptions.InvalidEncryptionKey;
@@ -28,7 +28,7 @@ class AesEncryptor {
 			throw new InvalidEncryptionKey();
 		}
 		byte[] encryptedBytes = encryptUnencoded(key, plainTextPassword);
-		return Base64.encode(encryptedBytes);
+		return Base64.encodeBase64String(encryptedBytes);
 	}
 
 	public static byte[] encryptUnencoded(Key key, String plainText) throws EncryptorException {

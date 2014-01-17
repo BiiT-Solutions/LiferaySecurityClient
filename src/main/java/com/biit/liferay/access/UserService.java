@@ -304,7 +304,7 @@ public class UserService extends ServiceAccess<User> {
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
-	public void updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
+	public User updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
 			PBKDF2EncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
 		checkConnection();
@@ -322,7 +322,9 @@ public class UserService extends ServiceAccess<User> {
 			user.setPassword(obtainedUser.getPassword());
 			LiferayClientLogger.info(this.getClass().getName(), "User has change its password '" + user.getScreenName()
 					+ "'.");
+			return obtainedUser;
 		}
+		return null;
 	}
 
 }

@@ -161,9 +161,9 @@ public class AuthenticationService {
 		return UserService.getInstance().getUserById(userId);
 	}
 
-	public void updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
+	public User updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
 			PBKDF2EncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
-		UserService.getInstance().updatePassword(user, plainTextPassword);
+		return UserService.getInstance().updatePassword(user, plainTextPassword);
 	}
 }
