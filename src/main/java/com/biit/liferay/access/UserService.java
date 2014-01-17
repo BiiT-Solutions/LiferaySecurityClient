@@ -315,7 +315,7 @@ public class UserService extends ServiceAccess<User> {
 		params.add(new BasicNameValuePair("password2", plainTextPassword));
 		params.add(new BasicNameValuePair("passwordReset", "false"));
 
-		String result = getHttpResponse("user/delete-user", params);
+		String result = getHttpResponse("user/update-password", params);
 		if (result != null) {
 			// A Simple JSON Response Read
 			User obtainedUser = decodeFromJson(result, User.class);
