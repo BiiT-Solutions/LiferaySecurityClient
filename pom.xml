@@ -19,6 +19,7 @@
 		<biit-liferay-common-utils.version>0.2.0</biit-liferay-common-utils.version>
 		<surefire.version>2.16</surefire.version>
 		<PBKDF2-encryption.version>1.0.0</PBKDF2-encryption.version>
+		<SHA1-encryption.version>1.0.0</SHA1-encryption.version>
 	</properties>
 
 	<build>
@@ -54,6 +55,13 @@
 	</distributionManagement>
 
 	<dependencies>
+		<!-- SHA1Encryption -->
+		<dependency>
+			<groupId>com.biit.security</groupId>
+			<artifactId>SHA1-encryption</artifactId>
+			<version>${SHA1-encryption.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<!-- PBkDF2Encryption -->
 		<dependency>
 			<groupId>com.biit.security</groupId>
@@ -65,7 +73,7 @@
 			<groupId>com.biit.liferay</groupId>
 			<artifactId>common</artifactId>
 			<version>${biit-liferay-common-utils.version}</version>
-		</dependency>		
+		</dependency>
 		<!-- Testing -->
 		<dependency>
 			<groupId>org.testng</groupId>
