@@ -17,17 +17,17 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 
 public abstract class AuthorizationService {
+	private AuthorizationPool authorizationPool;
 
 	public AuthorizationService() {
+		authorizationPool = new AuthorizationPool();
+
 		if (RoleService.getInstance().isNotConnected()) {
 			RoleService.getInstance().serverConnection();
 		}
 		if (UserGroupService.getInstance().isNotConnected()) {
 			UserGroupService.getInstance().serverConnection();
 		}
-		// LiferayClientLogger
-		// .fatal(AuthenticationService.class.getName(),
-		// "Cannot connect to RoleService and/or GroupService. Please, configure the file 'liferay.conf' correctly.");
 	}
 
 	public boolean isAuthorizedActivity(User user, String activity) throws IOException, AuthenticationRequired {
@@ -76,8 +76,7 @@ public abstract class AuthorizationService {
 		return new ArrayList<Role>();
 	}
 
-	public List<UserGroup> getUserGroups(User user) throws ClientProtocolException, IOException,
-			AuthenticationRequired {
+	public List<UserGroup> getUserGroups(User user) throws ClientProtocolException, IOException, AuthenticationRequired {
 		if (user != null) {
 			try {
 				return UserGroupService.getInstance().getUserUserGroups(user);
@@ -110,6 +109,31 @@ public abstract class AuthorizationService {
 			}
 		}
 		return new ArrayList<Role>();
+	}
+
+	/**
+	 * User is allowed to do an activity.
+	 * 
+	 * @param user
+	 * @param activity
+	 * @return
+	 * @throws AuthenticationRequired
+	 * @throws IOException
+	 */
+	public boolean isAuthorizedActivity(User user, IActivity activity) throws IOException, AuthenticationRequired {
+		if (user == null) {
+			return false;
+		}
+		// Is it in the pool?
+		Boolean authorized = authorizationPool.isAuthorizedActivity(user, activity);
+		if (authorized != null) {
+			return authorized;
+		}
+
+		// Calculate authorization.
+		authorized = isAuthorizedActivity(user, activity.getTag());
+		authorizationPool.addUser(user, activity, authorized);
+		return authorized;
 	}
 
 	public abstract List<String> getRoleActivities(Role role);
