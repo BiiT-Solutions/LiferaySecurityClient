@@ -130,8 +130,8 @@ public class UserService extends ServiceAccess<User> {
 	 * @param companySoap
 	 *            liferay portal where look up for.
 	 * @param screenName
-	 *            is a unique token that identifies a liferay user from another,
-	 *            so two users cannot use the same screenname.
+	 *            is a unique token that identifies a liferay user from another, so two users cannot use the same
+	 *            screenname.
 	 * @return a user.
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
@@ -148,7 +148,6 @@ public class UserService extends ServiceAccess<User> {
 		if (user != null) {
 			return user;
 		}
-		
 
 		// Read from liferay.
 		checkConnection();
@@ -192,8 +191,7 @@ public class UserService extends ServiceAccess<User> {
 	}
 
 	/**
-	 * Creates an user into liferay portal. If password and/or screenname are
-	 * not set, they will be auto-generated.
+	 * Creates an user into liferay portal. If password and/or screenname are not set, they will be auto-generated.
 	 * 
 	 * @param companySoap
 	 * @param password
@@ -280,15 +278,17 @@ public class UserService extends ServiceAccess<User> {
 	 */
 	public void deleteUser(User user) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
 			AuthenticationRequired {
-		checkConnection();
+		if (user != null) {
+			checkConnection();
 
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("userId", user.getUserId() + ""));
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("userId", user.getUserId() + ""));
 
-		getHttpResponse("user/delete-user", params);
+			getHttpResponse("user/delete-user", params);
 
-		userPool.removeUser(user);
-		LiferayClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName() + "' deleted.");
+			userPool.removeUser(user);
+			LiferayClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName() + "' deleted.");
+		}
 	}
 
 	/**

@@ -8,6 +8,7 @@
 package com.liferay.portal.model;
 
 public class Organization implements java.io.Serializable {
+
 	private java.lang.String comments;
 
 	private long companyId;
@@ -372,6 +373,28 @@ public class Organization implements java.io.Serializable {
 	 */
 	public void setUuid(java.lang.String uuid) {
 		this.uuid = uuid;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (organizationId ^ (organizationId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Organization other = (Organization) obj;
+		if (organizationId != other.organizationId)
+			return false;
+		return true;
 	}
 
 }

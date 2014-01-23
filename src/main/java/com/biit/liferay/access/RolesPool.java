@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
@@ -16,14 +17,14 @@ public class RolesPool {
 	private Hashtable<Long, Long> userTime; // user id -> time.
 	private Hashtable<Long, List<Role>> rolesByUser; // Roles by user.
 
-	private Hashtable<String, Long> groupTime; // Group Name -> time.
-	private Hashtable<String, List<Role>> rolesByGroup; // Roles by group.
+	private Hashtable<Long, Long> groupTime; // Group Id -> time.
+	private Hashtable<Long, List<Role>> rolesByGroup; // Roles by group.
 
 	public RolesPool() {
 		userTime = new Hashtable<Long, Long>();
-		groupTime = new Hashtable<String, Long>();
+		groupTime = new Hashtable<Long, Long>();
 		rolesByUser = new Hashtable<Long, List<Role>>();
-		rolesByGroup = new Hashtable<String, List<Role>>();
+		rolesByGroup = new Hashtable<Long, List<Role>>();
 	}
 
 	public List<Role> getUserRoles(User user) {
@@ -47,20 +48,28 @@ public class RolesPool {
 		return null;
 	}
 
+	public List<Role> getOrganizationRoles(Organization organization) {
+		return getGroupRoles(organization.getOrganizationId());
+	}
+
 	public List<Role> getGroupRoles(UserGroup group) {
+		return getGroupRoles(group.getUserGroupId());
+	}
+
+	public List<Role> getGroupRoles(long groupId) {
 		long now = System.currentTimeMillis();
-		String groupName = null;
+		Long nextGroupId = null;
 		if (groupTime.size() > 0) {
-			Enumeration<String> e = groupTime.keys();
+			Enumeration<Long> e = groupTime.keys();
 			while (e.hasMoreElements()) {
-				groupName = e.nextElement();
-				if ((now - groupTime.get(groupName)) > EXPIRATION_TIME) {
+				nextGroupId = e.nextElement();
+				if ((now - groupTime.get(nextGroupId)) > EXPIRATION_TIME) {
 					// object has expired
-					removeGroupRoles(groupName);
-					groupName = null;
+					removeGroupRoles(nextGroupId);
+					nextGroupId = null;
 				} else {
-					if (group.getName().equals(groupName)) {
-						return rolesByGroup.get(groupName);
+					if (groupId == nextGroupId) {
+						return rolesByGroup.get(nextGroupId);
 					}
 				}
 			}
@@ -100,13 +109,21 @@ public class RolesPool {
 		}
 	}
 
+	public void addOrganizationRoles(Organization organization, List<Role> roles) {
+		addUserGroupRoles(organization.getOrganizationId(), roles);
+	}
+
 	public void addUserGroupRoles(UserGroup group, List<Role> roles) {
-		if (group != null && roles != null) {
-			groupTime.put(group.getName(), System.currentTimeMillis());
-			List<Role> groupRoles = rolesByGroup.get(group.getName());
+		addUserGroupRoles(group.getUserGroupId(), roles);
+	}
+
+	private void addUserGroupRoles(Long groupId, List<Role> roles) {
+		if (groupId != null && roles != null) {
+			groupTime.put(groupId, System.currentTimeMillis());
+			List<Role> groupRoles = rolesByGroup.get(groupId);
 			if (groupRoles == null) {
 				groupRoles = new ArrayList<Role>();
-				rolesByGroup.put(group.getName(), groupRoles);
+				rolesByGroup.put(groupId, groupRoles);
 			}
 
 			for (Role role : roles) {
@@ -145,14 +162,14 @@ public class RolesPool {
 		}
 	}
 
-	public void removeGroupRoles(String groupName) {
-		groupTime.remove(groupName);
-		rolesByGroup.remove(groupName);
+	public void removeGroupRoles(Long groupId) {
+		groupTime.remove(groupId);
+		rolesByGroup.remove(groupId);
 	}
 
 	public void removeGroupRoles(UserGroup group) {
 		if (group != null) {
-			removeGroupRoles(group.getName());
+			removeGroupRoles(group.getUserGroupId());
 		}
 	}
 

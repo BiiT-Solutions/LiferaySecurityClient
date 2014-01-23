@@ -369,4 +369,12 @@ public class Role implements java.io.Serializable {
 		return true;
 	}
 
+	public RoleType getRoleType() {
+		return RoleType.getRoleType(getType());
+	}
+
+	public void setRoleType(RoleType roleType) {
+		setType(roleType.getLiferayCode());
+	}
+
 }

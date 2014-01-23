@@ -17,6 +17,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
@@ -45,7 +46,7 @@ public class RoleService extends ServiceAccess<Role> {
 	}
 
 	/**
-	 * Get the list of roles for a UserSoap.
+	 * Get the list of roles for a user.
 	 * 
 	 * @param user
 	 * @return
@@ -81,7 +82,81 @@ public class RoleService extends ServiceAccess<Role> {
 	}
 
 	/**
-	 * Get a list of roles for a group.
+	 * Get the list of roles for a user in a Organization.
+	 * 
+	 * @param user
+	 * @param organization
+	 * @return
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 */
+	public List<Role> getUserRoles(User user, Organization organization) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		List<Role> roles = new ArrayList<Role>();
+		if (user != null) {
+			List<Role> userRoles = rolePool.getUserRoles(user);
+			if (userRoles != null) {
+				return userRoles;
+			}
+			checkConnection();
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("userId", user.getUserId() + ""));
+
+			String result = getHttpResponse("role/get-user-roles", params);
+			if (result != null) {
+				// A Simple JSON Response Read
+				roles = decodeListFromJson(result, Role.class);
+				rolePool.addUserRoles(user, roles);
+				return roles;
+			}
+
+			return null;
+		}
+		return roles;
+	}
+
+	/**
+	 * Get a list of roles of a organization.
+	 * 
+	 * @param group
+	 * @return
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 */
+	public List<Role> getOrganizationRoles(Organization organization) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		List<Role> roles = new ArrayList<Role>();
+		if (organization != null) {
+			List<Role> groupRoles = rolePool.getOrganizationRoles(organization);
+			if (groupRoles != null) {
+				return groupRoles;
+			}
+			checkConnection();
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("groupId", organization.getOrganizationId() + ""));
+
+			String result = getHttpResponse("role/get-group-roles", params);
+
+			if (result != null) {
+				// A Simple JSON Response Read
+				roles = decodeListFromJson(result, Role.class);
+				rolePool.addOrganizationRoles(organization, roles);
+				return roles;
+			}
+
+			return null;
+		}
+		return roles;
+	}
+
+	/**
+	 * Get a list of roles of a group.
 	 * 
 	 * @param group
 	 * @return
@@ -321,7 +396,7 @@ public class RoleService extends ServiceAccess<Role> {
 	}
 
 	/**
-	 * Removes the RoleSoap from the UserSoap. For testing use only.
+	 * Removes the RoleSoap from the user. For testing use only.
 	 * 
 	 * @param role
 	 * @param user
