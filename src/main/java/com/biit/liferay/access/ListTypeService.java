@@ -22,19 +22,18 @@ public class ListTypeService extends ServiceAccess<ListType> {
 	private final static String FULL_MEMBER_TAG = "full-member";
 	private final static String FULL_MEMBER_TYPE = "com.liferay.portal.model.Organization.status";
 
-	private ListTypeService() {
-	}
-
 	public static ListTypeService getInstance() {
 		return instance;
 	}
 
+	private ListTypeService() {
+	}
+
 	@Override
-	public List<ListType> decodeListFromJson(String json, Class<ListType> arg1) throws JsonParseException,
+	public List<ListType> decodeListFromJson(String json, Class<ListType> objectClass) throws JsonParseException,
 			JsonMappingException, IOException {
 		List<ListType> myObjects = new ObjectMapper().readValue(json, new TypeReference<List<ListType>>() {
 		});
-
 		return myObjects;
 	}
 

@@ -26,99 +26,17 @@ public class OrganizationService extends ServiceAccess<Organization> {
 	private final static String DEFAULT_TYPE = "regular-organization";
 	private final static boolean DEFAULT_CREATE_SITE = false;
 	private final static OrganizationService instance = new OrganizationService();
-	private OrganizationPool organizationPool;
-	private Integer organizationStatus = null;
-
-	// Connection information to connects to secondary services.
-	private String address;
-	private String protocol;
-	private int port;
-	private String webservicesPath;
-	private String authenticationToken;
-	private String loginUser;
-	private String password;
-
-	private OrganizationService() {
-		organizationPool = new OrganizationPool();
-	}
 
 	public static OrganizationService getInstance() {
 		return instance;
 	}
 
-	@Override
-	public void serverConnection(String address, String protocol, int port, String webservicesPath,
-			String authenticationToken, String loginUser, String password) {
-		this.address = address;
-		this.protocol = protocol;
-		this.port = port;
-		this.webservicesPath = webservicesPath;
-		this.authenticationToken = authenticationToken;
-		this.loginUser = loginUser;
-		this.password = password;
-		super.serverConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser, password);
-	}
+	private OrganizationPool organizationPool;
 
-	@Override
-	public List<Organization> decodeListFromJson(String json, Class<Organization> objectClass)
-			throws JsonParseException, JsonMappingException, IOException {
-		List<Organization> myObjects = new ObjectMapper().readValue(json, new TypeReference<List<Organization>>() {
-		});
+	private Integer organizationStatus = null;
 
-		return myObjects;
-	}
-
-	/**
-	 * Gets all organizations of a company.
-	 * 
-	 * @param company
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 * @throws AuthenticationRequired
-	 */
-	public List<Organization> getOrganizations(Company company) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired {
-		// Look up user in the pool.
-		List<Organization> organizations = new ArrayList<Organization>();
-		organizations = organizationPool.getOrganizations(company);
-		if (organizations != null) {
-			return organizations;
-		}
-
-		// Look up user in the liferay.
-		checkConnection();
-
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("companyId", company.getCompanyId() + ""));
-		params.add(new BasicNameValuePair("parentOrganizationId", DEFAULT_PARENT_ORGANIZATION_ID + ""));
-
-		String result = getHttpResponse("organization/get-organizations", params);
-		if (result != null) {
-			// A Simple JSON Response Read
-			organizations = decodeListFromJson(result, Organization.class);
-			organizationPool.addOrganizations(company, organizations);
-		}
-
-		return organizations;
-	}
-
-	/**
-	 * Creates a new organization.
-	 * 
-	 * @param name
-	 * @return
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 * @throws NotConnectedToWebServiceException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
-	 */
-	public Organization addOrganization(Company company, String name) throws ClientProtocolException, IOException,
-			NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
-		return addOrganization(company, DEFAULT_PARENT_ORGANIZATION_ID, name, DEFAULT_TYPE, DEFAULT_REGION_ID,
-				DEFAULT_COUNTRY_ID, getOrganizationStatus(), "", DEFAULT_CREATE_SITE);
+	private OrganizationService() {
+		organizationPool = new OrganizationPool();
 	}
 
 	/**
@@ -170,6 +88,32 @@ public class OrganizationService extends ServiceAccess<Organization> {
 	}
 
 	/**
+	 * Creates a new organization. Requires the use of ListTypeService.
+	 * 
+	 * @param name
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws NotConnectedToWebServiceException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
+	 */
+	public Organization addOrganization(Company company, String name) throws ClientProtocolException, IOException,
+			NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
+		return addOrganization(company, DEFAULT_PARENT_ORGANIZATION_ID, name, DEFAULT_TYPE, DEFAULT_REGION_ID,
+				DEFAULT_COUNTRY_ID, getOrganizationStatus(), "", DEFAULT_CREATE_SITE);
+	}
+
+	@Override
+	public List<Organization> decodeListFromJson(String json, Class<Organization> objectClass)
+			throws JsonParseException, JsonMappingException, IOException {
+		List<Organization> myObjects = new ObjectMapper().readValue(json, new TypeReference<List<Organization>>() {
+		});
+
+		return myObjects;
+	}
+
+	/**
 	 * Deletes an organization in Liferay database.
 	 * 
 	 * @param organization
@@ -195,7 +139,45 @@ public class OrganizationService extends ServiceAccess<Organization> {
 	}
 
 	/**
-	 * Obtains the default status from the database using a webservice.
+	 * Gets all organizations of a company.
+	 * 
+	 * @param company
+	 * @return
+	 * @throws NotConnectedToWebServiceException
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws AuthenticationRequired
+	 */
+	public List<Organization> getOrganizations(Company company) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		// Look up user in the pool.
+		List<Organization> organizations = new ArrayList<Organization>();
+		if (company != null) {
+			organizations = organizationPool.getOrganizations(company);
+			if (organizations != null) {
+				return organizations;
+			}
+
+			// Look up user in the liferay.
+			checkConnection();
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("companyId", company.getCompanyId() + ""));
+			params.add(new BasicNameValuePair("parentOrganizationId", DEFAULT_PARENT_ORGANIZATION_ID + ""));
+
+			String result = getHttpResponse("organization/get-organizations", params);
+			if (result != null) {
+				// A Simple JSON Response Read
+				organizations = decodeListFromJson(result, Organization.class);
+				organizationPool.addOrganizations(company, organizations);
+			}
+		}
+
+		return organizations;
+	}
+
+	/**
+	 * Obtains the default status from the database using a webservice. Requires the use of ListTypeService.
 	 * 
 	 * @return
 	 * @throws ClientProtocolException
@@ -206,10 +188,13 @@ public class OrganizationService extends ServiceAccess<Organization> {
 	 */
 	private int getOrganizationStatus() throws ClientProtocolException, NotConnectedToWebServiceException, IOException,
 			AuthenticationRequired, WebServiceAccessError {
-		if (organizationStatus == null && !isNotConnected()) {
-			ListTypeService.getInstance().serverConnection(address, protocol, port, webservicesPath,
-					authenticationToken, loginUser, password);
-			organizationStatus = ListTypeService.getInstance().getFullMemberStatus();
+		if (organizationStatus == null) {
+			try {
+				organizationStatus = ListTypeService.getInstance().getFullMemberStatus();
+			} catch (AuthenticationRequired e) {
+				throw new AuthenticationRequired(
+						"Cannot connect to inner service 'ListTypeService'. Authentication Required. ");
+			}
 		}
 		return organizationStatus;
 	}

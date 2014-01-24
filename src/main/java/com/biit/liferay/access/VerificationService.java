@@ -35,11 +35,20 @@ public class VerificationService extends ServiceAccess<User> {
 	private final static String JSON_AUTHENTICATION_REQUIRED_STRING = "Authenticated access required";
 	private final static VerificationService instance = new VerificationService();
 
+	public static VerificationService getInstance() {
+		return instance;
+	}
+
 	private VerificationService() {
 	}
 
-	public static VerificationService getInstance() {
-		return instance;
+	private void closeClient(CloseableHttpClient httpClient) {
+		// Close client.
+		try {
+			httpClient.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -101,15 +110,6 @@ public class VerificationService extends ServiceAccess<User> {
 		closeClient(httpClient);
 		return false;
 
-	}
-
-	private void closeClient(CloseableHttpClient httpClient) {
-		// Close client.
-		try {
-			httpClient.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

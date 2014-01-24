@@ -17,6 +17,13 @@ public class UserPool {
 		users = new Hashtable<Long, User>();
 	}
 
+	public void addUser(User user) {
+		if (user != null) {
+			time.put(user.getUserId(), System.currentTimeMillis());
+			users.put(user.getUserId(), user);
+		}
+	}
+
 	public User getUserByEmailAddress(String emailAddress) {
 		long now = System.currentTimeMillis();
 		Long userId = null;
@@ -78,13 +85,6 @@ public class UserPool {
 			}
 		}
 		return null;
-	}
-
-	public void addUser(User user) {
-		if (user != null) {
-			time.put(user.getUserId(), System.currentTimeMillis());
-			users.put(user.getUserId(), user);
-		}
 	}
 
 	public void removeUser(long userId) {

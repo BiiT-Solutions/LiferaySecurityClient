@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 
+import com.biit.liferay.access.ListTypeService;
+import com.biit.liferay.access.OrganizationService;
 import com.biit.liferay.access.RoleService;
 import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.exceptions.AuthenticationRequired;
@@ -21,12 +23,18 @@ public abstract class AuthorizationService {
 
 	public AuthorizationService() {
 		authorizationPool = new AuthorizationPool();
-
+		// Connect if not connected the fist time used.
 		if (RoleService.getInstance().isNotConnected()) {
 			RoleService.getInstance().serverConnection();
 		}
 		if (UserGroupService.getInstance().isNotConnected()) {
 			UserGroupService.getInstance().serverConnection();
+		}
+		if (OrganizationService.getInstance().isNotConnected()) {
+			OrganizationService.getInstance().serverConnection();
+		}
+		if (ListTypeService.getInstance().isNotConnected()) {
+			ListTypeService.getInstance().serverConnection();
 		}
 	}
 

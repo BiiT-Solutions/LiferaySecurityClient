@@ -23,12 +23,12 @@ import com.liferay.portal.model.Company;
 public class CompanyService extends ServiceAccess<Company> {
 	private final static CompanyService instance = new CompanyService();
 
-	private CompanyService() {
-
-	}
-
 	public static CompanyService getInstance() {
 		return instance;
+	}
+
+	private CompanyService() {
+
 	}
 
 	@Override
@@ -38,6 +38,34 @@ public class CompanyService extends ServiceAccess<Company> {
 		});
 
 		return myObjects;
+	}
+
+	/**
+	 * Returns the CompanySoap with the virtual host name.
+	 * 
+	 * @param companyId
+	 *            the primary key of the CompanySoap
+	 * @return Returns the CompanySoap with the virtual host name.
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
+	 */
+	public Company getCompanyById(long companyId) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException, AuthenticationRequired, WebServiceAccessError {
+		checkConnection();
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("companyId", companyId + ""));
+
+		String result = getHttpResponse("company/get-company-by-id", params);
+		if (result != null) {
+			// A Simple JSON Response Read
+			return decodeFromJson(result, Company.class);
+		}
+
+		return null;
 	}
 
 	/**
@@ -62,34 +90,6 @@ public class CompanyService extends ServiceAccess<Company> {
 		params.add(new BasicNameValuePair("virtualHost", virtualHost));
 
 		String result = getHttpResponse("company/get-company-by-virtual-host", params);
-		if (result != null) {
-			// A Simple JSON Response Read
-			return decodeFromJson(result, Company.class);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Returns the CompanySoap with the virtual host name.
-	 * 
-	 * @param companyId
-	 *            the primary key of the CompanySoap
-	 * @return Returns the CompanySoap with the virtual host name.
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
-	 */
-	public Company getCompanyById(long companyId) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException, AuthenticationRequired, WebServiceAccessError {
-		checkConnection();
-
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("companyId", companyId + ""));
-
-		String result = getHttpResponse("company/get-company-by-id", params);
 		if (result != null) {
 			// A Simple JSON Response Read
 			return decodeFromJson(result, Company.class);

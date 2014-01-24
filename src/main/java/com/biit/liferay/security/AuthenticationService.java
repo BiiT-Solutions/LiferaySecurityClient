@@ -36,7 +36,6 @@ public class AuthenticationService {
 		if (CompanyService.getInstance().isNotConnected()) {
 			CompanyService.getInstance().serverConnection();
 		}
-		// Connect if not connected the fist time used.
 		if (UserGroupService.getInstance().isNotConnected()) {
 			UserGroupService.getInstance().serverConnection();
 		}

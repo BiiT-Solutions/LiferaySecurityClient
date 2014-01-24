@@ -13,43 +13,18 @@ public class UserGroupsPool {
 	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
 	private Hashtable<Long, Long> userTime; // group name -> time.
-	private Hashtable<Long, List<UserGroup>> groupsByUser; // user id ->
-															// user.
+	private Hashtable<Long, List<UserGroup>> groupsByUser; // user id -> user.
 
 	public UserGroupsPool() {
 		userTime = new Hashtable<Long, Long>();
 		groupsByUser = new Hashtable<Long, List<UserGroup>>();
 	}
 
-	public List<UserGroup> getGroupByUser(User user) {
-		long now = System.currentTimeMillis();
-		Long userId = null;
-		if (userTime.size() > 0) {
-			Enumeration<Long> e = userTime.keys();
-			while (e.hasMoreElements()) {
-				userId = e.nextElement();
-				if ((now - userTime.get(userId)) > EXPIRATION_TIME) {
-					// object has expired
-					removeUserGroups(userId);
-					userId = null;
-				} else {
-					if (user.getUserId() == userId) {
-						return groupsByUser.get(userId);
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	public void removeUserGroups(long userId) {
-		userTime.remove(userId);
-		groupsByUser.remove(userId);
-	}
-
-	public void removeUserGroups(User user) {
-		if (user != null) {
-			removeUserGroups(user.getUserId());
+	public void addUserGroup(User user, UserGroup group) {
+		if (user != null && group != null) {
+			List<UserGroup> groups = new ArrayList<UserGroup>();
+			groups.add(group);
+			addUserGroups(user, groups);
 		}
 	}
 
@@ -70,12 +45,37 @@ public class UserGroupsPool {
 		}
 	}
 
-	public void addUserGroup(User user, UserGroup group) {
-		if (user != null && group != null) {
-			List<UserGroup> groups = new ArrayList<UserGroup>();
-			groups.add(group);
-			addUserGroups(user, groups);
+	public List<UserGroup> getGroupsByUser(User user) {
+		long now = System.currentTimeMillis();
+		Long userId = null;
+		if (userTime.size() > 0) {
+			Enumeration<Long> e = userTime.keys();
+			while (e.hasMoreElements()) {
+				userId = e.nextElement();
+				if ((now - userTime.get(userId)) > EXPIRATION_TIME) {
+					// object has expired
+					removeUserGroups(userId);
+					userId = null;
+				} else {
+					if (user.getUserId() == userId) {
+						return groupsByUser.get(userId);
+					}
+				}
+			}
 		}
+		return null;
+	}
+
+	public void removeUserGroup(Long groupId) {
+		List<Long> groups = new ArrayList<Long>();
+		groups.add(groupId);
+		removeUserGroupsById(groups);
+	}
+
+	public void removeUserGroup(UserGroup group) {
+		List<UserGroup> groups = new ArrayList<UserGroup>();
+		groups.add(group);
+		removeUserGroups(groups);
 	}
 
 	public void removeUserGroups(List<UserGroup> groups) {
@@ -83,6 +83,17 @@ public class UserGroupsPool {
 			for (List<UserGroup> userGroups : groupsByUser.values()) {
 				userGroups.remove(group);
 			}
+		}
+	}
+
+	public void removeUserGroups(long userId) {
+		userTime.remove(userId);
+		groupsByUser.remove(userId);
+	}
+
+	public void removeUserGroups(User user) {
+		if (user != null) {
+			removeUserGroups(user.getUserId());
 		}
 	}
 
@@ -97,17 +108,5 @@ public class UserGroupsPool {
 				}
 			}
 		}
-	}
-
-	public void removeUserGroup(Long groupId) {
-		List<Long> groups = new ArrayList<Long>();
-		groups.add(groupId);
-		removeUserGroupsById(groups);
-	}
-
-	public void removeUserGroup(UserGroup group) {
-		List<UserGroup> groups = new ArrayList<UserGroup>();
-		groups.add(group);
-		removeUserGroups(groups);
 	}
 }
