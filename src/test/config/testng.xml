@@ -9,8 +9,10 @@
 				<include name="userAccess" />
 				<include name="basicSecurityMethodTest" />
 				<include name="roleAccess" />
+				<include name="groupAccess" />
+				<include name="organizationAccess" />
+				<include name="pool" />
 				<include name="clearData" />
-				<exclude name="password" />
 			</run>
 		</groups>
 		<classes>

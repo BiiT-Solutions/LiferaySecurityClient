@@ -16,21 +16,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.model.User;
 
 public class GroupService extends ServiceAccess<Group> {
-	private final static int DEFAUL_START_GROUP = -1;
-	private final static int DEFAUL_END_GROUP = -1;
+
 	private final static GroupService instance = new GroupService();
 
 	public static GroupService getInstance() {
 		return instance;
 	}
 
-	private OrganizationPool groupPool;
-
 	private GroupService() {
-		groupPool = new OrganizationPool();
 	}
 
 	@Override
@@ -41,64 +36,7 @@ public class GroupService extends ServiceAccess<Group> {
 		return myObjects;
 	}
 
-	/**
-	 * Gets all organizations of a user.
-	 * 
-	 * @param user
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws AuthenticationRequired
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 */
-	public List<Group> getUserOrganizationGroups(Long userId) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired {
-		if (userId != null) {
-			List<Group> groups = new ArrayList<Group>();
-			// Look up group in the pool.
-			groups = groupPool.getOrganizationGroups(userId);
-			System.out.println("groups " + groups);
-			if (groups != null) {
-				return groups;
-			}
 
-			// Look up user in the liferay.
-			checkConnection();
-
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("userId", userId + ""));
-			params.add(new BasicNameValuePair("start", DEFAUL_START_GROUP + ""));
-			params.add(new BasicNameValuePair("end", DEFAUL_END_GROUP + ""));
-
-			String result = getHttpResponse("group/get-user-organizations-groups", params);
-			System.out.println("result -> " + result);
-			if (result != null) {
-				// A Simple JSON Response Read
-				groups = decodeListFromJson(result, Group.class);
-				groupPool.addOrganizationGroups(userId, groups);
-				return groups;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Gets all organizations of a user.
-	 * 
-	 * @param user
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws AuthenticationRequired
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 */
-	public List<Group> getUserOrganizationGroups(User user) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired {
-		if (user != null) {
-			return getUserOrganizationGroups(user.getUserId());
-		}
-		return null;
-	}
 
 	public Group getGroup(Long companyId, String groupName) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {

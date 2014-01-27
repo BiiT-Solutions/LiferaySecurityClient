@@ -52,8 +52,16 @@ public class OrganizationPool {
 		}
 	}
 
+	public void addOrganizationGroup(User user, Group group) {
+		if (user != null && group != null) {
+			List<Group> groups = new ArrayList<Group>();
+			groups.add(group);
+			addOrganizationGroups(user, groups);
+		}
+	}
+
 	public void addOrganizationGroups(User user, List<Group> groups) {
-		if (user != null) {
+		if (user != null && groups != null && !groups.isEmpty()) {
 			addOrganizationGroups(user.getUserId(), groups);
 		}
 	}

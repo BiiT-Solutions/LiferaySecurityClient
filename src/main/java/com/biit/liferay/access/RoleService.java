@@ -30,18 +30,17 @@ import com.liferay.portal.model.UserGroup;
 public class RoleService extends ServiceAccess<Role> {
 	private static final String LIFERAY_ORGANIZATION_GROUP_PREFIX = " LFR_ORGANIZATION";
 	private final static RoleService instance = new RoleService();
-
-	public static RoleService getInstance() {
-		return instance;
-	}
-
 	private RolesPool rolePool;
-
+	//Relationship between organization and groups. 
 	private HashMap<Long, Long> organizationGroups;
 
 	private RoleService() {
 		rolePool = new RolesPool();
 		organizationGroups = new HashMap<Long, Long>();
+	}
+
+	public static RoleService getInstance() {
+		return instance;
 	}
 
 	/**
@@ -512,8 +511,10 @@ public class RoleService extends ServiceAccess<Role> {
 	public List<Role> getUserRolesOfGroup(Long userId, Long groupId) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired {
 		List<Role> roles = new ArrayList<Role>();
+
 		if (groupId != null && userId != null) {
 			List<Role> groupRoles = rolePool.getUserRolesOfGroup(userId, groupId);
+		
 			if (groupRoles != null) {
 				return groupRoles;
 			}
@@ -524,9 +525,7 @@ public class RoleService extends ServiceAccess<Role> {
 			params.add(new BasicNameValuePair("userId", userId + ""));
 
 			String result = getHttpResponse("role/get-user-group-roles", params);
-			System.out.println(result);
 			if (result != null) {
-				System.out.println(result);
 				// A Simple JSON Response Read
 				roles = decodeListFromJson(result, Role.class);
 				rolePool.addUserRolesOfGroup(userId, groupId, roles);
@@ -567,56 +566,37 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws IOException
 	 * @throws NotConnectedToWebServiceException
 	 * @throws ClientProtocolException
-	 */
-	public List<Role> getUserRolesOfOrganization(Long userId, Long organizationId) throws ClientProtocolException,
-			NotConnectedToWebServiceException, IOException, AuthenticationRequired {
-		if (userId != null && organizationId != null) {
-			List<Group> userOrganizationGroups = new ArrayList<Group>();
-
-			// If already have find the group.
-			Long groupId = organizationGroups.get(organizationId);
-			if (groupId != null) {
-				return getUserRolesOfGroup(userId, groupId);
-			}
-
-			System.out.println("userId: " + userId);
-			// Get the group of the organization.
-			try {
-				userOrganizationGroups = GroupService.getInstance().getUserOrganizationGroups(userId);
-			} catch (AuthenticationRequired e) {
-				throw new AuthenticationRequired(
-						"Cannot connect to inner service 'GroupService'. Authentication Required. ");
-			}
-			
-			System.out.println(userOrganizationGroups);
-
-			for (Group group : userOrganizationGroups) {
-				// classPK key of group references the Id of the organization.
-				if (group.getClassPK() == organizationId) {
-					// Get roles of the group.
-					organizationGroups.put(organizationId, group.getGroupId());
-					return getUserRolesOfGroup(userId, group.getGroupId());
-				}
-			}
-		}
-		return new ArrayList<Role>();
-	}
-
-	/**
-	 * Gets all roles of a user for an organization.
-	 * 
-	 * @param user
-	 * @param organization
-	 * @return
-	 * @throws AuthenticationRequired
-	 * @throws IOException
-	 * @throws NotConnectedToWebServiceException
-	 * @throws ClientProtocolException
+	 * @throws WebServiceAccessError 
 	 */
 	public List<Role> getUserRolesOfOrganization(User user, Organization organization) throws ClientProtocolException,
-			NotConnectedToWebServiceException, IOException, AuthenticationRequired {
+			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
 		if (user != null && organization != null) {
-			return getUserRolesOfOrganization(user.getUserId(), organization.getOrganizationId());
+//			List<Group> userOrganizationGroups = new ArrayList<Group>();
+
+			// Get the group of the organization.	
+			Long groupId = getOrganizationGroupId(organization);
+			return getUserRolesOfGroup(user.getUserId(), groupId);
+
+			// Get the group of the organization.
+//			try {
+//				userOrganizationGroups = OrganizationService.getInstance().getUserOrganizationGroups(userId);
+//			} catch (AuthenticationRequired e) {
+//				throw new AuthenticationRequired(
+//						"Cannot connect to inner service 'GroupService'. Authentication Required. ");
+//			}
+//
+//			for (Group group : userOrganizationGroups) {
+//				// classPK key of group references the Id of the organization.
+//				if (group.getClassPK() == organizationId) {
+//					// Get roles of the group.
+//					organizationGroups.put(organizationId, group.getGroupId());
+//					return getUserRolesOfGroup(userId, group.getGroupId());
+//				}
+//			}
+			
+			
+			
+			
 		}
 		return new ArrayList<Role>();
 	}
@@ -730,7 +710,7 @@ public class RoleService extends ServiceAccess<Role> {
 				rolesIds = "[";
 			}
 			for (int i = 0; i < roles.size(); i++) {
-				rolesIds += roles.get(i).getUserId();
+				rolesIds += roles.get(i).getRoleId();
 				if (i < roles.size() - 1) {
 					rolesIds += ",";
 				}
@@ -743,8 +723,11 @@ public class RoleService extends ServiceAccess<Role> {
 			params.add(new BasicNameValuePair("userId", userId + ""));
 			params.add(new BasicNameValuePair("groupId", groupId + ""));
 			params.add(new BasicNameValuePair("roleIds", rolesIds));
-
+			
 			getHttpResponse("usergrouprole/add-user-group-roles", params);
+
+			rolePool.addUserRolesOfGroup(userId, groupId, roles);
+
 			LiferayClientLogger.info(this.getClass().getName(), "Roles ids " + rolesIds + " added to group '" + groupId
 					+ "' and user '" + userId + "'");
 
@@ -826,12 +809,29 @@ public class RoleService extends ServiceAccess<Role> {
 		addUserGroupRoles(user, userGroup, roles);
 	}
 
+	/**
+	 * Gets the Group Id related to an organization.
+	 * 
+	 * @param organization
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
+	 */
 	public long getOrganizationGroupId(Organization organization) throws ClientProtocolException,
 			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
+
+		if (organizationGroups.get(organization.getOrganizationId()) != null) {
+			return organizationGroups.get(organization.getOrganizationId());
+		}
+
 		try {
 			Group group = GroupService.getInstance().getGroup(organization.getCompanyId(),
 					organization.getName() + LIFERAY_ORGANIZATION_GROUP_PREFIX);
 			if (group != null) {
+				organizationGroups.put(organization.getOrganizationId(), group.getGroupId());
 				return group.getGroupId();
 			}
 		} catch (AuthenticationRequired e) {
