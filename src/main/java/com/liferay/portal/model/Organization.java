@@ -397,4 +397,9 @@ public class Organization implements java.io.Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return getName();
+	}
+
 }

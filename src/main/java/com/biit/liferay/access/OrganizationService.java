@@ -213,7 +213,56 @@ public class OrganizationService extends ServiceAccess<Organization> {
 			}
 		}
 		return organizationStatus;
-	}	
+	}
+
+	/**
+	 * Gets all organizations where the user pertains to.
+	 * 
+	 * @param company
+	 * @param user
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
+	 */
+	public List<Organization> getUserOrganizations(Company companyOfUser, User user) throws ClientProtocolException,
+			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
+		List<Organization> organizationsOfUser = new ArrayList<Organization>();
+
+		List<Group> usergroups = getUserOrganizationGroups(user.getUserId());
+
+		List<Organization> allOrganizations = getOrganizations(companyOfUser);
+
+		for (Group group : usergroups) {
+			// classPK key of group references the Id of the organization.
+			for (Organization organization : allOrganizations) {
+				if (group.getClassPK() == organization.getOrganizationId()) {
+					organizationsOfUser.add(organization);
+				}
+			}
+		}
+		return organizationsOfUser;
+	}
+
+	/**
+	 * Gets all organizations where the user pertains to. Needs the inner service CompanyService.
+	 * 
+	 * @param user
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
+	 */
+	public List<Organization> getUserOrganizations(User user) throws ClientProtocolException,
+			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
+		Company companyOfUser = CompanyService.getInstance().getCompanyById(user.getCompanyId());
+
+		return getUserOrganizations(companyOfUser, user);
+	}
 
 	/**
 	 * Gets all organizations of a user.
