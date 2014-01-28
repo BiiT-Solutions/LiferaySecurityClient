@@ -3,6 +3,7 @@ package com.biit.liferay.security;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.User;
 
 /**
@@ -16,10 +17,12 @@ public class AuthorizationPool {
 	private Hashtable<User, Long> time;
 	// Form, user id -> activity -> allowed.
 	private Hashtable<User, Hashtable<IActivity, Boolean>> users;
+	private Hashtable<User, Hashtable<Organization, Hashtable<IActivity, Boolean>>> organizations;
 
 	public AuthorizationPool() {
 		time = new Hashtable<User, Long>();
 		users = new Hashtable<User, Hashtable<IActivity, Boolean>>();
+		organizations = new Hashtable<User, Hashtable<Organization, Hashtable<IActivity, Boolean>>>();
 	}
 
 	/**
@@ -56,14 +59,56 @@ public class AuthorizationPool {
 		return null;
 	}
 
-	public void addUser(User user, IActivity activity, boolean allowed) {
-		if (user != null && activity != null) {
+	public Boolean isAuthorizedActivity(User user, Organization organization, IActivity activity) {
+		long now = System.currentTimeMillis();
+		User authorizedUser = null;
+
+		if (time.size() > 0) {
+			Enumeration<User> userEnum = time.keys();
+			while (userEnum.hasMoreElements()) {
+				authorizedUser = userEnum.nextElement();
+				try {
+					if (time.get(authorizedUser) != null && (now - time.get(authorizedUser)) > EXPIRATION_TIME) {
+						// object has expired
+						removeUser(authorizedUser);
+						authorizedUser = null;
+					} else if (user != null && user.equals(authorizedUser)) {
+						if (organizations.get(user) != null && organizations.get(user).get(organizations) != null
+								&& activity != null) {
+							return organizations.get(user).get(organizations).get(activity);
+						}
+					}
+				} catch (Exception except) {
+					// Something is wrong. Considered as not cached.
+				}
+			}
+		}
+		return null;
+	}
+
+	public void addUser(User user, IActivity activity, Boolean authorized) {
+		if (user != null && activity != null && authorized != null) {
 			if (users.get(user) == null) {
 				users.put(user, new Hashtable<IActivity, Boolean>());
 			}
 
 			time.put(user, System.currentTimeMillis());
-			users.get(user).put(activity, allowed);
+			users.get(user).put(activity, authorized);
+		}
+	}
+
+	public void addUser(User user, Organization organization, IActivity activity, Boolean authorized) {
+		if (user != null && organization != null && activity != null && authorized != null) {
+			if (organizations.get(user) == null) {
+				organizations.put(user, new Hashtable<Organization, Hashtable<IActivity, Boolean>>());
+			}
+			
+			if (organizations.get(user).get(organization) == null) {
+				organizations.get(user).put(organization, new Hashtable<IActivity, Boolean>());
+			}
+
+			organizations.get(user).get(organization).put(activity, authorized);
+			time.put(user, System.currentTimeMillis());
 		}
 	}
 
@@ -71,6 +116,8 @@ public class AuthorizationPool {
 		if (user != null) {
 			time.remove(user);
 			users.remove(user);
+			organizations.remove(user);
 		}
 	}
+
 }

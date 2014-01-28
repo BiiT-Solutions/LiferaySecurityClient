@@ -3,6 +3,7 @@ package com.biit.liferay.security;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
@@ -52,17 +53,25 @@ public abstract class AuthorizationService {
 		}
 	}
 
-	public boolean isAuthorizedActivity(User user, String activity) throws IOException, AuthenticationRequired {
-		if (user != null) {
-			if (getUserActivitiesAllowed(user).contains(activity)) {
-				return true;
+	private List<IActivity> getUserActivitiesAllowed(User user, Organization organization) throws IOException,
+			AuthenticationRequired {
+		List<IActivity> organizationActivities = new ArrayList<IActivity>();
+		if (user != null && organization != null) {
+			// Add roles obtained by organization.
+			for (Role role : getUserRoles(user, organization)) {
+				for (IActivity activity : getRoleActivities(role)) {
+					if (!organizationActivities.contains(activity)) {
+						organizationActivities.add(activity);
+					}
+				}
 			}
 		}
-		return false;
+
+		return organizationActivities;
 	}
 
-	private List<String> getUserActivitiesAllowed(User user) throws IOException, AuthenticationRequired {
-		List<String> activities = new ArrayList<String>();
+	private List<IActivity> getUserActivitiesAllowed(User user) throws IOException, AuthenticationRequired {
+		List<IActivity> activities = new ArrayList<IActivity>();
 		if (user != null) {
 			List<Role> roles = getUserRoles(user);
 
@@ -76,20 +85,14 @@ public abstract class AuthorizationService {
 				}
 			}
 
-			// Add roles obtained by organization.
-			List<Organization> userOrganizations = getUserOrganizations(user);
-			for (Organization organization : userOrganizations) {
-				for (Role role : getUserRoles(user, organization)) {
-					if (!roles.contains(role)) {
-						roles.add(role);
-					}
-				}
-			}
-
 			// Activities by role.
 			for (Role role : roles) {
-				List<String> roleActivities = getRoleActivities(role);
-				activities.addAll(roleActivities);
+				List<IActivity> roleActivities = getRoleActivities(role);
+				for (IActivity roleActivity : roleActivities) {
+					if (!activities.contains(roleActivity)) {
+						activities.add(roleActivity);
+					}
+				}
 			}
 		}
 		return activities;
@@ -200,10 +203,32 @@ public abstract class AuthorizationService {
 		}
 
 		// Calculate authorization.
-		authorized = isAuthorizedActivity(user, activity.getTag());
+		authorized = getUserActivitiesAllowed(user).contains(activity);
 		authorizationPool.addUser(user, activity, authorized);
 		return authorized;
 	}
 
-	public abstract List<String> getRoleActivities(Role role);
+	public boolean isAuthorizedActivity(User user, Organization organization, IActivity activity) throws IOException,
+			AuthenticationRequired {
+		if (user != null) {
+			// If user has the permission... no need to check the organization.
+			if (isAuthorizedActivity(user, activity)) {
+				return true;
+			}
+
+			// Is it in the pool?
+			Boolean authorized = authorizationPool.isAuthorizedActivity(user, organization, activity);
+			if (authorized != null) {
+				return authorized;
+			}
+
+			// Calculate authorization.
+			authorized =  getUserActivitiesAllowed(user, organization).contains(activity);			
+			authorizationPool.addUser(user, organization, activity, authorized);
+			return authorized;
+		}
+		return false;
+	}
+
+	public abstract List<IActivity> getRoleActivities(Role role);
 }
