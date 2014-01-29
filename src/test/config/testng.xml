@@ -10,6 +10,7 @@
 				<include name="basicSecurityMethodTest" />
 				<include name="roleAccess" />
 				<include name="groupAccess" />
+				<include name="contactAccess" />
 				<include name="organizationAccess" />
 				<include name="pool" />
 				<include name="clearData" />

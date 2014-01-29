@@ -20,7 +20,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.model.Company;
-import com.liferay.portal.model.Organization;
+import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.User;
 
 /**
@@ -37,6 +37,18 @@ public class UserService extends ServiceAccess<User> {
 
 	private UserService() {
 		userPool = new UserPool();
+	}
+
+	@Override
+	public void serverConnection(String address, String protocol, int port, String webservicesPath,
+			String authenticationToken, String loginUser, String password) {
+		// Standard behavior.
+		super.serverConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser, password);
+		// Some user information is in the contact object.
+		if (!ContactService.getInstance().isNotConnected()) {
+			ContactService.getInstance().serverConnection(address, protocol, port, webservicesPath,
+					authenticationToken, loginUser, password);
+		}
 	}
 
 	/**
@@ -188,28 +200,32 @@ public class UserService extends ServiceAccess<User> {
 	 */
 	public User getUserByEmailAddress(Company company, String emailAddress) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
-		emailAddress = emailAddress.toLowerCase();
-		// Look up user in the pool.
-		User user = userPool.getUserByEmailAddress(emailAddress);
-		if (user != null) {
-			return user;
+		if (company != null && emailAddress != null) {
+			emailAddress = emailAddress.toLowerCase();
+			// Look up user in the pool.
+			User user = userPool.getUserByEmailAddress(emailAddress);
+			if (user != null) {
+				return user;
+			}
+
+			// Look up user in the liferay.
+			checkConnection();
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("companyId", company.getCompanyId() + ""));
+			params.add(new BasicNameValuePair("emailAddress", emailAddress));
+
+			String result = getHttpResponse("user/get-user-by-email-address", params);
+			if (result != null) {
+				// A Simple JSON Response Read
+				user = decodeFromJson(result, User.class);
+				userPool.addUser(user);
+				updateContactInformation(user);
+				return user;
+			}
 		}
+		return null;
 
-		// Look up user in the liferay.
-		checkConnection();
-
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("companyId", company.getCompanyId() + ""));
-		params.add(new BasicNameValuePair("emailAddress", emailAddress));
-
-		String result = getHttpResponse("user/get-user-by-email-address", params);
-		if (result != null) {
-			// A Simple JSON Response Read
-			user = decodeFromJson(result, User.class);
-			userPool.addUser(user);
-		}
-
-		return user;
 	}
 
 	/**
@@ -244,6 +260,7 @@ public class UserService extends ServiceAccess<User> {
 				// A Simple JSON Response Read
 				user = decodeFromJson(result, User.class);
 				userPool.addUser(user);
+				updateContactInformation(user);
 				return user;
 			}
 		}
@@ -287,6 +304,7 @@ public class UserService extends ServiceAccess<User> {
 			// A Simple JSON Response Read
 			user = decodeFromJson(result, User.class);
 			userPool.addUser(user);
+			updateContactInformation(user);
 			return user;
 		}
 
@@ -327,5 +345,21 @@ public class UserService extends ServiceAccess<User> {
 			return obtainedUser;
 		}
 		return null;
+	}
+
+	/**
+	 * Some user's information in Liferay is in the contact object. We copy it to the user object.
+	 * 
+	 * @param user
+	 * @throws WebServiceAccessError
+	 * @throws AuthenticationRequired
+	 * @throws IOException
+	 * @throws NotConnectedToWebServiceException
+	 * @throws ClientProtocolException
+	 */
+	private void updateContactInformation(User user) throws ClientProtocolException, NotConnectedToWebServiceException,
+			IOException, AuthenticationRequired, WebServiceAccessError {
+		Contact contact = ContactService.getInstance().getContact(user);
+		user.setBirthday(contact.getBirthday());
 	}
 }

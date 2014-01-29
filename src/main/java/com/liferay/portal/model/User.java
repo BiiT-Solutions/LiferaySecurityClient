@@ -7,6 +7,8 @@
 
 package com.liferay.portal.model;
 
+import java.util.Date;
+
 public class User implements java.io.Serializable {
 	private boolean agreedToTermsOfUse;
 
@@ -89,6 +91,9 @@ public class User implements java.io.Serializable {
 	private long userId;
 
 	private java.lang.String uuid;
+
+	// This information in Liferay is in the Contact object.
+	private Date birthday;
 
 	public User() {
 	}
@@ -883,6 +888,14 @@ public class User implements java.io.Serializable {
 	 */
 	public void setUuid(java.lang.String uuid) {
 		this.uuid = uuid;
+	}
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
 	}
 
 }
