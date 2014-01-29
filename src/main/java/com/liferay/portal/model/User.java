@@ -890,10 +890,18 @@ public class User implements java.io.Serializable {
 		this.uuid = uuid;
 	}
 
+	/**
+	 * Gets the user birthday.
+	 * 
+	 * @return
+	 */
 	public Date getBirthday() {
 		return birthday;
 	}
 
+	/**
+	 * Sets the user birthday.
+	 */
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
 	}

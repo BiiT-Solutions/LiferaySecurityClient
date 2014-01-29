@@ -3,6 +3,9 @@ package com.liferay.portal.model;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Stores extra information of a user.
+ */
 public class Contact {
 	private Long accountId;
 	private String aimSn;
