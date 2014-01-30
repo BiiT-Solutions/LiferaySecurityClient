@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.http.client.ClientProtocolException;
 
 import com.biit.liferay.access.CompanyService;
+import com.biit.liferay.access.ContactService;
 import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.VerificationService;
@@ -38,6 +39,9 @@ public class AuthenticationService {
 		}
 		if (UserGroupService.getInstance().isNotConnected()) {
 			UserGroupService.getInstance().serverConnection();
+		}
+		if (ContactService.getInstance().isNotConnected()) {
+			ContactService.getInstance().serverConnection();
 		}
 
 		// LiferayClientLogger
@@ -95,20 +99,23 @@ public class AuthenticationService {
 		try {
 			user = UserService.getInstance().getUserByEmailAddress(company, userMail);
 		} catch (AuthenticationRequired e) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new LiferayConnectionException("Error connecting to Liferay service with '"
-					+ ConfigurationReader.getInstance().getUser() + "@"
+					+ ConfigurationReader.getInstance().getUser() + " at "
 					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
 					+ ConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file");
 		} catch (NotConnectedToWebServiceException e) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new LiferayConnectionException("Error connecting to Liferay service with '"
-					+ ConfigurationReader.getInstance().getUser() + "@"
+					+ ConfigurationReader.getInstance().getUser() + " at "
 					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
 					+ ConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file");
 		} catch (WebServiceAccessError e) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new LiferayConnectionException("Error connecting to Liferay service with '"
-					+ ConfigurationReader.getInstance().getUser() + "@"
+					+ ConfigurationReader.getInstance().getUser() + " at "
 					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
 					+ ConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file");
