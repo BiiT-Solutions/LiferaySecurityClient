@@ -5,7 +5,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
-import com.biit.liferay.log.LiferayClientLogger;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Role;
