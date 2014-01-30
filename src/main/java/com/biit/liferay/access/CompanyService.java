@@ -2,6 +2,7 @@ package com.biit.liferay.access;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -22,13 +23,14 @@ import com.liferay.portal.model.Company;
  */
 public class CompanyService extends ServiceAccess<Company> {
 	private final static CompanyService instance = new CompanyService();
+	private CompanyPool companyPool;
 
 	public static CompanyService getInstance() {
 		return instance;
 	}
 
 	private CompanyService() {
-
+		companyPool = new CompanyPool();
 	}
 
 	@Override
@@ -54,6 +56,12 @@ public class CompanyService extends ServiceAccess<Company> {
 	 */
 	public Company getCompanyById(long companyId) throws NotConnectedToWebServiceException, ClientProtocolException,
 			IOException, AuthenticationRequired, WebServiceAccessError {
+
+		Company company = companyPool.getCompanyById(companyId);
+		if (company != null) {
+			return company;
+		}
+
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -62,7 +70,9 @@ public class CompanyService extends ServiceAccess<Company> {
 		String result = getHttpResponse("company/get-company-by-id", params);
 		if (result != null) {
 			// A Simple JSON Response Read
-			return decodeFromJson(result, Company.class);
+			company = decodeFromJson(result, Company.class);
+			companyPool.addCompany(company);
+			return company;
 		}
 
 		return null;
@@ -84,6 +94,11 @@ public class CompanyService extends ServiceAccess<Company> {
 	 */
 	public Company getCompanyByVirtualHost(String virtualHost) throws NotConnectedToWebServiceException,
 			JsonParseException, JsonMappingException, IOException, AuthenticationRequired, WebServiceAccessError {
+
+		if (companyPoolByVirtualHost.get(virtualHost) != null) {
+			return companyPoolByVirtualHost.get(virtualHost);
+		}
+
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -92,7 +107,9 @@ public class CompanyService extends ServiceAccess<Company> {
 		String result = getHttpResponse("company/get-company-by-virtual-host", params);
 		if (result != null) {
 			// A Simple JSON Response Read
-			return decodeFromJson(result, Company.class);
+			Company company = decodeFromJson(result, Company.class);
+			companyPoolByVirtualHost.put(virtualHost, company);
+			return company;
 		}
 
 		return null;
@@ -112,6 +129,12 @@ public class CompanyService extends ServiceAccess<Company> {
 	 */
 	public Company getCompanyByWebId(String webId) throws NotConnectedToWebServiceException, ClientProtocolException,
 			IOException, AuthenticationRequired, WebServiceAccessError {
+
+		Company company = companyPool.getCompanyByWebId(webId);
+		if (company != null) {
+			return company;
+		}
+
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -120,7 +143,9 @@ public class CompanyService extends ServiceAccess<Company> {
 		String result = getHttpResponse("company/get-company-by-web-id", params);
 		if (result != null) {
 			// A Simple JSON Response Read
-			return decodeFromJson(result, Company.class);
+			company = decodeFromJson(result, Company.class);
+			companyPool.addCompany(company);
+			return company;
 		}
 
 		return null;
