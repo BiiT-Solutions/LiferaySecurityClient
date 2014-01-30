@@ -40,13 +40,13 @@ public class UserService extends ServiceAccess<User> {
 	}
 
 	@Override
-	public void serverConnection(String address, String protocol, int port, String webservicesPath,
+	public void authorizedServerConnection(String address, String protocol, int port, String webservicesPath,
 			String authenticationToken, String loginUser, String password) {
 		// Standard behavior.
-		super.serverConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser, password);
+		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser, password);
 		// Some user information is in the contact object.
 		if (!ContactService.getInstance().isNotConnected()) {
-			ContactService.getInstance().serverConnection(address, protocol, port, webservicesPath,
+			ContactService.getInstance().authorizedServerConnection(address, protocol, port, webservicesPath,
 					authenticationToken, loginUser, password);
 		}
 	}
