@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.biit.liferay.log.LiferayClientLogger;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Role;
@@ -80,7 +81,6 @@ public class RolesPool {
 			List<Role> userRoles = rolesByUser.get(user.getUserId());
 			if (userRoles == null) {
 				userRoles = new ArrayList<Role>();
-				rolesByUser.put(user.getUserId(), userRoles);
 			}
 
 			for (Role role : roles) {
@@ -88,36 +88,8 @@ public class RolesPool {
 					userRoles.add(role);
 				}
 			}
-		}
-	}
 
-	public void addUserRolesOfGroup(Long userId, Long groupId, List<Role> roles) {
-		if (userId != null && groupId != null && roles != null) {
-			userRoleOfGroupTime.put(userId, System.currentTimeMillis());
-
-			Hashtable<Long, List<Role>> userAndGroupRoles = userRolesOfGroup.get(userId);
-			if (userAndGroupRoles == null) {
-				userAndGroupRoles = new Hashtable<Long, List<Role>>();
-				userRolesOfGroup.put(userId, userAndGroupRoles);
-			}
-
-			List<Role> groupRoles = userAndGroupRoles.get(groupId);
-			if (groupRoles == null) {
-				groupRoles = new ArrayList<Role>();
-				userAndGroupRoles.put(groupId, groupRoles);
-			}
-
-			for (Role role : roles) {
-				if (!groupRoles.contains(role)) {
-					groupRoles.add(role);
-				}
-			}
-		}
-	}
-
-	public void addUserRolesOfGroup(User user, Group group, List<Role> roles) {
-		if (user != null && group != null) {
-			addUserRolesOfGroup(user.getUserId(), group.getGroupId(), roles);
+			rolesByUser.put(user.getUserId(), userRoles);
 		}
 	}
 
@@ -204,7 +176,7 @@ public class RolesPool {
 						removeUserRolesOfGroup(nextUserId);
 						nextUserId = null;
 					} else {
-						if (userId == nextUserId) {
+						if (userId.equals(nextUserId)) {
 							Hashtable<Long, List<Role>> userAndGroupRoles = userRolesOfGroup.get(nextUserId);
 							if (userAndGroupRoles != null) {
 								return userAndGroupRoles.get(groupId);
@@ -215,6 +187,36 @@ public class RolesPool {
 			}
 		}
 		return null;
+	}
+
+	public void addUserRolesOfGroup(User user, Group group, List<Role> roles) {
+		if (user != null && group != null) {
+			addUserRolesOfGroup(user.getUserId(), group.getGroupId(), roles);
+		}
+	}
+
+	public void addUserRolesOfGroup(Long userId, Long groupId, List<Role> roles) {
+		if (userId != null && groupId != null && roles != null) {
+			userRoleOfGroupTime.put(userId, System.currentTimeMillis());
+
+			Hashtable<Long, List<Role>> userAndGroupRoles = userRolesOfGroup.get(userId);
+			if (userAndGroupRoles == null) {
+				userAndGroupRoles = new Hashtable<Long, List<Role>>();
+				userRolesOfGroup.put(userId, userAndGroupRoles);
+			}
+
+			List<Role> groupRoles = userAndGroupRoles.get(groupId);
+			if (groupRoles == null) {
+				groupRoles = new ArrayList<Role>();
+			}
+
+			for (Role role : roles) {
+				if (!groupRoles.contains(role)) {
+					groupRoles.add(role);
+				}
+			}
+			userRolesOfGroup.get(userId).put(groupId, groupRoles);
+		}
 	}
 
 	public List<Role> getUserRolesOfGroup(User user, Group group) {

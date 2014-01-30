@@ -13,10 +13,10 @@ public class RolePool {
 
 	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
-	private Hashtable<Long, Long> userTime; // UserSoap id -> time.
-	private Hashtable<Long, List<Role>> rolesByUser; // Roles by UserSoap.
+	private Hashtable<Long, Long> userTime; // user id -> time.
+	private Hashtable<Long, List<Role>> rolesByUser; // Roles by user.
 
-	private Hashtable<String, Long> groupTime; // UserSoap id -> time.
+	private Hashtable<String, Long> groupTime; // user id -> time.
 	private Hashtable<String, List<Role>> rolesByGroup; // Roles by group.
 
 	public RolePool() {
@@ -51,21 +51,21 @@ public class RolePool {
 		}
 	}
 
-	public void addUserRole(User UserSoap, Role RoleSoap) {
-		if (UserSoap != null && RoleSoap != null) {
+	public void addUserRole(User user, Role RoleSoap) {
+		if (user != null && RoleSoap != null) {
 			List<Role> roles = new ArrayList<Role>();
 			roles.add(RoleSoap);
-			addUserRoles(UserSoap, roles);
+			addUserRoles(user, roles);
 		}
 	}
 
-	public void addUserRoles(User UserSoap, List<Role> roles) {
-		if (UserSoap != null && roles != null && roles.size() > 0) {
-			userTime.put(UserSoap.getUserId(), System.currentTimeMillis());
-			List<Role> userRoles = rolesByUser.get(UserSoap.getUserId());
+	public void addUserRoles(User user, List<Role> roles) {
+		if (user != null && roles != null && roles.size() > 0) {
+			userTime.put(user.getUserId(), System.currentTimeMillis());
+			List<Role> userRoles = rolesByUser.get(user.getUserId());
 			if (userRoles == null) {
 				userRoles = new ArrayList<Role>();
-				rolesByUser.put(UserSoap.getUserId(), userRoles);
+				rolesByUser.put(user.getUserId(), userRoles);
 			}
 
 			for (Role RoleSoap : roles) {
@@ -97,7 +97,7 @@ public class RolePool {
 		return null;
 	}
 
-	public List<Role> getUserRoles(User UserSoap) {
+	public List<Role> getUserRoles(User user) {
 		long now = System.currentTimeMillis();
 		Long userId = null;
 		if (userTime.size() > 0) {
@@ -109,7 +109,7 @@ public class RolePool {
 					removeUserRoles(userId);
 					userId = null;
 				} else {
-					if (UserSoap.getUserId() == userId) {
+					if (user.getUserId() == userId) {
 						return rolesByUser.get(userId);
 					}
 				}
@@ -146,9 +146,9 @@ public class RolePool {
 		}
 	}
 
-	public void removeUserRole(User UserSoap, Role RoleSoap) {
-		if (UserSoap != null && RoleSoap != null) {
-			List<Role> userRoles = rolesByUser.get(UserSoap.getUserId());
+	public void removeUserRole(User user, Role RoleSoap) {
+		if (user != null && RoleSoap != null) {
+			List<Role> userRoles = rolesByUser.get(user.getUserId());
 			if (userRoles != null) {
 				userRoles.remove(RoleSoap);
 			}
@@ -160,16 +160,16 @@ public class RolePool {
 		rolesByUser.remove(userId);
 	}
 
-	public void removeUserRoles(User UserSoap) {
-		if (UserSoap != null) {
-			removeUserRoles(UserSoap.getUserId());
+	public void removeUserRoles(User user) {
+		if (user != null) {
+			removeUserRoles(user.getUserId());
 		}
 	}
 
-	public void setUserRoles(User UserSoap, List<Role> roles) {
-		if (UserSoap != null && roles != null) {
-			userTime.put(UserSoap.getUserId(), System.currentTimeMillis());
-			rolesByUser.put(UserSoap.getUserId(), roles);
+	public void setUserRoles(User user, List<Role> roles) {
+		if (user != null && roles != null) {
+			userTime.put(user.getUserId(), System.currentTimeMillis());
+			rolesByUser.put(user.getUserId(), roles);
 		}
 	}
 }

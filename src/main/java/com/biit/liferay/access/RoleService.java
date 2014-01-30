@@ -31,7 +31,7 @@ public class RoleService extends ServiceAccess<Role> {
 	private static final String LIFERAY_ORGANIZATION_GROUP_PREFIX = " LFR_ORGANIZATION";
 	private final static RoleService instance = new RoleService();
 	private RolesPool rolePool;
-	//Relationship between organization and groups. 
+	// Relationship between organization and groups.
 	private HashMap<Long, Long> organizationGroups;
 
 	private RoleService() {
@@ -514,7 +514,7 @@ public class RoleService extends ServiceAccess<Role> {
 
 		if (groupId != null && userId != null) {
 			List<Role> groupRoles = rolePool.getUserRolesOfGroup(userId, groupId);
-		
+
 			if (groupRoles != null) {
 				return groupRoles;
 			}
@@ -566,37 +566,14 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws IOException
 	 * @throws NotConnectedToWebServiceException
 	 * @throws ClientProtocolException
-	 * @throws WebServiceAccessError 
+	 * @throws WebServiceAccessError
 	 */
 	public List<Role> getUserRolesOfOrganization(User user, Organization organization) throws ClientProtocolException,
 			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
 		if (user != null && organization != null) {
-//			List<Group> userOrganizationGroups = new ArrayList<Group>();
-
-			// Get the group of the organization.	
+			// Get the group of the organization.
 			Long groupId = getOrganizationGroupId(organization);
 			return getUserRolesOfGroup(user.getUserId(), groupId);
-
-			// Get the group of the organization.
-//			try {
-//				userOrganizationGroups = OrganizationService.getInstance().getUserOrganizationGroups(userId);
-//			} catch (AuthenticationRequired e) {
-//				throw new AuthenticationRequired(
-//						"Cannot connect to inner service 'GroupService'. Authentication Required. ");
-//			}
-//
-//			for (Group group : userOrganizationGroups) {
-//				// classPK key of group references the Id of the organization.
-//				if (group.getClassPK() == organizationId) {
-//					// Get roles of the group.
-//					organizationGroups.put(organizationId, group.getGroupId());
-//					return getUserRolesOfGroup(userId, group.getGroupId());
-//				}
-//			}
-			
-			
-			
-			
 		}
 		return new ArrayList<Role>();
 	}
@@ -723,7 +700,7 @@ public class RoleService extends ServiceAccess<Role> {
 			params.add(new BasicNameValuePair("userId", userId + ""));
 			params.add(new BasicNameValuePair("groupId", groupId + ""));
 			params.add(new BasicNameValuePair("roleIds", rolesIds));
-			
+
 			getHttpResponse("usergrouprole/add-user-group-roles", params);
 
 			rolePool.addUserRolesOfGroup(userId, groupId, roles);
