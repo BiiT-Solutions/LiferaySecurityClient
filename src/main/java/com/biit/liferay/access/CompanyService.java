@@ -2,7 +2,6 @@ package com.biit.liferay.access;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -95,8 +94,9 @@ public class CompanyService extends ServiceAccess<Company> {
 	public Company getCompanyByVirtualHost(String virtualHost) throws NotConnectedToWebServiceException,
 			JsonParseException, JsonMappingException, IOException, AuthenticationRequired, WebServiceAccessError {
 
-		if (companyPoolByVirtualHost.get(virtualHost) != null) {
-			return companyPoolByVirtualHost.get(virtualHost);
+		Company company = companyPool.getCompanyByVirtualHostId(virtualHost);
+		if (company != null) {
+			return company;
 		}
 
 		checkConnection();
@@ -107,8 +107,8 @@ public class CompanyService extends ServiceAccess<Company> {
 		String result = getHttpResponse("company/get-company-by-virtual-host", params);
 		if (result != null) {
 			// A Simple JSON Response Read
-			Company company = decodeFromJson(result, Company.class);
-			companyPoolByVirtualHost.put(virtualHost, company);
+			company = decodeFromJson(result, Company.class);
+			companyPool.addCompany(company, virtualHost);
 			return company;
 		}
 
