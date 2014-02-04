@@ -3,7 +3,6 @@ package com.biit.liferay.security;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
@@ -98,10 +97,27 @@ public abstract class AuthorizationService {
 		return activities;
 	}
 
+	/**
+	 * Return all user organization of the application. An organization is in the application if it has a role that
+	 * exists in the application.
+	 * 
+	 * @param user
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws AuthenticationRequired
+	 */
 	public List<Organization> getUserOrganizations(User user) throws ClientProtocolException, IOException,
 			AuthenticationRequired {
 		try {
-			return OrganizationService.getInstance().getUserOrganizations(user);
+			List<Organization> organizations = OrganizationService.getInstance().getUserOrganizations(user);
+			List<Organization> applicationOrganizations = new ArrayList<Organization>();
+			for (Organization organization : organizations) {
+				if (!getUserRoles(user, organization).isEmpty()) {
+					applicationOrganizations.add(organization);
+				}
+			}
+			return applicationOrganizations;
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.error(AuthorizationService.class.getName(),
 					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
@@ -223,7 +239,7 @@ public abstract class AuthorizationService {
 			}
 
 			// Calculate authorization.
-			authorized =  getUserActivitiesAllowed(user, organization).contains(activity);			
+			authorized = getUserActivitiesAllowed(user, organization).contains(activity);
 			authorizationPool.addUser(user, organization, activity, authorized);
 			return authorized;
 		}
