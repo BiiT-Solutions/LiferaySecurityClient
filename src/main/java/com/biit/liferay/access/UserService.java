@@ -113,7 +113,7 @@ public class UserService extends ServiceAccess<User> {
 		params.add(new BasicNameValuePair("roleIds", Arrays.toString(roleIds)));
 		params.add(new BasicNameValuePair("userGroupIds", Arrays.toString(userGroupIds)));
 		params.add(new BasicNameValuePair("sendEmail", Boolean.toString(sendEmail)));
-		params.add(new BasicNameValuePair("serviceContext", null));
+		params.add(new BasicNameValuePair("-serviceContext", null));
 
 		String result = getHttpResponse("user/add-user", params);
 		User user = null;
