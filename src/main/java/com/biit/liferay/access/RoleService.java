@@ -63,8 +63,8 @@ public class RoleService extends ServiceAccess<Role> {
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("name", name));
-			params.add(new BasicNameValuePair("titleMap", convertMapToJson(titleMap)));
-			params.add(new BasicNameValuePair("descriptionMap", convertMapToJson(descriptionMap)));
+			params.add(new BasicNameValuePair("titleMap", encodeMapToJson(titleMap)));
+			params.add(new BasicNameValuePair("descriptionMap", encodeMapToJson(descriptionMap)));
 			params.add(new BasicNameValuePair("type", Integer.toString(type)));
 
 			String result = getHttpResponse("role/add-role", params);
