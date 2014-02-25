@@ -8,8 +8,8 @@ import com.liferay.portal.model.Contact;
 public class ContactPool {
 	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
-	private Hashtable<Long, Long> time; // User id -> time.
-	private Hashtable<Long, Contact> contacts; // User id -> User.
+	private Hashtable<Long, Long> time; // Contact id -> time.
+	private Hashtable<Long, Contact> contacts; // Contact id -> User.
 
 	public ContactPool() {
 		time = new Hashtable<Long, Long>();
