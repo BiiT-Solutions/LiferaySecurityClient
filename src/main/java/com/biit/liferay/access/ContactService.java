@@ -21,12 +21,14 @@ import com.liferay.portal.model.User;
 public class ContactService extends ServiceAccess<Contact> {
 
 	private final static ContactService instance = new ContactService();
+	private ContactPool contactPool;
+
+	private ContactService() {
+		contactPool = new ContactPool();
+	}
 
 	public static ContactService getInstance() {
 		return instance;
-	}
-
-	private ContactService() {
 	}
 
 	@Override
@@ -71,6 +73,11 @@ public class ContactService extends ServiceAccess<Contact> {
 			IOException, AuthenticationRequired, WebServiceAccessError {
 		if (contactId != null) {
 			// Look up user in the liferay.
+			Contact contact = contactPool.getContact(contactId);
+			if (contact != null) {
+				return contact;
+			}
+
 			checkConnection();
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -79,7 +86,8 @@ public class ContactService extends ServiceAccess<Contact> {
 			String result = getHttpResponse("contact/get-contact", params);
 			if (result != null) {
 				// A Simple JSON Response Read
-				Contact contact = decodeFromJson(result, Contact.class);
+				contact = decodeFromJson(result, Contact.class);
+				contactPool.addContact(contact);
 				return contact;
 			}
 		}
