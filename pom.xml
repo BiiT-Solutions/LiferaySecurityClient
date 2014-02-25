@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.biit.liferay</groupId>
-	<artifactId>security-ws-client</artifactId>
+	<artifactId>liferay-access-client</artifactId>
 	<packaging>jar</packaging>
 	<version>0.4.2</version>
 	<name>Liferay Authentication Client with Web Services</name>
@@ -15,7 +15,6 @@
 		<plugin.compiler.version>2.3.2</plugin.compiler.version>
 		<plugin.exec.version>1.2.1</plugin.exec.version>
 		<org.testng.version>6.8</org.testng.version>
-		<biit-common-utils.version>0.0.1</biit-common-utils.version>
 		<biit-liferay-common-utils.version>0.3.0</biit-liferay-common-utils.version>
 		<surefire.version>2.16</surefire.version>
 		<apache.commons.codec.version>1.9</apache.commons.codec.version>
@@ -72,7 +71,7 @@
 		<!-- Basic Liferay Access -->
 		<dependency>
 			<groupId>com.biit.liferay</groupId>
-			<artifactId>common</artifactId>
+			<artifactId>liferay-common</artifactId>
 			<version>${biit-liferay-common-utils.version}</version>
 		</dependency>
 		<!-- Testing -->
