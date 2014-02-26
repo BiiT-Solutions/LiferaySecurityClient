@@ -12,7 +12,13 @@ public class UserGroupPool {
 	private Hashtable<Long, Long> time; // group id -> time.
 	private Hashtable<Long, UserGroup> groups; // groupid -> UserGroup.
 
-	public UserGroupPool() {
+	private static UserGroupPool instance = new UserGroupPool();
+
+	public static UserGroupPool getInstance() {
+		return instance;
+	}
+
+	private UserGroupPool() {
 		time = new Hashtable<Long, Long>();
 		groups = new Hashtable<Long, UserGroup>();
 	}

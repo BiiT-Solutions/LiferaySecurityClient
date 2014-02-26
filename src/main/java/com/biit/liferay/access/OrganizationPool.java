@@ -20,7 +20,13 @@ public class OrganizationPool {
 	private Hashtable<Long, Long> userTime; // user id -> time.
 	private Hashtable<Long, List<Group>> organizationsGroupByUser; // Group by user.
 
-	public OrganizationPool() {
+	private static OrganizationPool instance = new OrganizationPool();
+
+	public static OrganizationPool getInstance() {
+		return instance;
+	}
+
+	private OrganizationPool() {
 		time = new Hashtable<Long, Long>();
 		organizationsByCompany = new Hashtable<Long, List<Organization>>();
 		userTime = new Hashtable<Long, Long>();

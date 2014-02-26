@@ -34,18 +34,11 @@ public class OrganizationService extends ServiceAccess<Organization> {
 	private final static boolean DEFAULT_CREATE_SITE = false;
 	private final static int DEFAUL_START_GROUP = -1;
 	private final static int DEFAUL_END_GROUP = -1;
-	private final static OrganizationService instance = new OrganizationService();
-
-	public static OrganizationService getInstance() {
-		return instance;
-	}
-
-	private OrganizationPool organizationPool;
-
 	private Integer organizationStatus = null;
+	private ListTypeService listTypeService;
+	private CompanyService companyService;
 
-	private OrganizationService() {
-		organizationPool = new OrganizationPool();
+	public OrganizationService() {
 	}
 
 	/**
@@ -88,7 +81,7 @@ public class OrganizationService extends ServiceAccess<Organization> {
 		if (result != null) {
 			// A Simple JSON Response Read
 			organization = decodeFromJson(result, Organization.class);
-			organizationPool.addOrganization(company, organization);
+			OrganizationPool.getInstance().addOrganization(company, organization);
 			LiferayClientLogger.info(this.getClass().getName(), "Organization '" + organization.getName() + "' added.");
 			return organization;
 		}
@@ -148,7 +141,7 @@ public class OrganizationService extends ServiceAccess<Organization> {
 
 			getHttpResponse("organization/delete-organization", params);
 
-			organizationPool.removeOrganization(company, organization);
+			OrganizationPool.getInstance().removeOrganization(company, organization);
 			LiferayClientLogger.info(this.getClass().getName(), "Organization '" + organization.getName()
 					+ "' deleted.");
 		}
@@ -169,7 +162,7 @@ public class OrganizationService extends ServiceAccess<Organization> {
 		// Look up user in the pool.
 		List<Organization> organizations = new ArrayList<Organization>();
 		if (company != null) {
-			organizations = organizationPool.getOrganizations(company);
+			organizations = OrganizationPool.getInstance().getOrganizations(company);
 			if (organizations != null) {
 				return organizations;
 			}
@@ -185,7 +178,7 @@ public class OrganizationService extends ServiceAccess<Organization> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				organizations = decodeListFromJson(result, Organization.class);
-				organizationPool.addOrganizations(company, organizations);
+				OrganizationPool.getInstance().addOrganizations(company, organizations);
 			}
 		}
 
@@ -206,7 +199,7 @@ public class OrganizationService extends ServiceAccess<Organization> {
 			AuthenticationRequired, WebServiceAccessError {
 		if (organizationStatus == null) {
 			try {
-				organizationStatus = ListTypeService.getInstance().getFullMemberStatus();
+				organizationStatus = listTypeService.getFullMemberStatus();
 			} catch (AuthenticationRequired e) {
 				throw new AuthenticationRequired(
 						"Cannot connect to inner service 'ListTypeService'. Authentication Required. ");
@@ -259,7 +252,7 @@ public class OrganizationService extends ServiceAccess<Organization> {
 	 */
 	public List<Organization> getUserOrganizations(User user) throws ClientProtocolException,
 			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
-		Company companyOfUser = CompanyService.getInstance().getCompanyById(user.getCompanyId());
+		Company companyOfUser = companyService.getCompanyById(user.getCompanyId());
 
 		return getUserOrganizations(companyOfUser, user);
 	}
@@ -279,7 +272,7 @@ public class OrganizationService extends ServiceAccess<Organization> {
 		if (userId != null) {
 			List<Group> groups = new ArrayList<Group>();
 			// Look up group in the pool.
-			groups = organizationPool.getOrganizationGroups(userId);
+			groups = OrganizationPool.getInstance().getOrganizationGroups(userId);
 			if (groups != null) {
 				return groups;
 			}
@@ -296,7 +289,7 @@ public class OrganizationService extends ServiceAccess<Organization> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				groups = decodeGroupListFromJson(result, Group.class);
-				organizationPool.addOrganizationGroups(userId, groups);
+				OrganizationPool.getInstance().addOrganizationGroups(userId, groups);
 				return groups;
 			}
 		}
@@ -376,7 +369,7 @@ public class OrganizationService extends ServiceAccess<Organization> {
 
 			// Reset the pool of groups to calculate again the user's organization groups.
 			for (User user : users) {
-				organizationPool.removeOrganizationGroups(user);
+				OrganizationPool.getInstance().removeOrganizationGroups(user);
 			}
 
 			LiferayClientLogger.info(this.getClass().getName(), "Users " + usersIds + " added to organization '"
@@ -403,7 +396,7 @@ public class OrganizationService extends ServiceAccess<Organization> {
 			removeUsersFromOrganization(users, organization);
 
 			// Reset the pool of groups to calculate again the user's organization groups.
-			organizationPool.removeOrganizationGroups(user);
+			OrganizationPool.getInstance().removeOrganizationGroups(user);
 		}
 	}
 
@@ -445,11 +438,34 @@ public class OrganizationService extends ServiceAccess<Organization> {
 
 			// Reset the pool of groups to calculate again the user's organization groups.
 			for (User user : users) {
-				organizationPool.removeOrganizationGroups(user);
+				OrganizationPool.getInstance().removeOrganizationGroups(user);
 			}
 
 			LiferayClientLogger.info(this.getClass().getName(), "Users " + usersIds + " removed from organization '"
 					+ organization.getName() + "'.");
 		}
+	}
+
+	@Override
+	public void authorizedServerConnection(String address, String protocol, int port, String webservicesPath,
+			String authenticationToken, String loginUser, String password) {
+		// Standard behavior.
+		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser,
+				password);
+		// Some user information is in the contact object.
+		listTypeService = new ListTypeService();
+		listTypeService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
+				loginUser, password);
+
+		companyService = new CompanyService();
+		companyService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
+				loginUser, password);
+	}
+
+	@Override
+	public void disconnect() {
+		super.disconnect();
+		listTypeService.disconnect();
+		companyService.disconnect();
 	}
 }

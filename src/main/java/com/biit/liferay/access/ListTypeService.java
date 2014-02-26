@@ -18,15 +18,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.model.ListType;
 
 public class ListTypeService extends ServiceAccess<ListType> {
-	private final static ListTypeService instance = new ListTypeService();
 	private final static String FULL_MEMBER_TAG = "full-member";
 	private final static String FULL_MEMBER_TYPE = "com.liferay.portal.model.Organization.status";
 
-	public static ListTypeService getInstance() {
-		return instance;
-	}
-
-	private ListTypeService() {
+	public ListTypeService() {
 	}
 
 	@Override

@@ -27,28 +27,27 @@ import com.liferay.portal.model.User;
  * This class allows to manage users from Liferay portal.
  */
 public class UserService extends ServiceAccess<User> {
-	private final static UserService instance = new UserService();
+	private ContactService contactService;
 
-	public static UserService getInstance() {
-		return instance;
-	}
-
-	private UserPool userPool;
-
-	private UserService() {
-		userPool = new UserPool();
+	public UserService() {
 	}
 
 	@Override
 	public void authorizedServerConnection(String address, String protocol, int port, String webservicesPath,
 			String authenticationToken, String loginUser, String password) {
 		// Standard behavior.
-		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser, password);
+		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser,
+				password);
 		// Some user information is in the contact object.
-		if (!ContactService.getInstance().isNotConnected()) {
-			ContactService.getInstance().authorizedServerConnection(address, protocol, port, webservicesPath,
-					authenticationToken, loginUser, password);
-		}
+		contactService = new ContactService();
+		contactService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
+				loginUser, password);
+	}
+
+	@Override
+	public void disconnect() {
+		super.disconnect();
+		contactService.disconnect();
 	}
 
 	/**
@@ -120,7 +119,7 @@ public class UserService extends ServiceAccess<User> {
 		if (result != null) {
 			// A Simple JSON Response Read
 			user = decodeFromJson(result, User.class);
-			userPool.addUser(user);
+			UserPool.getInstance().addUser(user);
 			LiferayClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName() + "' added.");
 			return user;
 		}
@@ -179,7 +178,7 @@ public class UserService extends ServiceAccess<User> {
 
 			getHttpResponse("user/delete-user", params);
 
-			userPool.removeUser(user);
+			UserPool.getInstance().removeUser(user);
 			LiferayClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName() + "' deleted.");
 		}
 	}
@@ -203,7 +202,7 @@ public class UserService extends ServiceAccess<User> {
 		if (company != null && emailAddress != null) {
 			emailAddress = emailAddress.toLowerCase();
 			// Look up user in the pool.
-			User user = userPool.getUserByEmailAddress(emailAddress);
+			User user = UserPool.getInstance().getUserByEmailAddress(emailAddress);
 			if (user != null) {
 				return user;
 			}
@@ -219,7 +218,7 @@ public class UserService extends ServiceAccess<User> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				user = decodeFromJson(result, User.class);
-				userPool.addUser(user);
+				UserPool.getInstance().addUser(user);
 				updateContactInformation(user);
 				return user;
 			}
@@ -244,7 +243,7 @@ public class UserService extends ServiceAccess<User> {
 			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
 		if (userId >= 0) {
 			// Look up user in the pool.
-			User user = userPool.getUserById(userId);
+			User user = UserPool.getInstance().getUserById(userId);
 			if (user != null) {
 				return user;
 			}
@@ -259,7 +258,7 @@ public class UserService extends ServiceAccess<User> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				user = decodeFromJson(result, User.class);
-				userPool.addUser(user);
+				UserPool.getInstance().addUser(user);
 				updateContactInformation(user);
 				return user;
 			}
@@ -287,7 +286,7 @@ public class UserService extends ServiceAccess<User> {
 		screenName = screenName.toLowerCase();
 
 		// Look up user in the pool.
-		User user = userPool.getUserByScreenName(screenName);
+		User user = UserPool.getInstance().getUserByScreenName(screenName);
 		if (user != null) {
 			return user;
 		}
@@ -303,7 +302,7 @@ public class UserService extends ServiceAccess<User> {
 		if (result != null) {
 			// A Simple JSON Response Read
 			user = decodeFromJson(result, User.class);
-			userPool.addUser(user);
+			UserPool.getInstance().addUser(user);
 			updateContactInformation(user);
 			return user;
 		}
@@ -359,7 +358,7 @@ public class UserService extends ServiceAccess<User> {
 	 */
 	private void updateContactInformation(User user) throws ClientProtocolException, NotConnectedToWebServiceException,
 			IOException, AuthenticationRequired, WebServiceAccessError {
-		Contact contact = ContactService.getInstance().getContact(user);
+		Contact contact = contactService.getContact(user);
 		user.setBirthday(contact.getBirthday());
 	}
 }

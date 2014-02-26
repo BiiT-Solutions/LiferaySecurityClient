@@ -28,25 +28,16 @@ import com.liferay.portal.model.UserGroup;
 public class AuthenticationService {
 	private final static AuthenticationService instance = new AuthenticationService();
 	private Company company = null;
+	private UserService userService;
+	private CompanyService companyService;
+	private UserGroupService userGroupService;
+	private ContactService contactService;
 
 	private AuthenticationService() {
-		// Connect if it is not connected the fist time used.
-		if (UserService.getInstance().isNotConnected()) {
-			UserService.getInstance().serverConnection();
-		}
-		if (CompanyService.getInstance().isNotConnected()) {
-			CompanyService.getInstance().serverConnection();
-		}
-		if (UserGroupService.getInstance().isNotConnected()) {
-			UserGroupService.getInstance().serverConnection();
-		}
-		if (ContactService.getInstance().isNotConnected()) {
-			ContactService.getInstance().serverConnection();
-		}
-
-		// LiferayClientLogger
-		// .fatal(AuthenticationService.class.getName(),
-		// "Cannot connect to UserService and/or CompanyService. Please, configure the file 'liferay.conf' correctly.");
+		userService.serverConnection();
+		companyService.serverConnection();
+		userGroupService.serverConnection();
+		contactService.serverConnection();
 	}
 
 	public static AuthenticationService getInstance() {
@@ -81,8 +72,7 @@ public class AuthenticationService {
 		}
 
 		if (company == null) {
-			company = CompanyService.getInstance().getCompanyByVirtualHost(
-					ConfigurationReader.getInstance().getVirtualHost());
+			company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
 		}
 
 		// Check password.
@@ -97,7 +87,7 @@ public class AuthenticationService {
 		// Get user information.
 		User user = null;
 		try {
-			user = UserService.getInstance().getUserByEmailAddress(company, userMail);
+			user = userService.getUserByEmailAddress(company, userMail);
 		} catch (AuthenticationRequired e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new LiferayConnectionException("Error connecting to Liferay service with '"
@@ -131,7 +121,7 @@ public class AuthenticationService {
 	public boolean isInGroup(UserGroup group, User user) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired {
 		if (group != null && user != null) {
-			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(user);
+			List<UserGroup> userGroups = userGroupService.getUserUserGroups(user);
 			for (UserGroup UserGroupSoap : userGroups) {
 				if (UserGroupSoap.getUserGroupId() == group.getUserGroupId()) {
 					return true;
@@ -154,7 +144,7 @@ public class AuthenticationService {
 	public UserGroup getDefaultGroup(User user) throws NotConnectedToWebServiceException, ClientProtocolException,
 			IOException, AuthenticationRequired {
 		if (user != null) {
-			List<UserGroup> userGroups = UserGroupService.getInstance().getUserUserGroups(user);
+			List<UserGroup> userGroups = userGroupService.getUserUserGroups(user);
 			if (userGroups != null && userGroups.size() > 0) {
 				return userGroups.get(0);
 			}
@@ -164,12 +154,12 @@ public class AuthenticationService {
 
 	public User getUserById(long userId) throws NotConnectedToWebServiceException, UserDoesNotExistException,
 			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
-		return UserService.getInstance().getUserById(userId);
+		return userService.getUserById(userId);
 	}
 
 	public User updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
 			PBKDF2EncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
-		return UserService.getInstance().updatePassword(user, plainTextPassword);
+		return userService.updatePassword(user, plainTextPassword);
 	}
 }

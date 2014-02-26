@@ -24,17 +24,8 @@ import com.liferay.portal.model.UserGroup;
  * This class allows to manage group from Liferay portal.
  */
 public class UserGroupService extends ServiceAccess<UserGroup> {
-	private final static UserGroupService instance = new UserGroupService();
-	public static UserGroupService getInstance() {
-		return instance;
-	}
-	private UserGroupsPool userGroupsPool;
 
-	private UserGroupPool groupPool;
-
-	private UserGroupService() {
-		userGroupsPool = new UserGroupsPool();
-		groupPool = new UserGroupPool();
+	public UserGroupService() {
 	}
 
 	/**
@@ -65,7 +56,7 @@ public class UserGroupService extends ServiceAccess<UserGroup> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				userGroup = decodeFromJson(result, UserGroup.class);
-				groupPool.addGroup(userGroup);
+				UserGroupPool.getInstance().addGroup(userGroup);
 				return userGroup;
 			}
 
@@ -110,7 +101,7 @@ public class UserGroupService extends ServiceAccess<UserGroup> {
 					"Users ids " + usersId + " added to group '" + group.getName() + "'");
 
 			for (User user : users) {
-				userGroupsPool.addUserGroup(user, group);
+				UserGroupsPool.getInstance().addUserGroup(user, group);
 			}
 		}
 	}
@@ -151,7 +142,7 @@ public class UserGroupService extends ServiceAccess<UserGroup> {
 			params.add(new BasicNameValuePair("userIds", Long.toString(user.getUserId())));
 
 			getHttpResponse("user/unset-user-group-users", params);
-			userGroupsPool.removeUserGroups(user);
+			UserGroupsPool.getInstance().removeUserGroups(user);
 
 			LiferayClientLogger.info(this.getClass().getName(), "User '" + user.getScreenName() + "' unset from '"
 					+ userGroup.getName() + "'.");
@@ -177,8 +168,8 @@ public class UserGroupService extends ServiceAccess<UserGroup> {
 			params.add(new BasicNameValuePair("userGroupId", Long.toString(userGroupId)));
 
 			getHttpResponse("usergroup/delete-user-group", params);
-			groupPool.removeGroup(userGroupId);
-			userGroupsPool.removeUserGroup(userGroupId);
+			UserGroupPool.getInstance().removeGroup(userGroupId);
+			UserGroupsPool.getInstance().removeUserGroup(userGroupId);
 
 			LiferayClientLogger.info(this.getClass().getName(), "Group with id '" + userGroupId + "' deleted.");
 
@@ -203,8 +194,8 @@ public class UserGroupService extends ServiceAccess<UserGroup> {
 			params.add(new BasicNameValuePair("userGroupId", Long.toString(userGroup.getUserGroupId())));
 
 			getHttpResponse("usergroup/delete-user-group", params);
-			groupPool.removeGroup(userGroup.getUserGroupId());
-			userGroupsPool.removeUserGroup(userGroup);
+			UserGroupPool.getInstance().removeGroup(userGroup.getUserGroupId());
+			UserGroupsPool.getInstance().removeUserGroup(userGroup);
 
 			LiferayClientLogger.info(this.getClass().getName(), "Group '" + userGroup.getName() + "' deleted.");
 
@@ -228,7 +219,7 @@ public class UserGroupService extends ServiceAccess<UserGroup> {
 			WebServiceAccessError {
 		if (userGroupId >= 0) {
 			// Look up UserSoap in the pool.
-			UserGroup group = groupPool.getGroup(userGroupId);
+			UserGroup group = UserGroupPool.getInstance().getGroup(userGroupId);
 			if (group != null) {
 				return group;
 			}
@@ -242,7 +233,7 @@ public class UserGroupService extends ServiceAccess<UserGroup> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				UserGroup userGroup = decodeFromJson(result, UserGroup.class);
-				groupPool.addGroup(userGroup);
+				UserGroupPool.getInstance().addGroup(userGroup);
 				return userGroup;
 			}
 
@@ -268,7 +259,7 @@ public class UserGroupService extends ServiceAccess<UserGroup> {
 			IOException, UserGroupDoesNotExistException, AuthenticationRequired, WebServiceAccessError {
 		if (name != null && name.length() > 0) {
 			// Look up UserSoap in the pool.
-			UserGroup group = groupPool.getGroup(name);
+			UserGroup group = UserGroupPool.getInstance().getGroup(name);
 			if (group != null) {
 				return group;
 			}
@@ -282,7 +273,7 @@ public class UserGroupService extends ServiceAccess<UserGroup> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				UserGroup userGroup = decodeFromJson(result, UserGroup.class);
-				groupPool.addGroup(userGroup);
+				UserGroupPool.getInstance().addGroup(userGroup);
 				return userGroup;
 			}
 
@@ -307,7 +298,7 @@ public class UserGroupService extends ServiceAccess<UserGroup> {
 
 		// Look up UserSoap in the pool.
 		if (user != null) {
-			List<UserGroup> usergroups = userGroupsPool.getGroupsByUser(user);
+			List<UserGroup> usergroups = UserGroupsPool.getInstance().getGroupsByUser(user);
 			if (usergroups != null) {
 				return usergroups;
 			}
@@ -321,7 +312,7 @@ public class UserGroupService extends ServiceAccess<UserGroup> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				groups = decodeListFromJson(result, UserGroup.class);
-				userGroupsPool.addUserGroups(user, groups);
+				UserGroupsPool.getInstance().addUserGroups(user, groups);
 				return groups;
 			}
 		}

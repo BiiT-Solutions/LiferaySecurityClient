@@ -12,7 +12,13 @@ public class UserPool {
 	private Hashtable<Long, Long> time; // User id -> time.
 	private Hashtable<Long, User> users; // User id -> User.
 
-	public UserPool() {
+	private static UserPool instance = new UserPool();
+
+	public static UserPool getInstance() {
+		return instance;
+	}
+
+	private UserPool() {
 		time = new Hashtable<Long, Long>();
 		users = new Hashtable<Long, User>();
 	}

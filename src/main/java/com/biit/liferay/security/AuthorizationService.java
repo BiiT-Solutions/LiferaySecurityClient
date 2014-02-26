@@ -7,13 +7,9 @@ import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 
-import com.biit.liferay.access.CompanyService;
-import com.biit.liferay.access.GroupService;
-import com.biit.liferay.access.ListTypeService;
 import com.biit.liferay.access.OrganizationService;
 import com.biit.liferay.access.RoleService;
 import com.biit.liferay.access.UserGroupService;
-import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
@@ -25,31 +21,16 @@ import com.liferay.portal.model.UserGroup;
 
 public abstract class AuthorizationService {
 	private AuthorizationPool authorizationPool;
+	private RoleService roleService;
+	private UserGroupService userGroupService;
+	private OrganizationService organizationService;
 
 	public AuthorizationService() {
 		authorizationPool = new AuthorizationPool();
-		// Connect if not connected the fist time used.
-		if (UserService.getInstance().isNotConnected()) {
-			UserService.getInstance().serverConnection();
-		}
-		if (CompanyService.getInstance().isNotConnected()) {
-			CompanyService.getInstance().serverConnection();
-		}
-		if (RoleService.getInstance().isNotConnected()) {
-			RoleService.getInstance().serverConnection();
-		}
-		if (GroupService.getInstance().isNotConnected()) {
-			GroupService.getInstance().serverConnection();
-		}
-		if (UserGroupService.getInstance().isNotConnected()) {
-			UserGroupService.getInstance().serverConnection();
-		}
-		if (OrganizationService.getInstance().isNotConnected()) {
-			OrganizationService.getInstance().serverConnection();
-		}
-		if (ListTypeService.getInstance().isNotConnected()) {
-			ListTypeService.getInstance().serverConnection();
-		}
+
+		roleService.serverConnection();
+		userGroupService.serverConnection();
+		organizationService.serverConnection();
 	}
 
 	private List<IActivity> getUserActivitiesAllowed(User user, Organization organization) throws IOException,
@@ -110,7 +91,7 @@ public abstract class AuthorizationService {
 	public List<Organization> getUserOrganizations(User user) throws ClientProtocolException, IOException,
 			AuthenticationRequired {
 		try {
-			List<Organization> organizations = OrganizationService.getInstance().getUserOrganizations(user);
+			List<Organization> organizations = organizationService.getUserOrganizations(user);
 			List<Organization> applicationOrganizations = new ArrayList<Organization>();
 			for (Organization organization : organizations) {
 				if (!getUserRoles(user, organization).isEmpty()) {
@@ -133,7 +114,7 @@ public abstract class AuthorizationService {
 	public List<Role> getUserRoles(User user, Organization organization) throws IOException, AuthenticationRequired {
 		if (user != null && organization != null) {
 			try {
-				return RoleService.getInstance().getUserRolesOfOrganization(user, organization);
+				return roleService.getUserRolesOfOrganization(user, organization);
 			} catch (NotConnectedToWebServiceException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
@@ -150,7 +131,7 @@ public abstract class AuthorizationService {
 	public List<Role> getUserRoles(User user) throws IOException, AuthenticationRequired {
 		if (user != null) {
 			try {
-				return RoleService.getInstance().getUserRoles(user);
+				return roleService.getUserRoles(user);
 			} catch (RemoteException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
@@ -167,7 +148,7 @@ public abstract class AuthorizationService {
 	public List<UserGroup> getUserGroups(User user) throws ClientProtocolException, IOException, AuthenticationRequired {
 		if (user != null) {
 			try {
-				return UserGroupService.getInstance().getUserUserGroups(user);
+				return userGroupService.getUserUserGroups(user);
 			} catch (RemoteException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the user's groups for " + user.getEmailAddress() + "'");
@@ -185,7 +166,7 @@ public abstract class AuthorizationService {
 			AuthenticationRequired {
 		if (group != null) {
 			try {
-				return RoleService.getInstance().getGroupRoles(group);
+				return roleService.getGroupRoles(group);
 			} catch (RemoteException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the group's roles for " + group.getName() + "'");

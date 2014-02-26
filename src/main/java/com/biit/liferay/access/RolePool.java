@@ -11,7 +11,7 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 
-public class RolesPool {
+public class RolePool {
 
 	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
@@ -24,7 +24,13 @@ public class RolesPool {
 	private Hashtable<Long, Long> userRoleOfGroupTime; // user id -> time.
 	private Hashtable<Long, Hashtable<Long, List<Role>>> userRolesOfGroup; // User->Group->Roles.
 
-	public RolesPool() {
+	private static RolePool instance = new RolePool();
+
+	public static RolePool getInstance() {
+		return instance;
+	}
+
+	private RolePool() {
 		userTime = new Hashtable<Long, Long>();
 		groupTime = new Hashtable<Long, Long>();
 		rolesByUser = new Hashtable<Long, List<Role>>();

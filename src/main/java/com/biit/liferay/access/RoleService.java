@@ -29,18 +29,12 @@ import com.liferay.portal.model.UserGroup;
  */
 public class RoleService extends ServiceAccess<Role> {
 	private static final String LIFERAY_ORGANIZATION_GROUP_PREFIX = " LFR_ORGANIZATION";
-	private final static RoleService instance = new RoleService();
-	private RolesPool rolePool;
+	private GroupService groupService;
 	// Relationship between organization and groups.
 	private HashMap<Long, Long> organizationGroups;
 
-	private RoleService() {
-		rolePool = new RolesPool();
+	public RoleService() {
 		organizationGroups = new HashMap<Long, Long>();
-	}
-
-	public static RoleService getInstance() {
-		return instance;
 	}
 
 	/**
@@ -132,7 +126,7 @@ public class RoleService extends ServiceAccess<Role> {
 			LiferayClientLogger.info(this.getClass().getName(),
 					"Groups ids " + groupIds + " added to role '" + role.getName() + "'");
 			for (UserGroup group : userGroups) {
-				rolePool.addUserGroupRole(group, role);
+				RolePool.getInstance().addUserGroupRole(group, role);
 			}
 		}
 	}
@@ -227,7 +221,7 @@ public class RoleService extends ServiceAccess<Role> {
 			getHttpResponse("user/add-role-users", params);
 
 			for (User user : users) {
-				rolePool.addUserRole(user, role);
+				RolePool.getInstance().addUserRole(user, role);
 			}
 
 			LiferayClientLogger.info(this.getClass().getName(),
@@ -288,7 +282,7 @@ public class RoleService extends ServiceAccess<Role> {
 			getHttpResponse("role/add-user-roles", params);
 
 			for (Role role : roles) {
-				rolePool.addUserRole(user, role);
+				RolePool.getInstance().addUserRole(user, role);
 			}
 
 			LiferayClientLogger.info(this.getClass().getName(),
@@ -324,7 +318,7 @@ public class RoleService extends ServiceAccess<Role> {
 
 			getHttpResponse("role/delete-role", params);
 
-			rolePool.removeRole(role);
+			RolePool.getInstance().removeRole(role);
 			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getName() + "' deleted.");
 
 		}
@@ -350,7 +344,7 @@ public class RoleService extends ServiceAccess<Role> {
 
 		getHttpResponse("user/delete-role-user", params);
 
-		rolePool.removeUserRole(user, role);
+		RolePool.getInstance().removeUserRole(user, role);
 
 		LiferayClientLogger.info(this.getClass().getName(),
 				"Role '" + role.getName() + "' of user '" + user.getScreenName() + "' deleted.");
@@ -370,7 +364,7 @@ public class RoleService extends ServiceAccess<Role> {
 			IOException, AuthenticationRequired {
 		List<Role> roles = new ArrayList<Role>();
 		if (group != null) {
-			List<Role> groupRoles = rolePool.getGroupRoles(group);
+			List<Role> groupRoles = RolePool.getInstance().getGroupRoles(group);
 			if (groupRoles != null) {
 				return groupRoles;
 			}
@@ -384,7 +378,7 @@ public class RoleService extends ServiceAccess<Role> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				roles = decodeListFromJson(result, Role.class);
-				rolePool.addUserGroupRoles(group, roles);
+				RolePool.getInstance().addUserGroupRoles(group, roles);
 				return roles;
 			}
 
@@ -408,7 +402,7 @@ public class RoleService extends ServiceAccess<Role> {
 			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
 		List<Role> roles = new ArrayList<Role>();
 		if (organization != null) {
-			List<Role> groupRoles = rolePool.getOrganizationRoles(organization);
+			List<Role> groupRoles = RolePool.getInstance().getOrganizationRoles(organization);
 			if (groupRoles != null) {
 				return groupRoles;
 			}
@@ -422,7 +416,7 @@ public class RoleService extends ServiceAccess<Role> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				roles = decodeListFromJson(result, Role.class);
-				rolePool.addOrganizationRoles(organization, roles);
+				RolePool.getInstance().addOrganizationRoles(organization, roles);
 				return roles;
 			}
 
@@ -475,7 +469,7 @@ public class RoleService extends ServiceAccess<Role> {
 			IOException, AuthenticationRequired {
 		List<Role> roles = new ArrayList<Role>();
 		if (user != null) {
-			List<Role> userRoles = rolePool.getUserRoles(user);
+			List<Role> userRoles = RolePool.getInstance().getUserRoles(user);
 			if (userRoles != null) {
 				return userRoles;
 			}
@@ -488,7 +482,7 @@ public class RoleService extends ServiceAccess<Role> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				roles = decodeListFromJson(result, Role.class);
-				rolePool.addUserRoles(user, roles);
+				RolePool.getInstance().addUserRoles(user, roles);
 				return roles;
 			}
 
@@ -513,7 +507,7 @@ public class RoleService extends ServiceAccess<Role> {
 		List<Role> roles = new ArrayList<Role>();
 
 		if (groupId != null && userId != null) {
-			List<Role> groupRoles = rolePool.getUserRolesOfGroup(userId, groupId);
+			List<Role> groupRoles = RolePool.getInstance().getUserRolesOfGroup(userId, groupId);
 
 			if (groupRoles != null) {
 				return groupRoles;
@@ -528,7 +522,7 @@ public class RoleService extends ServiceAccess<Role> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				roles = decodeListFromJson(result, Role.class);
-				rolePool.addUserRolesOfGroup(userId, groupId, roles);
+				RolePool.getInstance().addUserRolesOfGroup(userId, groupId, roles);
 				return roles;
 			}
 
@@ -614,7 +608,7 @@ public class RoleService extends ServiceAccess<Role> {
 			getHttpResponse("group/unset-role-groups", params);
 
 			for (Group group : groups) {
-				rolePool.removeGroupRole(role, group);
+				RolePool.getInstance().removeGroupRole(role, group);
 			}
 
 			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getName() + "' unsetted from groups "
@@ -659,7 +653,7 @@ public class RoleService extends ServiceAccess<Role> {
 			getHttpResponse("group/unset-role-groups", params);
 
 			for (Organization organization : organizations) {
-				rolePool.removeOrganizationRole(role, organization);
+				RolePool.getInstance().removeOrganizationRole(role, organization);
 			}
 
 			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getName()
@@ -703,7 +697,7 @@ public class RoleService extends ServiceAccess<Role> {
 
 			getHttpResponse("usergrouprole/add-user-group-roles", params);
 
-			rolePool.addUserRolesOfGroup(userId, groupId, roles);
+			RolePool.getInstance().addUserRolesOfGroup(userId, groupId, roles);
 
 			LiferayClientLogger.info(this.getClass().getName(), "Roles ids " + rolesIds + " added to group '" + groupId
 					+ "' and user '" + userId + "'");
@@ -805,8 +799,8 @@ public class RoleService extends ServiceAccess<Role> {
 		}
 
 		try {
-			Group group = GroupService.getInstance().getGroup(organization.getCompanyId(),
-					organization.getName() + LIFERAY_ORGANIZATION_GROUP_PREFIX);
+			Group group = groupService.getGroup(organization.getCompanyId(), organization.getName()
+					+ LIFERAY_ORGANIZATION_GROUP_PREFIX);
 			if (group != null) {
 				organizationGroups.put(organization.getOrganizationId(), group.getGroupId());
 				return group.getGroupId();
@@ -817,5 +811,23 @@ public class RoleService extends ServiceAccess<Role> {
 		}
 
 		return -1;
+	}
+
+	@Override
+	public void authorizedServerConnection(String address, String protocol, int port, String webservicesPath,
+			String authenticationToken, String loginUser, String password) {
+		// Standard behavior.
+		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser,
+				password);
+		// Some user information is in the contact object.
+		groupService = new GroupService();
+		groupService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
+				loginUser, password);
+	}
+
+	@Override
+	public void disconnect() {
+		super.disconnect();
+		groupService.disconnect();
 	}
 }

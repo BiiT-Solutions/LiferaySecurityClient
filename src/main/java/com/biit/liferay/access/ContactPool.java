@@ -11,7 +11,13 @@ public class ContactPool {
 	private Hashtable<Long, Long> time; // Contact id -> time.
 	private Hashtable<Long, Contact> contacts; // Contact id -> User.
 
-	public ContactPool() {
+	private static ContactPool instance = new ContactPool();
+
+	public static ContactPool getInstance() {
+		return instance;
+	}
+
+	private ContactPool() {
 		time = new Hashtable<Long, Long>();
 		contacts = new Hashtable<Long, Contact>();
 	}
