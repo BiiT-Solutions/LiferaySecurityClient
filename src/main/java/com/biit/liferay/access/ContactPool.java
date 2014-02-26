@@ -16,7 +16,7 @@ public class ContactPool {
 		contacts = new Hashtable<Long, Contact>();
 	}
 
-	public Contact getContact(Long contactId) {
+	public Contact getContact(long contactId) {
 		long now = System.currentTimeMillis();
 		Long storedObject = null;
 		if (time.size() > 0) {
@@ -28,7 +28,7 @@ public class ContactPool {
 					removeContact(storedObject);
 					storedObject = null;
 				} else {
-					if (contacts.get(contactId) != null) {
+					if (contacts.get(storedObject) != null && contacts.get(storedObject).getContactId() == contactId) {
 						return contacts.get(contactId);
 					}
 				}

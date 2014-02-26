@@ -10,7 +10,7 @@ public class UserGroupPool {
 	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
 	private Hashtable<Long, Long> time; // group id -> time.
-	private Hashtable<Long, UserGroup> groups; // groupid -> UserSoap.
+	private Hashtable<Long, UserGroup> groups; // groupid -> UserGroup.
 
 	public UserGroupPool() {
 		time = new Hashtable<Long, Long>();
@@ -36,7 +36,7 @@ public class UserGroupPool {
 					removeGroup(storedObject);
 					storedObject = null;
 				} else {
-					if (groups.get(groupId) != null) {
+					if (groups.get(storedObject) != null && groups.get(storedObject).getUserGroupId() == groupId) {
 						return groups.get(groupId);
 					}
 				}

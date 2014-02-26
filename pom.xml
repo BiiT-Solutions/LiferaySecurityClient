@@ -17,7 +17,6 @@
 		<org.testng.version>6.8</org.testng.version>
 		<biit-liferay-common-utils.version>0.3.0</biit-liferay-common-utils.version>
 		<surefire.version>2.16</surefire.version>
-		<apache.commons.codec.version>1.9</apache.commons.codec.version>
 		<PBKDF2-encryption.version>1.0.0</PBKDF2-encryption.version>
 		<SHA1-encryption.version>1.0.0</SHA1-encryption.version>
 	</properties>
@@ -80,12 +79,6 @@
 			<artifactId>testng</artifactId>
 			<version>${org.testng.version}</version>
 			<scope>test</scope>
-		</dependency>
-		<!-- Apache commons codec -->
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>${apache.commons.codec.version}</version>
 		</dependency>
 	</dependencies>
 

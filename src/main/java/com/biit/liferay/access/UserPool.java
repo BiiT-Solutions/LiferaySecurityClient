@@ -36,7 +36,7 @@ public class UserPool {
 					removeUser(userId);
 					userId = null;
 				} else {
-					if (users.get(userId).getEmailAddress().equals(emailAddress)) {
+					if (users.get(userId) != null && users.get(userId).getEmailAddress().equals(emailAddress)) {
 						return users.get(userId);
 					}
 				}
@@ -57,7 +57,7 @@ public class UserPool {
 					removeUser(storedObject);
 					storedObject = null;
 				} else {
-					if (users.get(userId) != null) {
+					if (users.get(storedObject) != null && users.get(storedObject).getUserId() == userId) {
 						return users.get(userId);
 					}
 				}
@@ -78,7 +78,7 @@ public class UserPool {
 					removeUser(userId);
 					userId = null;
 				} else {
-					if (users.get(userId).getScreenName().equals(screenName)) {
+					if (users.get(userId) != null && users.get(userId).getScreenName().equals(screenName)) {
 						return users.get(userId);
 					}
 				}
