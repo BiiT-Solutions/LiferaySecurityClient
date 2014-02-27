@@ -21,9 +21,9 @@ import com.liferay.portal.model.UserGroup;
 
 public abstract class AuthorizationService {
 	private AuthorizationPool authorizationPool;
-	private RoleService roleService;
-	private UserGroupService userGroupService;
-	private OrganizationService organizationService;
+	private RoleService roleService = new RoleService();
+	private UserGroupService userGroupService = new UserGroupService();
+	private OrganizationService organizationService = new OrganizationService();
 
 	public AuthorizationService() {
 		authorizationPool = new AuthorizationPool();

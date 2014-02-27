@@ -38,6 +38,12 @@ public class UserService extends ServiceAccess<User> {
 		// Standard behavior.
 		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser,
 				password);
+		// Disconnect previous connections.
+		try {
+			contactService.disconnect();
+		} catch (Exception e) {
+
+		}
 		// Some user information is in the contact object.
 		contactService = new ContactService();
 		contactService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,

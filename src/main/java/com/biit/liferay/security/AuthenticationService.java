@@ -28,10 +28,10 @@ import com.liferay.portal.model.UserGroup;
 public class AuthenticationService {
 	private final static AuthenticationService instance = new AuthenticationService();
 	private Company company = null;
-	private UserService userService;
-	private CompanyService companyService;
-	private UserGroupService userGroupService;
-	private ContactService contactService;
+	private UserService userService = new UserService();
+	private CompanyService companyService = new CompanyService();
+	private UserGroupService userGroupService = new UserGroupService();
+	private ContactService contactService = new ContactService();
 
 	private AuthenticationService() {
 		userService.serverConnection();

@@ -452,11 +452,22 @@ public class OrganizationService extends ServiceAccess<Organization> {
 		// Standard behavior.
 		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser,
 				password);
+		// Disconnect previous connection
+		try {
+			listTypeService.disconnect();
+		} catch (Exception e) {
+
+		}
 		// Some user information is in the contact object.
 		listTypeService = new ListTypeService();
 		listTypeService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
 				loginUser, password);
 
+		try {
+			companyService.disconnect();
+		} catch (Exception e) {
+
+		}
 		companyService = new CompanyService();
 		companyService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
 				loginUser, password);

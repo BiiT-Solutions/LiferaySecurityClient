@@ -819,6 +819,12 @@ public class RoleService extends ServiceAccess<Role> {
 		// Standard behavior.
 		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser,
 				password);
+		// Disconnect previous connections.
+		try {
+			groupService.disconnect();
+		} catch (Exception e) {
+
+		}
 		// Some user information is in the contact object.
 		groupService = new GroupService();
 		groupService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
