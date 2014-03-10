@@ -22,8 +22,8 @@ import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.User;
 
 /**
- * Manage all Organization Services. As some organization's properties are defined as a group, also manage some group
- * services.
+ * Manage all Organization Services. As some organization's properties are
+ * defined as a group, also manage some group services.
  * 
  */
 public class OrganizationService extends ServiceAccess<Organization> {
@@ -186,7 +186,8 @@ public class OrganizationService extends ServiceAccess<Organization> {
 	}
 
 	/**
-	 * Obtains the default status from the database using a webservice. Requires the use of ListTypeService.
+	 * Obtains the default status from the database using a webservice. Requires
+	 * the use of ListTypeService.
 	 * 
 	 * @return
 	 * @throws ClientProtocolException
@@ -240,7 +241,8 @@ public class OrganizationService extends ServiceAccess<Organization> {
 	}
 
 	/**
-	 * Gets all organizations where the user pertains to. Needs the inner service CompanyService.
+	 * Gets all organizations where the user pertains to. Needs the inner
+	 * service CompanyService.
 	 * 
 	 * @param user
 	 * @return
@@ -314,6 +316,34 @@ public class OrganizationService extends ServiceAccess<Organization> {
 		return null;
 	}
 
+	public List<User> getOrganizationUsers(Organization organization) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		if (organization != null) {
+
+			List<User> users = new ArrayList<User>();
+			// Look up users in the pool.
+			users = OrganizationPool.getInstance().getOrganizationUsers(organization.getOrganizationId());
+			if (users != null) {
+				return users;
+			}
+
+			// Look up user in the liferay.
+			checkConnection();
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("organizationId", organization.getOrganizationId() + ""));
+
+			String result = getHttpResponse("/user/get-organization-users", params);
+			if (result != null) {
+				// A Simple JSON Response Read
+				users = (new UserService()).decodeListFromJson(result, User.class);
+				OrganizationPool.getInstance().addOrganizationUsers(organization.getOrganizationId(), users);
+				return users;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Assign a user to an organization.
 	 * 
@@ -367,7 +397,8 @@ public class OrganizationService extends ServiceAccess<Organization> {
 
 			getHttpResponse("user/add-organization-users", params);
 
-			// Reset the pool of groups to calculate again the user's organization groups.
+			// Reset the pool of groups to calculate again the user's
+			// organization groups.
 			for (User user : users) {
 				OrganizationPool.getInstance().removeOrganizationGroups(user);
 			}
@@ -395,7 +426,8 @@ public class OrganizationService extends ServiceAccess<Organization> {
 			users.add(user);
 			removeUsersFromOrganization(users, organization);
 
-			// Reset the pool of groups to calculate again the user's organization groups.
+			// Reset the pool of groups to calculate again the user's
+			// organization groups.
 			OrganizationPool.getInstance().removeOrganizationGroups(user);
 		}
 	}
@@ -436,7 +468,8 @@ public class OrganizationService extends ServiceAccess<Organization> {
 
 			getHttpResponse("user/unset-organization-users", params);
 
-			// Reset the pool of groups to calculate again the user's organization groups.
+			// Reset the pool of groups to calculate again the user's
+			// organization groups.
 			for (User user : users) {
 				OrganizationPool.getInstance().removeOrganizationGroups(user);
 			}

@@ -15,10 +15,17 @@ public class OrganizationPool {
 	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
 	private Hashtable<Long, Long> time; // Company id -> time.
-	private Hashtable<Long, List<Organization>> organizationsByCompany; // Company id -> Organizations.
+	private Hashtable<Long, List<Organization>> organizationsByCompany; // Company
+																		// id ->
+																		// Organizations.
 
 	private Hashtable<Long, Long> userTime; // user id -> time.
-	private Hashtable<Long, List<Group>> organizationsGroupByUser; // Group by user.
+	private Hashtable<Long, List<Group>> organizationsGroupByUser; // Group by
+																	// user.
+
+	private Hashtable<Long, Long> organizationUsersTime; // group id -> time.
+	private Hashtable<Long, List<User>> organizationUsers; // Users by
+															// organization.
 
 	private static OrganizationPool instance = new OrganizationPool();
 
@@ -31,6 +38,16 @@ public class OrganizationPool {
 		organizationsByCompany = new Hashtable<Long, List<Organization>>();
 		userTime = new Hashtable<Long, Long>();
 		organizationsGroupByUser = new Hashtable<Long, List<Group>>();
+		organizationUsersTime = new Hashtable<Long, Long>();
+		organizationUsers = new Hashtable<Long, List<User>>();
+	}
+
+	public void addOrganizationUsers(Long organizationId, List<User> users) {
+		if (organizationId != null && users != null) {
+			organizationUsersTime.put(organizationId, System.currentTimeMillis());
+			List<User> tempUsers = new ArrayList<User>(users);
+			organizationUsers.put(organizationId, tempUsers);
+		}
 	}
 
 	public void addOrganization(Company company, Organization organization) {
@@ -89,6 +106,27 @@ public class OrganizationPool {
 		}
 	}
 
+	public List<User> getOrganizationUsers(long organizationId) {
+		long now = System.currentTimeMillis();
+		Long nextOrganizationId = null;
+		if (organizationUsersTime.size() > 0) {
+			Enumeration<Long> e = organizationUsersTime.keys();
+			while (e.hasMoreElements()) {
+				nextOrganizationId = e.nextElement();
+				if ((now - organizationUsersTime.get(nextOrganizationId)) > EXPIRATION_TIME) {
+					// Object has expired.
+					removeOrganizationUsers(nextOrganizationId);
+					nextOrganizationId = null;
+				} else {
+					if (organizationId == nextOrganizationId) {
+						return organizationUsers.get(nextOrganizationId);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	public List<Group> getOrganizationGroups(long userId) {
 		long now = System.currentTimeMillis();
 		Long nextUserId = null;
@@ -136,6 +174,11 @@ public class OrganizationPool {
 			}
 		}
 		return null;
+	}
+
+	public void removeOrganizationUsers(Long organizationId) {
+		organizationUsersTime.remove(organizationId);
+		organizationUsers.remove(organizationId);
 	}
 
 	public void removeOrganization(Company company, Organization organization) {
