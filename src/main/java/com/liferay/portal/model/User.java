@@ -7,6 +7,7 @@
 
 package com.liferay.portal.model;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class User implements java.io.Serializable {
@@ -94,8 +95,12 @@ public class User implements java.io.Serializable {
 
 	// This information in Liferay is in the Contact object.
 	private Date birthday;
-	
+
 	private boolean male;
+
+	enum Gender {
+		MALE, FEMALE;
+	}
 
 	public User() {
 	}
@@ -914,6 +919,51 @@ public class User implements java.io.Serializable {
 
 	public void setMale(boolean male) {
 		this.male = male;
+	}
+
+	/**
+	 * Returns the gender of the user.
+	 * 
+	 * @return
+	 */
+	public Gender getGender() {
+		if (male) {
+			return Gender.MALE;
+		} else {
+			return Gender.FEMALE;
+		}
+	}
+
+	/**
+	 * Sets the gender of a user.
+	 * 
+	 * @param gender
+	 */
+	public void setGender(Gender gender) {
+		if (gender == Gender.MALE) {
+			male = true;
+		} else {
+			male = false;
+		}
+	}
+
+	/**
+	 * Returns the number of years that a user has.
+	 * 
+	 * @return
+	 */
+	public int getAge() {
+		Calendar dob = Calendar.getInstance();
+		dob.setTime(birthday);
+		Calendar today = Calendar.getInstance();
+		int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+		if (today.get(Calendar.MONTH) < dob.get(Calendar.MONTH)) {
+			age--;
+		} else if (today.get(Calendar.MONTH) == dob.get(Calendar.MONTH)
+				&& today.get(Calendar.DAY_OF_MONTH) < dob.get(Calendar.DAY_OF_MONTH)) {
+			age--;
+		}
+		return age;
 	}
 
 }
