@@ -366,5 +366,6 @@ public class UserService extends ServiceAccess<User> {
 			IOException, AuthenticationRequired, WebServiceAccessError {
 		Contact contact = contactService.getContact(user);
 		user.setBirthday(contact.getBirthday());
+		user.setMale(contact.isMale());
 	}
 }

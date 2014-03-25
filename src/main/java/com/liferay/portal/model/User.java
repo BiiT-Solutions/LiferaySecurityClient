@@ -94,6 +94,8 @@ public class User implements java.io.Serializable {
 
 	// This information in Liferay is in the Contact object.
 	private Date birthday;
+	
+	private boolean male;
 
 	public User() {
 	}
@@ -904,6 +906,14 @@ public class User implements java.io.Serializable {
 	 */
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
+	}
+
+	public boolean isMale() {
+		return male;
+	}
+
+	public void setMale(boolean male) {
+		this.male = male;
 	}
 
 }
