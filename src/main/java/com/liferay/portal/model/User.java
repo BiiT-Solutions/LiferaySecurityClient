@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class User implements java.io.Serializable {
+
 	private boolean agreedToTermsOfUse;
 
 	private java.lang.String comments;
@@ -97,10 +98,6 @@ public class User implements java.io.Serializable {
 	private Date birthday;
 
 	private boolean male;
-
-	enum Gender {
-		MALE, FEMALE;
-	}
 
 	public User() {
 	}
