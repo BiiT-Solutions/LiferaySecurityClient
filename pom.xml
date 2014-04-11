@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.biit.liferay</groupId>
-	<artifactId>liferay-access-client</artifactId>
+	<artifactId>liferay-authentication-client</artifactId>
 	<packaging>jar</packaging>
 	<version>0.5.0</version>
 	<name>Liferay Authentication Client with Web Services</name>
