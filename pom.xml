@@ -70,7 +70,7 @@
 		<!-- Basic Liferay Access -->
 		<dependency>
 			<groupId>com.biit.liferay</groupId>
-			<artifactId>liferay-common</artifactId>
+			<artifactId>liferay-service-common</artifactId>
 			<version>${biit-liferay-common-utils.version}</version>
 		</dependency>
 		<!-- Testing -->
