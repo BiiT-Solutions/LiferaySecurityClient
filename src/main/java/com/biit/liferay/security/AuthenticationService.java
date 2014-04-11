@@ -7,6 +7,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import com.biit.liferay.access.CompanyService;
 import com.biit.liferay.access.ContactService;
+import com.biit.liferay.access.PasswordService;
 import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.VerificationService;
@@ -17,7 +18,6 @@ import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.configuration.ConfigurationReader;
 import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.liferay.security.exceptions.InvalidCredentialsException;
-import com.biit.liferay.security.exceptions.LiferayConnectionException;
 import com.biit.security.exceptions.PBKDF2EncryptorException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -32,12 +32,14 @@ public class AuthenticationService {
 	private CompanyService companyService = new CompanyService();
 	private UserGroupService userGroupService = new UserGroupService();
 	private ContactService contactService = new ContactService();
+	private PasswordService passwordService = new PasswordService();
 
 	private AuthenticationService() {
 		userService.serverConnection();
 		companyService.serverConnection();
 		userGroupService.serverConnection();
 		contactService.serverConnection();
+		passwordService.serverConnection();
 	}
 
 	public static AuthenticationService getInstance() {
@@ -63,9 +65,8 @@ public class AuthenticationService {
 	 * @throws WebServiceAccessError
 	 */
 	public User authenticate(String userMail, String password) throws InvalidCredentialsException,
-			NotConnectedToWebServiceException, LiferayConnectionException, PBKDF2EncryptorException,
-			JsonParseException, JsonMappingException, ClientProtocolException, IOException, AuthenticationRequired,
-			WebServiceAccessError {
+			NotConnectedToWebServiceException, PBKDF2EncryptorException, JsonParseException, JsonMappingException,
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
 		// Login fails if either the username or password is null
 		if (userMail == null || password == null) {
 			throw new InvalidCredentialsException("No fields filled up.");
@@ -90,21 +91,21 @@ public class AuthenticationService {
 			user = userService.getUserByEmailAddress(company, userMail);
 		} catch (AuthenticationRequired e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-			throw new LiferayConnectionException("Error connecting to Liferay service with '"
+			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '"
 					+ ConfigurationReader.getInstance().getUser() + " at "
 					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
 					+ ConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file");
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-			throw new LiferayConnectionException("Error connecting to Liferay service with '"
+			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '"
 					+ ConfigurationReader.getInstance().getUser() + " at "
 					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
 					+ ConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file");
 		} catch (WebServiceAccessError e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-			throw new LiferayConnectionException("Error connecting to Liferay service with '"
+			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '"
 					+ ConfigurationReader.getInstance().getUser() + " at "
 					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
 					+ ConfigurationReader.getInstance().getConnectionPort()
@@ -160,6 +161,6 @@ public class AuthenticationService {
 	public User updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
 			PBKDF2EncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
-		return userService.updatePassword(user, plainTextPassword);
+		return passwordService.updatePassword(user, plainTextPassword);
 	}
 }

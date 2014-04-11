@@ -5,7 +5,7 @@
 	<groupId>com.biit.liferay</groupId>
 	<artifactId>liferay-access-client</artifactId>
 	<packaging>jar</packaging>
-	<version>0.4.4</version>
+	<version>0.5.0</version>
 	<name>Liferay Authentication Client with Web Services</name>
 	<description>Obtain users, groups and roles information from liferay</description>
 
@@ -15,7 +15,7 @@
 		<plugin.compiler.version>2.3.2</plugin.compiler.version>
 		<plugin.exec.version>1.2.1</plugin.exec.version>
 		<org.testng.version>6.8</org.testng.version>
-		<biit-liferay-common-utils.version>0.3.1</biit-liferay-common-utils.version>
+		<biit-liferay-common-utils.version>0.4.0</biit-liferay-common-utils.version>
 		<surefire.version>2.16</surefire.version>
 		<PBKDF2-encryption.version>1.0.0</PBKDF2-encryption.version>
 		<SHA1-encryption.version>1.0.0</SHA1-encryption.version>
