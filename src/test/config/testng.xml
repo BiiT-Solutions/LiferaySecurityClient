@@ -6,6 +6,7 @@
 			<run>
 				<include name="connection" />
 				<include name="companyAccess" />
+				<include name="siteAccess" />
 				<include name="userAccess" />
 				<include name="basicSecurityMethodTest" />
 				<include name="roleAccess" />
