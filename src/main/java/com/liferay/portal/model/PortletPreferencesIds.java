@@ -8,6 +8,8 @@
 package com.liferay.portal.model;
 
 public class PortletPreferencesIds implements java.io.Serializable {
+	private static final long serialVersionUID = 5502573990974190354L;
+
 	private long companyId;
 
 	private long ownerId;
