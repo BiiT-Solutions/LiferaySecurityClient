@@ -8,6 +8,8 @@
 package com.liferay.portal.model;
 
 public class Website implements java.io.Serializable {
+	private static final long serialVersionUID = -2073244277325614089L;
+
 	private long classNameId;
 
 	private long classPK;

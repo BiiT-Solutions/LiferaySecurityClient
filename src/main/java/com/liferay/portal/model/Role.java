@@ -8,6 +8,8 @@
 package com.liferay.portal.model;
 
 public class Role implements java.io.Serializable {
+	private static final long serialVersionUID = 7329105650809872362L;
+
 	private long classNameId;
 
 	private long classPK;

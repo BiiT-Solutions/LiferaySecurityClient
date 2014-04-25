@@ -12,10 +12,12 @@ import com.biit.liferay.access.RoleService;
 import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.access.exceptions.PortletNotInstalledException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.log.LiferayClientLogger;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Role;
+import com.liferay.portal.model.Site;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 
@@ -79,8 +81,8 @@ public abstract class AuthorizationService {
 	}
 
 	/**
-	 * Return all user organization of the application. An organization is in the application if it has a role that
-	 * exists in the application.
+	 * Return all user organization of the application. An organization is in
+	 * the application if it has a role that exists in the application.
 	 * 
 	 * @param user
 	 * @return
@@ -104,6 +106,25 @@ public abstract class AuthorizationService {
 					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 		} catch (WebServiceAccessError e) {
+			LiferayClientLogger.error(AuthorizationService.class.getName(),
+					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+		}
+		return new ArrayList<Organization>();
+	}
+
+	public List<Organization> getUserOrganizations(User user, Site site) throws ClientProtocolException, IOException,
+			AuthenticationRequired, PortletNotInstalledException {
+		try {
+			List<Organization> organizations = organizationService.getOrganizations(site, user);
+			List<Organization> applicationOrganizations = new ArrayList<Organization>();
+			for (Organization organization : organizations) {
+				if (!getUserRoles(user, organization).isEmpty()) {
+					applicationOrganizations.add(organization);
+				}
+			}
+			return applicationOrganizations;
+		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.error(AuthorizationService.class.getName(),
 					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
