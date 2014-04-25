@@ -49,11 +49,7 @@
 		<repository>
 			<id>central</id>
 			<name>biit-releases</name>
-<<<<<<< HEAD
-			<url>http://dev.biit-solutions.com/artifactory/ext-release-local</url>
-=======
 			<url>https://dev.biit-solutions.com:8443/mavenartifactory/ext-release-local</url>
->>>>>>> branch 'master' of jhortelano@dev.biit-solutions.com:LiferaySecurityClient.git
 		</repository>
 	</distributionManagement>
 
