@@ -11,6 +11,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.biit.liferay.access.exceptions.AuthenticationRequired;
+import com.biit.liferay.access.exceptions.DuplicatedLiferayElement;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.log.LiferayClientLogger;
@@ -48,10 +49,11 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
+	 * @throws DuplicatedLiferayElement
 	 */
 	public Role addRole(String name, int type, Map<String, String> titleMap, Map<String, String> descriptionMap)
 			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
-			WebServiceAccessError {
+			WebServiceAccessError, DuplicatedLiferayElement {
 		if (name != null && name.length() > 0) {
 			checkConnection();
 
@@ -64,6 +66,11 @@ public class RoleService extends ServiceAccess<Role> {
 			String result = getHttpResponse("role/add-role", params);
 			Role role = null;
 			if (result != null) {
+				// Check some errors
+				if (result.contains("DuplicateRoleException")) {
+					throw new DuplicatedLiferayElement("Already exists a role with this name");
+				}
+
 				// A Simple JSON Response Read
 				role = decodeFromJson(result, Role.class);
 				LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getName() + "' added.");
