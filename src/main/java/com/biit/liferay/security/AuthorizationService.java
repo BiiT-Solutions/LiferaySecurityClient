@@ -29,7 +29,6 @@ public abstract class AuthorizationService {
 
 	public AuthorizationService() {
 		authorizationPool = new AuthorizationPool();
-
 		roleService.serverConnection();
 		userGroupService.serverConnection();
 		organizationService.serverConnection();
