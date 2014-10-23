@@ -2,8 +2,8 @@ package com.biit.liferay.security;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -34,9 +34,9 @@ public abstract class AuthorizationService {
 		organizationService.serverConnection();
 	}
 
-	private List<IActivity> getUserActivitiesAllowed(User user, Organization organization) throws IOException,
+	private Set<IActivity> getUserActivitiesAllowed(User user, Organization organization) throws IOException,
 			AuthenticationRequired {
-		List<IActivity> organizationActivities = new ArrayList<IActivity>();
+		Set<IActivity> organizationActivities = new HashSet<IActivity>();
 		if (user != null && organization != null) {
 			// Add roles obtained by organization.
 			for (Role role : getUserRoles(user, organization)) {
@@ -51,13 +51,13 @@ public abstract class AuthorizationService {
 		return organizationActivities;
 	}
 
-	private List<IActivity> getUserActivitiesAllowed(User user) throws IOException, AuthenticationRequired {
-		List<IActivity> activities = new ArrayList<IActivity>();
+	private Set<IActivity> getUserActivitiesAllowed(User user) throws IOException, AuthenticationRequired {
+		Set<IActivity> activities = new HashSet<IActivity>();
 		if (user != null) {
-			List<Role> roles = getUserRoles(user);
+			Set<Role> roles = getUserRoles(user);
 
 			// Add roles obtained by group.
-			List<UserGroup> userGroups = getUserGroups(user);
+			Set<UserGroup> userGroups = getUserGroups(user);
 			for (UserGroup group : userGroups) {
 				for (Role role : getUserGroupRoles(group)) {
 					if (!roles.contains(role)) {
@@ -68,7 +68,7 @@ public abstract class AuthorizationService {
 
 			// Activities by role.
 			for (Role role : roles) {
-				List<IActivity> roleActivities = getRoleActivities(role);
+				Set<IActivity> roleActivities = getRoleActivities(role);
 				for (IActivity roleActivity : roleActivities) {
 					if (!activities.contains(roleActivity)) {
 						activities.add(roleActivity);
@@ -80,8 +80,8 @@ public abstract class AuthorizationService {
 	}
 
 	/**
-	 * Return all user organization of the application. An organization is in
-	 * the application if it has a role that exists in the application.
+	 * Return all user organization of the application. An organization is in the application if it has a role that
+	 * exists in the application.
 	 * 
 	 * @param user
 	 * @return
@@ -89,11 +89,11 @@ public abstract class AuthorizationService {
 	 * @throws IOException
 	 * @throws AuthenticationRequired
 	 */
-	public List<Organization> getUserOrganizations(User user) throws ClientProtocolException, IOException,
+	public Set<Organization> getUserOrganizations(User user) throws ClientProtocolException, IOException,
 			AuthenticationRequired {
 		try {
-			List<Organization> organizations = organizationService.getUserOrganizations(user);
-			List<Organization> applicationOrganizations = new ArrayList<Organization>();
+			Set<Organization> organizations = new HashSet<Organization>(organizationService.getUserOrganizations(user));
+			Set<Organization> applicationOrganizations = new HashSet<Organization>();
 			for (Organization organization : organizations) {
 				if (!getUserRoles(user, organization).isEmpty()) {
 					applicationOrganizations.add(organization);
@@ -109,14 +109,15 @@ public abstract class AuthorizationService {
 					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 		}
-		return new ArrayList<Organization>();
+		return new HashSet<Organization>();
 	}
 
-	public List<Organization> getUserOrganizations(User user, Site site) throws ClientProtocolException, IOException,
+	public Set<Organization> getUserOrganizations(User user, Site site) throws ClientProtocolException, IOException,
 			AuthenticationRequired, PortletNotInstalledException {
 		try {
-			List<Organization> organizations = organizationService.getOrganizations(site, user);
-			List<Organization> applicationOrganizations = new ArrayList<Organization>();
+			Set<Organization> organizations = new HashSet<Organization>(
+					organizationService.getOrganizations(site, user));
+			Set<Organization> applicationOrganizations = new HashSet<Organization>();
 			for (Organization organization : organizations) {
 				if (!getUserRoles(user, organization).isEmpty()) {
 					applicationOrganizations.add(organization);
@@ -128,13 +129,13 @@ public abstract class AuthorizationService {
 					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 		}
-		return new ArrayList<Organization>();
+		return new HashSet<Organization>();
 	}
 
-	public List<Role> getUserRoles(User user, Organization organization) throws IOException, AuthenticationRequired {
+	public Set<Role> getUserRoles(User user, Organization organization) throws IOException, AuthenticationRequired {
 		if (user != null && organization != null) {
 			try {
-				return roleService.getUserRolesOfOrganization(user, organization);
+				return new HashSet<Role>(roleService.getUserRolesOfOrganization(user, organization));
 			} catch (NotConnectedToWebServiceException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
@@ -145,13 +146,13 @@ public abstract class AuthorizationService {
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
-		return new ArrayList<Role>();
+		return new HashSet<Role>();
 	}
 
-	public List<Role> getUserRoles(User user) throws IOException, AuthenticationRequired {
+	public Set<Role> getUserRoles(User user) throws IOException, AuthenticationRequired {
 		if (user != null) {
 			try {
-				return roleService.getUserRoles(user);
+				return new HashSet<Role>(roleService.getUserRoles(user));
 			} catch (RemoteException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
@@ -162,13 +163,13 @@ public abstract class AuthorizationService {
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
-		return new ArrayList<Role>();
+		return new HashSet<Role>();
 	}
 
-	public List<UserGroup> getUserGroups(User user) throws ClientProtocolException, IOException, AuthenticationRequired {
+	public Set<UserGroup> getUserGroups(User user) throws ClientProtocolException, IOException, AuthenticationRequired {
 		if (user != null) {
 			try {
-				return userGroupService.getUserUserGroups(user);
+				return new HashSet<UserGroup>(userGroupService.getUserUserGroups(user));
 			} catch (RemoteException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the user's groups for " + user.getEmailAddress() + "'");
@@ -179,14 +180,14 @@ public abstract class AuthorizationService {
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
-		return new ArrayList<UserGroup>();
+		return new HashSet<UserGroup>();
 	}
 
-	public List<Role> getUserGroupRoles(UserGroup group) throws ClientProtocolException, IOException,
+	public Set<Role> getUserGroupRoles(UserGroup group) throws ClientProtocolException, IOException,
 			AuthenticationRequired {
 		if (group != null) {
 			try {
-				return roleService.getGroupRoles(group);
+				return new HashSet<Role>(roleService.getGroupRoles(group));
 			} catch (RemoteException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
 						"Error retrieving the group's roles for " + group.getName() + "'");
@@ -197,7 +198,7 @@ public abstract class AuthorizationService {
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
-		return new ArrayList<Role>();
+		return new HashSet<Role>();
 	}
 
 	/**
@@ -247,5 +248,5 @@ public abstract class AuthorizationService {
 		return false;
 	}
 
-	public abstract List<IActivity> getRoleActivities(Role role);
+	public abstract Set<IActivity> getRoleActivities(Role role);
 }
