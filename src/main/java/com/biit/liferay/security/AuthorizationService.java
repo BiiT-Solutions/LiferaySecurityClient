@@ -34,6 +34,22 @@ public abstract class AuthorizationService {
 		organizationService.serverConnection();
 	}
 
+	public Organization getOrganization(long organizationId) throws IOException, AuthenticationRequired {
+		try {
+			Organization organization = organizationService.getOrganization(organizationId);
+			return organization;
+		} catch (NotConnectedToWebServiceException e) {
+			LiferayClientLogger.error(AuthorizationService.class.getName(),
+					"Error retrieving the organization with id '" + organizationId + "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+		} catch (WebServiceAccessError e) {
+			LiferayClientLogger.error(AuthorizationService.class.getName(),
+					"Error retrieving the organization with id '" + organizationId + "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+		}
+		return null;
+	}
+
 	private Set<IActivity> getUserActivitiesAllowed(User user, Organization organization) throws IOException,
 			AuthenticationRequired {
 		Set<IActivity> organizationActivities = new HashSet<IActivity>();
