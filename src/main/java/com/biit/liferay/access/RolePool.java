@@ -31,6 +31,10 @@ public class RolePool {
 	}
 
 	private RolePool() {
+		reset();
+	}
+
+	public void reset() {
 		userTime = new Hashtable<Long, Long>();
 		groupTime = new Hashtable<Long, Long>();
 		rolesByUser = new Hashtable<Long, List<Role>>();

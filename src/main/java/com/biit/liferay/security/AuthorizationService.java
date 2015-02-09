@@ -33,6 +33,13 @@ public abstract class AuthorizationService {
 		userGroupService.serverConnection();
 		organizationService.serverConnection();
 	}
+	
+	public void reset(){
+		authorizationPool.reset();
+		roleService.reset();
+		userGroupService.reset();
+		organizationService.reset();
+	}
 
 	public Organization getOrganization(long organizationId) throws IOException, AuthenticationRequired {
 		try {

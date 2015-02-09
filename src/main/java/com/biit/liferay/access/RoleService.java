@@ -37,6 +37,10 @@ public class RoleService extends ServiceAccess<Role> {
 	public RoleService() {
 		organizationGroups = new HashMap<Long, Long>();
 	}
+	
+	public void reset(){
+		RolePool.getInstance().reset();
+	}
 
 	/**
 	 * Creates a new RoleSoap on Liferay. For testing use only.

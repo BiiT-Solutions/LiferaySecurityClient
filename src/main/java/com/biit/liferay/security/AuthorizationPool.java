@@ -20,6 +20,10 @@ public class AuthorizationPool {
 	private Hashtable<User, Hashtable<Organization, Hashtable<IActivity, Boolean>>> organizations;
 
 	public AuthorizationPool() {
+		reset();
+	}
+	
+	public void reset(){
 		time = new Hashtable<User, Long>();
 		users = new Hashtable<User, Hashtable<IActivity, Boolean>>();
 		organizations = new Hashtable<User, Hashtable<Organization, Hashtable<IActivity, Boolean>>>();
