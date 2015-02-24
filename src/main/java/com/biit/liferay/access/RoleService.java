@@ -208,7 +208,7 @@ public class RoleService extends ServiceAccess<Role> {
 	 */
 	public void addRoleUsers(List<User> users, Role role) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired {
-		if (users != null && users != null && users.size() > 0) {
+		if (users != null && users.size() > 0) {
 			checkConnection();
 
 			String userIds = "";
