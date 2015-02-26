@@ -60,7 +60,7 @@ public class AuthorizationPool {
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	public Boolean isAuthorizedActivity(User user, Organization organization, IActivity activity) {
@@ -87,7 +87,7 @@ public class AuthorizationPool {
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	public void addUser(User user, IActivity activity, Boolean authorized) {
