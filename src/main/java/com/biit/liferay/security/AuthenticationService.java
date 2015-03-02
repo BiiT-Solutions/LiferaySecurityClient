@@ -89,6 +89,9 @@ public class AuthenticationService {
 			// Get user information.
 			User user = null;
 			user = userService.getUserByEmailAddress(company, userMail);
+
+			LiferayClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'.");
+			return user;
 		} catch (AuthenticationRequired e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '"
@@ -114,9 +117,6 @@ public class AuthenticationService {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new InvalidCredentialsException("User does not exist or cannot connect to Liferay web services.");
 		}
-
-		LiferayClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'.");
-		return user;
 	}
 
 	public boolean isInGroup(UserGroup group, User user) throws NotConnectedToWebServiceException,
