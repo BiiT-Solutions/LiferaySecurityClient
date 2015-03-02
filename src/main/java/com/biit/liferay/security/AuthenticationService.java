@@ -72,22 +72,22 @@ public class AuthenticationService {
 			throw new InvalidCredentialsException("No fields filled up.");
 		}
 
-		if (company == null) {
-			company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
-		}
-
-		// Check password.
 		try {
-			if (!VerificationService.getInstance().testConnection(company, userMail, password)) {
+			if (company == null) {
+				company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
+			}
+
+			// Check password.
+			try {
+				if (!VerificationService.getInstance().testConnection(company, userMail, password)) {
+					throw new InvalidCredentialsException("Invalid user or password.");
+				}
+			} catch (AuthenticationRequired ar) {
 				throw new InvalidCredentialsException("Invalid user or password.");
 			}
-		} catch (AuthenticationRequired ar) {
-			throw new InvalidCredentialsException("Invalid user or password.");
-		}
 
-		// Get user information.
-		User user = null;
-		try {
+			// Get user information.
+			User user = null;
 			user = userService.getUserByEmailAddress(company, userMail);
 		} catch (AuthenticationRequired e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
@@ -95,27 +95,27 @@ public class AuthenticationService {
 					+ ConfigurationReader.getInstance().getUser() + " at "
 					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
 					+ ConfigurationReader.getInstance().getConnectionPort()
-					+ "'.\n Check configuration at 'liferay.conf' file");
+					+ "'.\n Check configuration at 'liferay.conf' file.");
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '"
 					+ ConfigurationReader.getInstance().getUser() + " at "
 					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
 					+ ConfigurationReader.getInstance().getConnectionPort()
-					+ "'.\n Check configuration at 'liferay.conf' file");
+					+ "'.\n Check configuration at 'liferay.conf' file.");
 		} catch (WebServiceAccessError e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '"
 					+ ConfigurationReader.getInstance().getUser() + " at "
 					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
 					+ ConfigurationReader.getInstance().getConnectionPort()
-					+ "'.\n Check configuration at 'liferay.conf' file");
+					+ "'.\n Check configuration at 'liferay.conf' file.");
 		} catch (Exception e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new InvalidCredentialsException("User does not exist or cannot connect to Liferay web services.");
 		}
 
-		LiferayClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'");
+		LiferayClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'.");
 		return user;
 	}
 
