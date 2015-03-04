@@ -20,7 +20,6 @@
 		<classes>
 			<class name="com.biit.liferay.access.AccessTest" />
 			<class name="com.biit.liferay.access.AccessUtilsTest" />
-			<!-- <class name="com.biit.liferaysecurity.BasicSecurityMethodTest" /> -->
 		</classes>
 	</test>
 </suite>
