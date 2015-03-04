@@ -76,10 +76,6 @@ public class AuthenticationService {
 			if (company == null) {
 				company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
 			}
-
-			if (!VerificationService.getInstance().testConnection(company, userMail, password)) {
-				throw new InvalidCredentialsException("Invalid user or password.");
-			}
 		} catch (Exception ar) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), ar);
 			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '"
@@ -87,6 +83,15 @@ public class AuthenticationService {
 					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
 					+ ConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
+		}
+
+		try {
+			if (!VerificationService.getInstance().testConnection(company, userMail, password)) {
+				throw new InvalidCredentialsException("Invalid user or password.");
+			}
+		} catch (Exception ar) {
+			// Cannot access to user, but already has a company. The error is with the user or password.
+			throw new InvalidCredentialsException("Invalid user or password.");
 		}
 
 		try {
