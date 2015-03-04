@@ -65,27 +65,31 @@ public class AuthenticationService {
 	 * @throws WebServiceAccessError
 	 */
 	public User authenticate(String userMail, String password) throws InvalidCredentialsException,
-			NotConnectedToWebServiceException, PBKDF2EncryptorException, JsonParseException, JsonMappingException,
-			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
+			NotConnectedToWebServiceException {
 		// Login fails if either the username or password is null
 		if (userMail == null || password == null) {
 			throw new InvalidCredentialsException("No fields filled up.");
 		}
 
+		// Check password.
 		try {
 			if (company == null) {
 				company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
 			}
 
-			// Check password.
-			try {
-				if (!VerificationService.getInstance().testConnection(company, userMail, password)) {
-					throw new InvalidCredentialsException("Invalid user or password.");
-				}
-			} catch (AuthenticationRequired ar) {
+			if (!VerificationService.getInstance().testConnection(company, userMail, password)) {
 				throw new InvalidCredentialsException("Invalid user or password.");
 			}
+		} catch (Exception ar) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), ar);
+			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '"
+					+ ConfigurationReader.getInstance().getUser() + " at "
+					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
+					+ ConfigurationReader.getInstance().getConnectionPort()
+					+ "'.\n Check configuration at 'liferay.conf' file.");
+		}
 
+		try {
 			// Get user information.
 			User user = null;
 			user = userService.getUserByEmailAddress(company, userMail);
