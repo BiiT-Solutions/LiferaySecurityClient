@@ -37,8 +37,8 @@ public class RoleService extends ServiceAccess<Role> {
 	public RoleService() {
 		organizationGroups = new HashMap<Long, Long>();
 	}
-	
-	public void reset(){
+
+	public void reset() {
 		RolePool.getInstance().reset();
 	}
 
@@ -454,6 +454,37 @@ public class RoleService extends ServiceAccess<Role> {
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("roleId", Long.toString(roleId)));
+
+		String result = getHttpResponse("role/get-role", params);
+		Role role = null;
+		if (result != null) {
+			// A Simple JSON Response Read
+			role = decodeFromJson(result, Role.class);
+			return role;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Creates a new RoleSoap on Liferay. For testing use only.
+	 * 
+	 * @param name
+	 *            name of the new RoleSoap.
+	 * @return
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
+	 */
+	public Role getRole(String roleName, long companyId) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
+		checkConnection();
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("companyId", Long.toString(companyId)));
+		params.add(new BasicNameValuePair("Name", roleName));
 
 		String result = getHttpResponse("role/get-role", params);
 		Role role = null;
