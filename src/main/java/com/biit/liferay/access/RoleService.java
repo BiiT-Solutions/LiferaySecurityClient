@@ -31,6 +31,7 @@ import com.liferay.portal.model.UserGroup;
 public class RoleService extends ServiceAccess<Role> {
 	private static final String LIFERAY_ORGANIZATION_GROUP_PREFIX = " LFR_ORGANIZATION";
 	private GroupService groupService;
+	private OrganizationService organizationService;
 	// Relationship between organization and groups.
 	private HashMap<Long, Long> organizationGroups;
 
@@ -864,6 +865,7 @@ public class RoleService extends ServiceAccess<Role> {
 		// Disconnect previous connections.
 		try {
 			groupService.disconnect();
+			organizationService.disconnect();
 		} catch (Exception e) {
 
 		}
@@ -871,11 +873,40 @@ public class RoleService extends ServiceAccess<Role> {
 		groupService = new GroupService();
 		groupService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
 				loginUser, password);
+
+		organizationService = new OrganizationService();
+		organizationService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
+				loginUser, password);
 	}
 
 	@Override
 	public void disconnect() {
 		super.disconnect();
 		groupService.disconnect();
+		organizationService.disconnect();
+	}
+
+	/**
+	 * Gets all users that have a specific role in an organization.
+	 * 
+	 * @throws WebServiceAccessError
+	 * @throws AuthenticationRequired
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
+	public List<User> getUsers(Role role, Organization organization) throws ClientProtocolException, IOException,
+			NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
+		List<User> usersOfOrganizationWithRole = new ArrayList<User>();
+		List<User> usersOfOrganization = organizationService.getOrganizationUsers(organization.getOrganizationId());
+
+		for (User user : usersOfOrganization) {
+			List<Role> roles = getUserRolesOfOrganization(user, organization);
+			if (roles.contains(role)) {
+				usersOfOrganizationWithRole.add(user);
+			}
+		}
+
+		return usersOfOrganizationWithRole;
 	}
 }
