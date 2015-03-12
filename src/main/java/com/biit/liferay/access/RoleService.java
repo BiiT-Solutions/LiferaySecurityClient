@@ -484,7 +484,7 @@ public class RoleService extends ServiceAccess<Role> {
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("companyId", Long.toString(companyId)));
-		params.add(new BasicNameValuePair("Name", roleName));
+		params.add(new BasicNameValuePair("name", roleName));
 
 		String result = getHttpResponse("role/get-role", params);
 		Role role = null;
