@@ -73,20 +73,7 @@ public class AuthenticationService {
 
 		// Check password.
 		try {
-			if (company == null) {
-				company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
-			}
-		} catch (Exception ar) {
-			LiferayClientLogger.errorMessage(this.getClass().getName(), ar);
-			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '"
-					+ ConfigurationReader.getInstance().getUser() + " at "
-					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
-					+ ConfigurationReader.getInstance().getConnectionPort()
-					+ "'.\n Check configuration at 'liferay.conf' file.");
-		}
-
-		try {
-			if (!VerificationService.getInstance().testConnection(company, userMail, password)) {
+			if (!VerificationService.getInstance().testConnection(getCompany(), userMail, password)) {
 				throw new InvalidCredentialsException("Invalid user or password.");
 			}
 		} catch (Exception ar) {
@@ -97,7 +84,7 @@ public class AuthenticationService {
 		try {
 			// Get user information.
 			User user = null;
-			user = userService.getUserByEmailAddress(company, userMail);
+			user = userService.getUserByEmailAddress(getCompany(), userMail);
 
 			LiferayClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'.");
 			return user;
@@ -167,9 +154,30 @@ public class AuthenticationService {
 		return userService.getUserById(userId);
 	}
 
+	public User getUserByEmail(String userEmail) throws NotConnectedToWebServiceException, UserDoesNotExistException,
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
+		return userService.getUserByEmailAddress(getCompany(), userEmail);
+	}
+
 	public User updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
 			PBKDF2EncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
 		return passwordService.updatePassword(user, plainTextPassword);
+	}
+
+	private Company getCompany() throws NotConnectedToWebServiceException {
+		try {
+			if (company == null) {
+				company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
+			}
+			return company;
+		} catch (Exception ar) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), ar);
+			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '"
+					+ ConfigurationReader.getInstance().getUser() + " at "
+					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
+					+ ConfigurationReader.getInstance().getConnectionPort()
+					+ "'.\n Check configuration at 'liferay.conf' file.");
+		}
 	}
 }
