@@ -2,19 +2,25 @@ package com.biit.liferay.security;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.http.client.ClientProtocolException;
 
+import com.biit.liferay.access.CompanyService;
 import com.biit.liferay.access.OrganizationService;
 import com.biit.liferay.access.RoleService;
 import com.biit.liferay.access.UserGroupService;
+import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.PortletNotInstalledException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
+import com.biit.liferay.configuration.ConfigurationReader;
 import com.biit.liferay.log.LiferayClientLogger;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.Site;
@@ -26,19 +32,25 @@ public abstract class AuthorizationService {
 	private RoleService roleService = new RoleService();
 	private UserGroupService userGroupService = new UserGroupService();
 	private OrganizationService organizationService = new OrganizationService();
+	private CompanyService companyService = new CompanyService();
+	private UserService userService = new UserService();
 
 	public AuthorizationService() {
 		authorizationPool = new AuthorizationPool();
 		roleService.serverConnection();
 		userGroupService.serverConnection();
 		organizationService.serverConnection();
+		companyService.serverConnection();
+		userService.serverConnection();
 	}
-	
-	public void reset(){
+
+	public void reset() {
 		authorizationPool.reset();
 		roleService.reset();
 		userGroupService.reset();
 		organizationService.reset();
+		companyService.reset();
+		userService.reset();
 	}
 
 	public Organization getOrganization(long organizationId) throws IOException, AuthenticationRequired {
@@ -272,4 +284,16 @@ public abstract class AuthorizationService {
 	}
 
 	public abstract Set<IActivity> getRoleActivities(Role role);
+
+	public List<User> getAllUsers() {
+		List<User> users = new ArrayList<User>();
+		try {
+			Company company = companyService
+					.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
+			return userService.getCompanyUsers(company.getCompanyId());
+		} catch (IOException | AuthenticationRequired | NotConnectedToWebServiceException | WebServiceAccessError e) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+		}
+		return users;
+	}
 }
