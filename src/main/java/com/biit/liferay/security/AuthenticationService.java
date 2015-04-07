@@ -25,25 +25,25 @@ import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 
-public class AuthenticationService {
+public class AuthenticationService implements IAuthenticationService {
+	public static AuthenticationService getInstance() {
+		return instance;
+	}
 	private final static AuthenticationService instance = new AuthenticationService();
 	private Company company = null;
 	private UserService userService = new UserService();
 	private CompanyService companyService = new CompanyService();
 	private UserGroupService userGroupService = new UserGroupService();
 	private ContactService contactService = new ContactService();
+
 	private PasswordService passwordService = new PasswordService();
 
-	private AuthenticationService() {
+	protected AuthenticationService() {
 		userService.serverConnection();
 		companyService.serverConnection();
 		userGroupService.serverConnection();
 		contactService.serverConnection();
 		passwordService.serverConnection();
-	}
-
-	public static AuthenticationService getInstance() {
-		return instance;
 	}
 
 	/**
@@ -64,6 +64,7 @@ public class AuthenticationService {
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
+	@Override
 	public User authenticate(String userMail, String password) throws InvalidCredentialsException,
 			NotConnectedToWebServiceException {
 		// Login fails if either the username or password is null
@@ -115,56 +116,6 @@ public class AuthenticationService {
 		}
 	}
 
-	public boolean isInGroup(UserGroup group, User user) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired {
-		if (group != null && user != null) {
-			List<UserGroup> userGroups = userGroupService.getUserUserGroups(user);
-			for (UserGroup UserGroupSoap : userGroups) {
-				if (UserGroupSoap.getUserGroupId() == group.getUserGroupId()) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Get first group of user.
-	 * 
-	 * @param user
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 */
-	public UserGroup getDefaultGroup(User user) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException, AuthenticationRequired {
-		if (user != null) {
-			List<UserGroup> userGroups = userGroupService.getUserUserGroups(user);
-			if (userGroups != null && userGroups.size() > 0) {
-				return userGroups.get(0);
-			}
-		}
-		return null;
-	}
-
-	public User getUserById(long userId) throws NotConnectedToWebServiceException, UserDoesNotExistException,
-			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
-		return userService.getUserById(userId);
-	}
-
-	public User getUserByEmail(String userEmail) throws NotConnectedToWebServiceException, UserDoesNotExistException,
-			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
-		return userService.getUserByEmailAddress(getCompany(), userEmail);
-	}
-
-	public User updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
-			PBKDF2EncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
-			WebServiceAccessError {
-		return passwordService.updatePassword(user, plainTextPassword);
-	}
-
 	private Company getCompany() throws NotConnectedToWebServiceException {
 		try {
 			if (company == null) {
@@ -179,5 +130,60 @@ public class AuthenticationService {
 					+ ConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
 		}
+	}
+
+	/**
+	 * Get first group of user.
+	 * 
+	 * @param user
+	 * @return
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 */
+	@Override
+	public UserGroup getDefaultGroup(User user) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException, AuthenticationRequired {
+		if (user != null) {
+			List<UserGroup> userGroups = userGroupService.getUserUserGroups(user);
+			if (userGroups != null && userGroups.size() > 0) {
+				return userGroups.get(0);
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public User getUserByEmail(String userEmail) throws NotConnectedToWebServiceException, UserDoesNotExistException,
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
+		return userService.getUserByEmailAddress(getCompany(), userEmail);
+	}
+
+	@Override
+	public User getUserById(long userId) throws NotConnectedToWebServiceException, UserDoesNotExistException,
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
+		return userService.getUserById(userId);
+	}
+
+	@Override
+	public boolean isInGroup(UserGroup group, User user) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		if (group != null && user != null) {
+			List<UserGroup> userGroups = userGroupService.getUserUserGroups(user);
+			for (UserGroup UserGroupSoap : userGroups) {
+				if (UserGroupSoap.getUserGroupId() == group.getUserGroupId()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public User updatePassword(User user, String plainTextPassword) throws NotConnectedToWebServiceException,
+			PBKDF2EncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
+		return passwordService.updatePassword(user, plainTextPassword);
 	}
 }

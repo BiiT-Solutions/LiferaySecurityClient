@@ -27,7 +27,7 @@ import com.liferay.portal.model.Site;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 
-public abstract class AuthorizationService {
+public abstract class AuthorizationService implements IAuthorizationService {
 	private AuthorizationPool authorizationPool;
 	private RoleService roleService = new RoleService();
 	private UserGroupService userGroupService = new UserGroupService();
@@ -44,15 +44,20 @@ public abstract class AuthorizationService {
 		userService.serverConnection();
 	}
 
-	public void reset() {
-		authorizationPool.reset();
-		roleService.reset();
-		userGroupService.reset();
-		organizationService.reset();
-		companyService.reset();
-		userService.reset();
+	@Override
+	public List<User> getAllUsers() {
+		List<User> users = new ArrayList<User>();
+		try {
+			Company company = companyService
+					.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
+			return userService.getCompanyUsers(company.getCompanyId());
+		} catch (IOException | AuthenticationRequired | NotConnectedToWebServiceException | WebServiceAccessError e) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+		}
+		return users;
 	}
 
+	@Override
 	public Organization getOrganization(long organizationId) throws IOException, AuthenticationRequired {
 		try {
 			Organization organization = organizationService.getOrganization(organizationId);
@@ -67,23 +72,6 @@ public abstract class AuthorizationService {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 		}
 		return null;
-	}
-
-	private Set<IActivity> getUserActivitiesAllowed(User user, Organization organization) throws IOException,
-			AuthenticationRequired {
-		Set<IActivity> organizationActivities = new HashSet<IActivity>();
-		if (user != null && organization != null) {
-			// Add roles obtained by organization.
-			for (Role role : getUserRoles(user, organization)) {
-				for (IActivity activity : getRoleActivities(role)) {
-					if (!organizationActivities.contains(activity)) {
-						organizationActivities.add(activity);
-					}
-				}
-			}
-		}
-
-		return organizationActivities;
 	}
 
 	private Set<IActivity> getUserActivitiesAllowed(User user) throws IOException, AuthenticationRequired {
@@ -114,6 +102,60 @@ public abstract class AuthorizationService {
 		return activities;
 	}
 
+	private Set<IActivity> getUserActivitiesAllowed(User user, Organization organization) throws IOException,
+			AuthenticationRequired {
+		Set<IActivity> organizationActivities = new HashSet<IActivity>();
+		if (user != null && organization != null) {
+			// Add roles obtained by organization.
+			for (Role role : getUserRoles(user, organization)) {
+				for (IActivity activity : getRoleActivities(role)) {
+					if (!organizationActivities.contains(activity)) {
+						organizationActivities.add(activity);
+					}
+				}
+			}
+		}
+
+		return organizationActivities;
+	}
+
+	@Override
+	public Set<Role> getUserGroupRoles(UserGroup group) throws ClientProtocolException, IOException,
+			AuthenticationRequired {
+		if (group != null) {
+			try {
+				return new HashSet<Role>(roleService.getGroupRoles(group));
+			} catch (RemoteException e) {
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the group's roles for " + group.getName() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			} catch (NotConnectedToWebServiceException e) {
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the group's roles for " + group.getName() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			}
+		}
+		return new HashSet<Role>();
+	}
+
+	@Override
+	public Set<UserGroup> getUserGroups(User user) throws ClientProtocolException, IOException, AuthenticationRequired {
+		if (user != null) {
+			try {
+				return new HashSet<UserGroup>(userGroupService.getUserUserGroups(user));
+			} catch (RemoteException e) {
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the user's groups for " + user.getEmailAddress() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			} catch (NotConnectedToWebServiceException e) {
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the user's groups for " + user.getEmailAddress() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			}
+		}
+		return new HashSet<UserGroup>();
+	}
+
 	/**
 	 * Return all user organization of the application. An organization is in the application if it has a role that
 	 * exists in the application.
@@ -124,6 +166,7 @@ public abstract class AuthorizationService {
 	 * @throws IOException
 	 * @throws AuthenticationRequired
 	 */
+	@Override
 	public Set<Organization> getUserOrganizations(User user) throws ClientProtocolException, IOException,
 			AuthenticationRequired {
 		try {
@@ -147,6 +190,7 @@ public abstract class AuthorizationService {
 		return new HashSet<Organization>();
 	}
 
+	@Override
 	public Set<Organization> getUserOrganizations(User user, Site site) throws ClientProtocolException, IOException,
 			AuthenticationRequired, PortletNotInstalledException {
 		try {
@@ -167,23 +211,7 @@ public abstract class AuthorizationService {
 		return new HashSet<Organization>();
 	}
 
-	public Set<Role> getUserRoles(User user, Organization organization) throws IOException, AuthenticationRequired {
-		if (user != null && organization != null) {
-			try {
-				return new HashSet<Role>(roleService.getUserRolesOfOrganization(user, organization));
-			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			} catch (WebServiceAccessError e) {
-				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			}
-		}
-		return new HashSet<Role>();
-	}
-
+	@Override
 	public Set<Role> getUserRoles(User user) throws IOException, AuthenticationRequired {
 		if (user != null) {
 			try {
@@ -201,35 +229,18 @@ public abstract class AuthorizationService {
 		return new HashSet<Role>();
 	}
 
-	public Set<UserGroup> getUserGroups(User user) throws ClientProtocolException, IOException, AuthenticationRequired {
-		if (user != null) {
+	@Override
+	public Set<Role> getUserRoles(User user, Organization organization) throws IOException, AuthenticationRequired {
+		if (user != null && organization != null) {
 			try {
-				return new HashSet<UserGroup>(userGroupService.getUserUserGroups(user));
-			} catch (RemoteException e) {
-				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the user's groups for " + user.getEmailAddress() + "'");
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				return new HashSet<Role>(roleService.getUserRolesOfOrganization(user, organization));
 			} catch (NotConnectedToWebServiceException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the user's groups for " + user.getEmailAddress() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			}
-		}
-		return new HashSet<UserGroup>();
-	}
-
-	public Set<Role> getUserGroupRoles(UserGroup group) throws ClientProtocolException, IOException,
-			AuthenticationRequired {
-		if (group != null) {
-			try {
-				return new HashSet<Role>(roleService.getGroupRoles(group));
-			} catch (RemoteException e) {
+			} catch (WebServiceAccessError e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the group's roles for " + group.getName() + "'");
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.error(AuthorizationService.class.getName(),
-						"Error retrieving the group's roles for " + group.getName() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
@@ -245,6 +256,7 @@ public abstract class AuthorizationService {
 	 * @throws AuthenticationRequired
 	 * @throws IOException
 	 */
+	@Override
 	public boolean isAuthorizedActivity(User user, IActivity activity) throws IOException, AuthenticationRequired {
 		if (user == null) {
 			return false;
@@ -261,6 +273,7 @@ public abstract class AuthorizationService {
 		return authorized;
 	}
 
+	@Override
 	public boolean isAuthorizedActivity(User user, Organization organization, IActivity activity) throws IOException,
 			AuthenticationRequired {
 		if (user != null) {
@@ -283,17 +296,12 @@ public abstract class AuthorizationService {
 		return false;
 	}
 
-	public abstract Set<IActivity> getRoleActivities(Role role);
-
-	public List<User> getAllUsers() {
-		List<User> users = new ArrayList<User>();
-		try {
-			Company company = companyService
-					.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
-			return userService.getCompanyUsers(company.getCompanyId());
-		} catch (IOException | AuthenticationRequired | NotConnectedToWebServiceException | WebServiceAccessError e) {
-			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-		}
-		return users;
+	public void reset() {
+		authorizationPool.reset();
+		roleService.reset();
+		userGroupService.reset();
+		organizationService.reset();
+		companyService.reset();
+		userService.reset();
 	}
 }
