@@ -247,6 +247,50 @@ public abstract class AuthorizationService implements IAuthorizationService {
 		return new HashSet<Role>();
 	}
 
+	@Override
+	public Role getRole(long roleId) throws IOException, AuthenticationRequired {
+		try {
+			return roleService.getRole(roleId);
+		} catch (RemoteException e) {
+			LiferayClientLogger.error(AuthorizationService.class.getName(), "Error retrieving the role '" + roleId
+					+ "'");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+		} catch (NotConnectedToWebServiceException e) {
+			LiferayClientLogger.error(AuthorizationService.class.getName(), "Error retrieving the role '" + roleId
+					+ "'");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+		} catch (WebServiceAccessError e) {
+			LiferayClientLogger.error(AuthorizationService.class.getName(), "Error retrieving the role '" + roleId
+					+ "'");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+		}
+		return null;
+	}
+
+	@Override
+	public Role getRole(String roleName) throws IOException, AuthenticationRequired {
+		if (roleName != null) {
+			try {
+				Company company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance()
+						.getVirtualHost());
+				return roleService.getRole(roleName, company.getCompanyId());
+			} catch (RemoteException e) {
+				LiferayClientLogger.error(AuthorizationService.class.getName(), "Error retrieving the role '"
+						+ roleName + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			} catch (NotConnectedToWebServiceException e) {
+				LiferayClientLogger.error(AuthorizationService.class.getName(), "Error retrieving the role '"
+						+ roleName + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			} catch (WebServiceAccessError e) {
+				LiferayClientLogger.error(AuthorizationService.class.getName(), "Error retrieving the role '"
+						+ roleName + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * User is allowed to do an activity.
 	 * 

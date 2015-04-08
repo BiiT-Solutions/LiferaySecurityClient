@@ -41,4 +41,8 @@ public interface IAuthorizationService {
 	boolean isAuthorizedActivity(User user, Organization organization, IActivity activity) throws IOException,
 			AuthenticationRequired;
 
+	Role getRole(String roleName) throws IOException, AuthenticationRequired;
+
+	Role getRole(long roleId) throws IOException, AuthenticationRequired;
+
 }
