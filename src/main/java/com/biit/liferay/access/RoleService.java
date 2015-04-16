@@ -13,6 +13,7 @@ import org.apache.http.message.BasicNameValuePair;
 import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.DuplicatedLiferayElement;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.access.exceptions.RoleNotDeletedException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.log.LiferayClientLogger;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -347,19 +348,23 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws AuthenticationRequired
 	 */
 	public void deleteRole(User user, Role role) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException, AuthenticationRequired {
+			IOException, AuthenticationRequired, RoleNotDeletedException {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("userId", user.getUserId() + ""));
 		params.add(new BasicNameValuePair("roleId", role.getRoleId() + ""));
 
-		getHttpResponse("user/delete-role-user", params);
+		String result = getHttpResponse("user/delete-role-user", params);
 
-		RolePool.getInstance().removeUserRole(user, role);
-
-		LiferayClientLogger.info(this.getClass().getName(),
-				"Role '" + role.getName() + "' of user '" + user.getScreenName() + "' deleted.");
+		if (result == null || result.length() < 3) {
+			RolePool.getInstance().removeUserRole(user, role);
+			LiferayClientLogger.info(this.getClass().getName(),
+					"Role '" + role.getName() + "' of user '" + user.getScreenName() + "' deleted.");
+		} else {
+			throw new RoleNotDeletedException("Role '" + role.getName() + "' (id:" + role.getRoleId()
+					+ ") not deleted correctly. ");
+		}
 	}
 
 	/**
