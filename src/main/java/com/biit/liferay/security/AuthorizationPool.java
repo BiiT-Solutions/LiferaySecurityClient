@@ -1,7 +1,9 @@
 package com.biit.liferay.security;
 
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.User;
@@ -14,19 +16,19 @@ public class AuthorizationPool {
 	private final static long EXPIRATION_TIME = 300000;// 300 seconds
 
 	// user id -> time.
-	private Hashtable<User, Long> time;
+	private Map<User, Long> time;
 	// Form, user id -> activity -> allowed.
-	private Hashtable<User, Hashtable<IActivity, Boolean>> users;
-	private Hashtable<User, Hashtable<Organization, Hashtable<IActivity, Boolean>>> organizations;
+	private Map<User, Map<IActivity, Boolean>> users;
+	private Map<User, Map<Organization, Map<IActivity, Boolean>>> organizations;
 
 	public AuthorizationPool() {
 		reset();
 	}
-	
-	public void reset(){
-		time = new Hashtable<User, Long>();
-		users = new Hashtable<User, Hashtable<IActivity, Boolean>>();
-		organizations = new Hashtable<User, Hashtable<Organization, Hashtable<IActivity, Boolean>>>();
+
+	public void reset() {
+		time = new HashMap<User, Long>();
+		users = new HashMap<User, Map<IActivity, Boolean>>();
+		organizations = new HashMap<User, Map<Organization, Map<IActivity, Boolean>>>();
 	}
 
 	/**
@@ -42,9 +44,9 @@ public class AuthorizationPool {
 		User userForm = null;
 
 		if (time.size() > 0) {
-			Enumeration<User> userEnum = time.keys();
-			while (userEnum.hasMoreElements()) {
-				userForm = userEnum.nextElement();
+			Iterator<User> userEnum = time.keySet().iterator();
+			while (userEnum.hasNext()) {
+				userForm = userEnum.next();
 				try {
 					if (time.get(userForm) != null && (now - time.get(userForm)) > EXPIRATION_TIME) {
 						// object has expired
@@ -68,18 +70,18 @@ public class AuthorizationPool {
 		User authorizedUser = null;
 
 		if (time.size() > 0) {
-			Enumeration<User> userEnum = time.keys();
-			while (userEnum.hasMoreElements()) {
-				authorizedUser = userEnum.nextElement();
+			Iterator<User> userEnum = time.keySet().iterator();
+			while (userEnum.hasNext()) {
+				authorizedUser = userEnum.next();
 				try {
 					if (time.get(authorizedUser) != null && (now - time.get(authorizedUser)) > EXPIRATION_TIME) {
 						// object has expired
 						removeUser(authorizedUser);
 						authorizedUser = null;
 					} else if (user != null && user.equals(authorizedUser)) {
-						if (organizations.get(user) != null && organizations.get(user).get(organizations) != null
+						if (organizations.get(user) != null && organizations.get(user).get(organization) != null
 								&& activity != null) {
-							return organizations.get(user).get(organizations).get(activity);
+							return organizations.get(user).get(organization).get(activity);
 						}
 					}
 				} catch (Exception except) {
@@ -104,11 +106,11 @@ public class AuthorizationPool {
 	public void addUser(User user, Organization organization, IActivity activity, Boolean authorized) {
 		if (user != null && organization != null && activity != null && authorized != null) {
 			if (organizations.get(user) == null) {
-				organizations.put(user, new Hashtable<Organization, Hashtable<IActivity, Boolean>>());
+				organizations.put(user, new HashMap<Organization, Map<IActivity, Boolean>>());
 			}
-			
+
 			if (organizations.get(user).get(organization) == null) {
-				organizations.get(user).put(organization, new Hashtable<IActivity, Boolean>());
+				organizations.get(user).put(organization, new HashMap<IActivity, Boolean>());
 			}
 
 			organizations.get(user).get(organization).put(activity, authorized);
@@ -123,5 +125,4 @@ public class AuthorizationPool {
 			organizations.remove(user);
 		}
 	}
-
 }

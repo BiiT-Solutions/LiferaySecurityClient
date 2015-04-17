@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -338,6 +339,31 @@ public abstract class AuthorizationService implements IAuthorizationService {
 			return authorized;
 		}
 		return false;
+	}
+
+	public Set<Organization> getUserOrganizationsWhereIsAuthorized(User user, IActivity... activities) {
+		Set<Organization> organizations = new HashSet<>();
+		// Is it in the pool?
+		try {
+			organizations = getUserOrganizations(user);
+			Iterator<Organization> itr = organizations.iterator();
+			while (itr.hasNext()) {
+				Organization organization = itr.next();
+				boolean remove = true;
+				for (IActivity activity : activities) {
+					if (isAuthorizedActivity(user, organization, activity)) {
+						remove = false;
+						break;
+					}
+				}
+				if (remove) {
+					itr.remove();
+				}
+			}
+		} catch (IOException | AuthenticationRequired e) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+		}
+		return organizations;
 	}
 
 	public void reset() {
