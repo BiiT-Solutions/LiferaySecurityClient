@@ -1,9 +1,10 @@
 package com.biit.liferay.access;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Organization;
@@ -15,14 +16,14 @@ public class RolePool {
 
 	private final static long EXPIRATION_TIME = 300000;// 5 minutes
 
-	private Hashtable<Long, Long> userTime; // user id -> time.
-	private Hashtable<Long, List<Role>> rolesByUser; // Roles by user.
+	private Map<Long, Long> userTime; // user id -> time.
+	private Map<Long, List<Role>> rolesByUser; // Roles by user.
 
-	private Hashtable<Long, Long> groupTime; // Group Id -> time.
-	private Hashtable<Long, List<Role>> rolesByGroup; // Roles by group.
+	private Map<Long, Long> groupTime; // Group Id -> time.
+	private Map<Long, List<Role>> rolesByGroup; // Roles by group.
 
-	private Hashtable<Long, Long> userRoleOfGroupTime; // user id -> time.
-	private Hashtable<Long, Hashtable<Long, List<Role>>> userRolesOfGroup; // User->Group->Roles.
+	private Map<Long, Long> userRoleOfGroupTime; // user id -> time.
+	private Map<Long, Map<Long, List<Role>>> userRolesOfGroup; // User->Group->Roles.
 
 	private static RolePool instance = new RolePool();
 
@@ -35,12 +36,12 @@ public class RolePool {
 	}
 
 	public void reset() {
-		userTime = new Hashtable<Long, Long>();
-		groupTime = new Hashtable<Long, Long>();
-		rolesByUser = new Hashtable<Long, List<Role>>();
-		rolesByGroup = new Hashtable<Long, List<Role>>();
-		userRoleOfGroupTime = new Hashtable<Long, Long>();
-		userRolesOfGroup = new Hashtable<Long, Hashtable<Long, List<Role>>>();
+		userTime = new HashMap<Long, Long>();
+		groupTime = new HashMap<Long, Long>();
+		rolesByUser = new HashMap<Long, List<Role>>();
+		rolesByGroup = new HashMap<Long, List<Role>>();
+		userRoleOfGroupTime = new HashMap<Long, Long>();
+		userRolesOfGroup = new HashMap<Long, Map<Long, List<Role>>>();
 	}
 
 	public void addOrganizationRoles(Organization organization, List<Role> roles) {
@@ -112,9 +113,9 @@ public class RolePool {
 		long now = System.currentTimeMillis();
 		Long nextGroupId = null;
 		if (groupTime.size() > 0) {
-			Enumeration<Long> e = groupTime.keys();
-			while (e.hasMoreElements()) {
-				nextGroupId = e.nextElement();
+			Iterator<Long> e = new HashMap<>(groupTime).keySet().iterator();
+			while (e.hasNext()) {
+				nextGroupId = e.next();
 				if ((now - groupTime.get(nextGroupId)) > EXPIRATION_TIME) {
 					// object has expired
 					removeGroupRoles(nextGroupId);
@@ -154,9 +155,9 @@ public class RolePool {
 			long now = System.currentTimeMillis();
 			Long userId = null;
 			if (userTime.size() > 0) {
-				Enumeration<Long> e = userTime.keys();
-				while (e.hasMoreElements()) {
-					userId = e.nextElement();
+				Iterator<Long> e = new HashMap<>(userTime).keySet().iterator();
+				while (e.hasNext()) {
+					userId = e.next();
 					if ((now - userTime.get(userId)) > EXPIRATION_TIME) {
 						// object has expired
 						removeUserRoles(userId);
@@ -177,16 +178,16 @@ public class RolePool {
 			long now = System.currentTimeMillis();
 			Long nextUserId = null;
 			if (userRoleOfGroupTime.size() > 0) {
-				Enumeration<Long> e = userRoleOfGroupTime.keys();
-				while (e.hasMoreElements()) {
-					nextUserId = e.nextElement();
+				Iterator<Long> e = new HashMap<>(userRoleOfGroupTime).keySet().iterator();
+				while (e.hasNext()) {
+					nextUserId = e.next();
 					if ((now - userRoleOfGroupTime.get(nextUserId)) > EXPIRATION_TIME) {
 						// object has expired
 						removeUserRolesOfGroup(nextUserId);
 						nextUserId = null;
 					} else {
 						if (userId.equals(nextUserId)) {
-							Hashtable<Long, List<Role>> userAndGroupRoles = userRolesOfGroup.get(nextUserId);
+							Map<Long, List<Role>> userAndGroupRoles = userRolesOfGroup.get(nextUserId);
 							if (userAndGroupRoles != null) {
 								return userAndGroupRoles.get(groupId);
 							}
@@ -208,9 +209,9 @@ public class RolePool {
 		if (userId != null && groupId != null && roles != null) {
 			userRoleOfGroupTime.put(userId, System.currentTimeMillis());
 
-			Hashtable<Long, List<Role>> userAndGroupRoles = userRolesOfGroup.get(userId);
+			Map<Long, List<Role>> userAndGroupRoles = userRolesOfGroup.get(userId);
 			if (userAndGroupRoles == null) {
-				userAndGroupRoles = new Hashtable<Long, List<Role>>();
+				userAndGroupRoles = new HashMap<Long, List<Role>>();
 				userRolesOfGroup.put(userId, userAndGroupRoles);
 			}
 
@@ -284,7 +285,7 @@ public class RolePool {
 			for (List<Role> groupRoles : rolesByGroup.values()) {
 				groupRoles.remove(role);
 			}
-			for (Hashtable<Long, List<Role>> rolesByUserAndGroup : userRolesOfGroup.values()) {
+			for (Map<Long, List<Role>> rolesByUserAndGroup : userRolesOfGroup.values()) {
 				for (List<Role> userGroupRoles : rolesByUserAndGroup.values()) {
 					userGroupRoles.remove(role);
 				}
