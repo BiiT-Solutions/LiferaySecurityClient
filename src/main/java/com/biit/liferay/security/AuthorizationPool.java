@@ -44,7 +44,7 @@ public class AuthorizationPool {
 		User userForm = null;
 
 		if (time.size() > 0) {
-			Iterator<User> userEnum = time.keySet().iterator();
+			Iterator<User> userEnum = new HashMap<>(time).keySet().iterator();
 			while (userEnum.hasNext()) {
 				userForm = userEnum.next();
 				try {
@@ -70,7 +70,7 @@ public class AuthorizationPool {
 		User authorizedUser = null;
 
 		if (time.size() > 0) {
-			Iterator<User> userEnum = time.keySet().iterator();
+			Iterator<User> userEnum = new HashMap<>(time).keySet().iterator();
 			while (userEnum.hasNext()) {
 				authorizedUser = userEnum.next();
 				try {
