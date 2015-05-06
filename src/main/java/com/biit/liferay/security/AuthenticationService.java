@@ -29,6 +29,7 @@ public class AuthenticationService implements IAuthenticationService {
 	public static AuthenticationService getInstance() {
 		return instance;
 	}
+
 	private final static AuthenticationService instance = new AuthenticationService();
 	private Company company = null;
 	private UserService userService = new UserService();
@@ -185,5 +186,12 @@ public class AuthenticationService implements IAuthenticationService {
 			PBKDF2EncryptorException, JsonParseException, JsonMappingException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
 		return passwordService.updatePassword(user, plainTextPassword);
+	}
+
+	public void reset() {
+		userGroupService.reset();
+		companyService.reset();
+		userService.reset();
+		passwordService.reset();
 	}
 }
