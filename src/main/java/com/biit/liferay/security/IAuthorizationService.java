@@ -45,4 +45,6 @@ public interface IAuthorizationService {
 
 	Role getRole(long roleId) throws IOException, AuthenticationRequired;
 
+	List<User> getAllUsers(long organizationId);
+
 }

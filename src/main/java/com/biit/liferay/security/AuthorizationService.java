@@ -59,6 +59,18 @@ public abstract class AuthorizationService implements IAuthorizationService {
 	}
 
 	@Override
+	public List<User> getAllUsers(long organizationId) {
+		try {
+			return organizationService.getOrganizationUsers(organizationId);
+		} catch (IOException | AuthenticationRequired | NotConnectedToWebServiceException e) {
+			LiferayClientLogger.error(AuthorizationService.class.getName(),
+					"Error retrieving the organization with id '" + organizationId + "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+		}
+		return null;
+	}
+
+	@Override
 	public Organization getOrganization(long organizationId) throws IOException, AuthenticationRequired {
 		try {
 			Organization organization = organizationService.getOrganization(organizationId);
