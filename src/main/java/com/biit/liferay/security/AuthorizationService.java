@@ -23,11 +23,12 @@ import com.biit.usermanager.entity.IGroup;
 import com.biit.usermanager.entity.IRole;
 import com.biit.usermanager.entity.IUser;
 import com.biit.usermanager.security.IActivity;
+import com.biit.usermanager.security.IAuthorizationService;
 import com.biit.usermanager.security.exceptions.UserManagementException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-public abstract class AuthorizationService implements IAuthorizationService {
+public abstract class AuthorizationService implements IAuthorizationService<Long, Long, Long> {
 	private AuthorizationPool authorizationPool;
 	private RoleService roleService = new RoleService();
 	private UserGroupService userGroupService = new UserGroupService();
