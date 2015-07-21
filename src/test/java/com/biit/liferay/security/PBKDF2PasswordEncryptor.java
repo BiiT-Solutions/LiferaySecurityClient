@@ -1,8 +1,8 @@
 package com.biit.liferay.security;
 
-import com.biit.liferay.security.exceptions.InvalidCredentialsException;
 import com.biit.security.PBKDF2Encryptor;
 import com.biit.security.exceptions.PBKDF2EncryptorException;
+import com.biit.usermanager.security.exceptions.InvalidCredentialsException;
 
 public class PBKDF2PasswordEncryptor extends PBKDF2Encryptor {
 	public static final String TYPE_PBKDF2 = "PBKDF2";

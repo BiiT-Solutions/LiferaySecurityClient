@@ -13,7 +13,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.DuplicatedLiferayElement;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.RoleNotDeletedException;
@@ -23,6 +22,7 @@ import com.biit.usermanager.entity.IGroup;
 import com.biit.usermanager.entity.IRole;
 import com.biit.usermanager.entity.IUser;
 import com.biit.usermanager.entity.pool.RolePool;
+import com.biit.usermanager.security.exceptions.AuthenticationRequired;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;

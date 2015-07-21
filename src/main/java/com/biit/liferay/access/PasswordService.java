@@ -8,12 +8,12 @@ import java.util.Set;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.security.exceptions.PBKDF2EncryptorException;
 import com.biit.usermanager.entity.IUser;
+import com.biit.usermanager.security.exceptions.AuthenticationRequired;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.liferay.portal.model.User;

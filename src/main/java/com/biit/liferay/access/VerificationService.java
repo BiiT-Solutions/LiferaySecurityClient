@@ -24,11 +24,11 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 
-import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.configuration.ConfigurationReader;
 import com.biit.usermanager.entity.IGroup;
 import com.biit.usermanager.entity.IUser;
+import com.biit.usermanager.security.exceptions.AuthenticationRequired;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.liferay.portal.model.User;

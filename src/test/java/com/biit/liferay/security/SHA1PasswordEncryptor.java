@@ -1,8 +1,8 @@
 package com.biit.liferay.security;
 
-import com.biit.liferay.security.exceptions.InvalidCredentialsException;
 import com.biit.security.SHA1Encryptor;
 import com.biit.security.exceptions.SHA1EncryptorException;
+import com.biit.usermanager.security.exceptions.InvalidCredentialsException;
 
 public class SHA1PasswordEncryptor extends SHA1Encryptor {
 	private static final SHA1PasswordEncryptor instance = new SHA1PasswordEncryptor();
