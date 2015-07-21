@@ -3,6 +3,7 @@ package com.biit.liferay.access;
 import org.testng.annotations.Test;
 
 import com.biit.liferay.access.exceptions.NotValidPasswordException;
+import com.biit.liferay.security.AccessUtils;
 
 public class AccessUtilsTest {
 
