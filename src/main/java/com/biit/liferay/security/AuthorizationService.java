@@ -22,6 +22,7 @@ import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.usermanager.entity.IGroup;
 import com.biit.usermanager.entity.IRole;
 import com.biit.usermanager.entity.IUser;
+import com.biit.usermanager.entity.pool.AuthorizationPool;
 import com.biit.usermanager.security.IActivity;
 import com.biit.usermanager.security.IAuthorizationService;
 import com.biit.usermanager.security.exceptions.UserManagementException;
