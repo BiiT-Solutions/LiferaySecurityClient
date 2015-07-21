@@ -47,10 +47,6 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		rolePool = new RolePool<Long, Long, Long>();
 	}
 
-	public void reset() {
-		rolePool.reset();
-	}
-
 	/**
 	 * Creates a new RoleSoap on Liferay. For testing use only.
 	 * 
@@ -251,6 +247,127 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 	}
 
 	/**
+	 * Add a role from a user group to a user. For testing use only.
+	 * 
+	 * @param user
+	 * @param role
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 */
+	public void addUserGroupRole(IUser<Long> user, IGroup<Long> userGroup, IRole<Long> role)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
+		roles.add(role);
+		addUserGroupRoles(user, userGroup, roles);
+	}
+
+	/**
+	 * Add a list of roles from a user group to a user. For testing use only.
+	 * 
+	 * @param user
+	 * @param roles
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 */
+	public void addUserGroupRoles(IUser<Long> user, IGroup<Long> userGroup, Set<IRole<Long>> roles)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+		if (user != null && userGroup != null && roles != null && !roles.isEmpty()) {
+			addUserGroupRoles(user.getId(), userGroup.getId(), roles);
+		}
+	}
+
+	/**
+	 * Add a list of roles to a user. For testing use only.
+	 * 
+	 * @param user
+	 * @param roles
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 */
+	public void addUserGroupRoles(Long userId, Long groupId, Set<IRole<Long>> roles)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+		if (userId != null && groupId != null && roles != null && !roles.isEmpty()) {
+			checkConnection();
+
+			String rolesIds = "";
+			if (roles.size() > 0) {
+				rolesIds = "[";
+			}
+			Iterator<IRole<Long>> iterator = roles.iterator();
+			while (iterator != null && iterator.hasNext()) {
+				rolesIds += iterator.next().getId();
+				if (iterator.hasNext()) {
+					rolesIds += ",";
+				}
+
+			}
+			if (rolesIds.length() > 0) {
+				rolesIds += "]";
+			}
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("userId", userId + ""));
+			params.add(new BasicNameValuePair("groupId", groupId + ""));
+			params.add(new BasicNameValuePair("roleIds", rolesIds));
+
+			getHttpResponse("usergrouprole/add-user-group-roles", params);
+
+			rolePool.addUserRolesOfGroup(userId, groupId, roles);
+
+			LiferayClientLogger.info(this.getClass().getName(), "Roles ids " + rolesIds + " added to group '" + groupId
+					+ "' and user '" + userId + "'");
+
+		}
+	}
+
+	/**
+	 * Add a role from a organization to a user. For testing use only.
+	 * 
+	 * @param user
+	 * @param role
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
+	 */
+	public void addUserOrganizationRole(IUser<Long> user, IGroup<Long> organization, IRole<Long> role)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
+		if (user != null && organization != null && role != null) {
+			Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
+			roles.add(role);
+			addUserOrganizationRoles(user, organization, roles);
+		}
+	}
+
+	/**
+	 * Add a list of roles from a organization to a user. For testing use only.
+	 * 
+	 * @param user
+	 * @param roles
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
+	 */
+	public void addUserOrganizationRoles(IUser<Long> user, IGroup<Long> organization, Set<IRole<Long>> roles)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
+		if (user != null && organization != null && roles != null && !roles.isEmpty()) {
+			long organizationGroupId = getOrganizationGroupId(organization);
+			addUserGroupRoles(user.getId(), organizationGroupId, roles);
+		}
+	}
+
+	/**
 	 * Add a role to a user. For testing use only.
 	 * 
 	 * @param user
@@ -309,6 +426,29 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 			LiferayClientLogger.info(this.getClass().getName(),
 					"Roles ids " + rolesIds + " added to user '" + user.getUniqueName() + "'");
 		}
+	}
+
+	@Override
+	public void authorizedServerConnection(String address, String protocol, int port, String webservicesPath,
+			String authenticationToken, String loginUser, String password) {
+		// Standard behavior.
+		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser,
+				password);
+		// Disconnect previous connections.
+		try {
+			groupService.disconnect();
+			organizationService.disconnect();
+		} catch (Exception e) {
+
+		}
+		// Some user information is in the contact object.
+		groupService = new GroupService();
+		groupService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
+				loginUser, password);
+
+		organizationService = new OrganizationService();
+		organizationService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
+				loginUser, password);
 	}
 
 	@Override
@@ -375,6 +515,13 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		}
 	}
 
+	@Override
+	public void disconnect() {
+		super.disconnect();
+		groupService.disconnect();
+		organizationService.disconnect();
+	}
+
 	/**
 	 * Get a list of roles of a group.
 	 * 
@@ -410,6 +557,39 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 			return null;
 		}
 		return roles;
+	}
+
+	/**
+	 * Gets the Group Id related to an organization.
+	 * 
+	 * @param organization
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws AuthenticationRequired
+	 * @throws WebServiceAccessError
+	 */
+	public long getOrganizationGroupId(IGroup<Long> organization) throws ClientProtocolException,
+			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
+
+		if (organizationGroups.get(organization.getId()) != null) {
+			return organizationGroups.get(organization.getId());
+		}
+
+		try {
+			IGroup<Long> group = groupService.getGroup(((Organization) organization).getCompanyId(),
+					organization.getUniqueName() + LIFERAY_ORGANIZATION_GROUP_PREFIX);
+			if (group != null) {
+				organizationGroups.put(organization.getId(), group.getId());
+				return group.getId();
+			}
+		} catch (AuthenticationRequired e) {
+			throw new AuthenticationRequired(
+					"Cannot connect to inner service 'GroupService'. Authentication Required. ");
+		}
+
+		return -1;
 	}
 
 	/**
@@ -550,6 +730,25 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 	/**
 	 * Gets the roles of a user in a group.
 	 * 
+	 * @param user
+	 * @param group
+	 * @return
+	 * @throws NotConnectedToWebServiceException
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws AuthenticationRequired
+	 */
+	public Set<IRole<Long>> getUserRolesOfGroup(IUser<Long> user, Group group)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+		if (group != null && user != null) {
+			return getUserRolesOfGroup(user.getId(), group.getGroupId());
+		}
+		return new HashSet<IRole<Long>>();
+	}
+
+	/**
+	 * Gets the roles of a user in a group.
+	 * 
 	 * @param userId
 	 * @param groupId
 	 * @return
@@ -588,25 +787,6 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 	}
 
 	/**
-	 * Gets the roles of a user in a group.
-	 * 
-	 * @param user
-	 * @param group
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 * @throws AuthenticationRequired
-	 */
-	public Set<IRole<Long>> getUserRolesOfGroup(IUser<Long> user, Group group)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
-		if (group != null && user != null) {
-			return getUserRolesOfGroup(user.getId(), group.getGroupId());
-		}
-		return new HashSet<IRole<Long>>();
-	}
-
-	/**
 	 * Gets all roles of a user for an organization. Needs the use of GroupService
 	 * 
 	 * @param userId
@@ -627,6 +807,34 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 			return getUserRolesOfGroup(user.getId(), groupId);
 		}
 		return new HashSet<IRole<Long>>();
+	}
+
+	/**
+	 * Gets all users that have a specific role in an organization.
+	 * 
+	 * @throws WebServiceAccessError
+	 * @throws AuthenticationRequired
+	 * @throws NotConnectedToWebServiceException
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
+	public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException,
+			IOException, NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
+		Set<IUser<Long>> usersOfOrganizationWithRole = new HashSet<IUser<Long>>();
+		Set<IUser<Long>> usersOfOrganization = organizationService.getOrganizationUsers(organization);
+
+		for (IUser<Long> user : usersOfOrganization) {
+			Set<IRole<Long>> roles = getUserRolesOfOrganization(user, organization);
+			if (roles.contains(role)) {
+				usersOfOrganizationWithRole.add(user);
+			}
+		}
+
+		return usersOfOrganizationWithRole;
+	}
+
+	public void reset() {
+		rolePool.reset();
 	}
 
 	/**
@@ -717,213 +925,5 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 			LiferayClientLogger.info(this.getClass().getName(), "IRole<Long> '" + role.getUniqueName()
 					+ "' unsetted from organizations " + groupIds);
 		}
-	}
-
-	/**
-	 * Add a list of roles to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param roles
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 */
-	public void addUserGroupRoles(Long userId, Long groupId, Set<IRole<Long>> roles)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
-		if (userId != null && groupId != null && roles != null && !roles.isEmpty()) {
-			checkConnection();
-
-			String rolesIds = "";
-			if (roles.size() > 0) {
-				rolesIds = "[";
-			}
-			Iterator<IRole<Long>> iterator = roles.iterator();
-			while (iterator != null && iterator.hasNext()) {
-				rolesIds += iterator.next().getId();
-				if (iterator.hasNext()) {
-					rolesIds += ",";
-				}
-
-			}
-			if (rolesIds.length() > 0) {
-				rolesIds += "]";
-			}
-
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("userId", userId + ""));
-			params.add(new BasicNameValuePair("groupId", groupId + ""));
-			params.add(new BasicNameValuePair("roleIds", rolesIds));
-
-			getHttpResponse("usergrouprole/add-user-group-roles", params);
-
-			rolePool.addUserRolesOfGroup(userId, groupId, roles);
-
-			LiferayClientLogger.info(this.getClass().getName(), "Roles ids " + rolesIds + " added to group '" + groupId
-					+ "' and user '" + userId + "'");
-
-		}
-	}
-
-	/**
-	 * Add a list of roles from a organization to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param roles
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
-	 */
-	public void addUserOrganizationRoles(IUser<Long> user, IGroup<Long> organization, Set<IRole<Long>> roles)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
-			WebServiceAccessError {
-		if (user != null && organization != null && roles != null && !roles.isEmpty()) {
-			long organizationGroupId = getOrganizationGroupId(organization);
-			addUserGroupRoles(user.getId(), organizationGroupId, roles);
-		}
-	}
-
-	/**
-	 * Add a list of roles from a user group to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param roles
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 */
-	public void addUserGroupRoles(IUser<Long> user, IGroup<Long> userGroup, Set<IRole<Long>> roles)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
-		if (user != null && userGroup != null && roles != null && !roles.isEmpty()) {
-			addUserGroupRoles(user.getId(), userGroup.getId(), roles);
-		}
-	}
-
-	/**
-	 * Add a role from a organization to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param role
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
-	 */
-	public void addUserOrganizationRole(IUser<Long> user, IGroup<Long> organization, IRole<Long> role)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
-			WebServiceAccessError {
-		if (user != null && organization != null && role != null) {
-			Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
-			roles.add(role);
-			addUserOrganizationRoles(user, organization, roles);
-		}
-	}
-
-	/**
-	 * Add a role from a user group to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param role
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 */
-	public void addUserGroupRole(IUser<Long> user, IGroup<Long> userGroup, IRole<Long> role)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
-		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
-		roles.add(role);
-		addUserGroupRoles(user, userGroup, roles);
-	}
-
-	/**
-	 * Gets the Group Id related to an organization.
-	 * 
-	 * @param organization
-	 * @return
-	 * @throws ClientProtocolException
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
-	 */
-	public long getOrganizationGroupId(IGroup<Long> organization) throws ClientProtocolException,
-			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
-
-		if (organizationGroups.get(organization.getId()) != null) {
-			return organizationGroups.get(organization.getId());
-		}
-
-		try {
-			IGroup<Long> group = groupService.getGroup(((Organization) organization).getCompanyId(),
-					organization.getUniqueName() + LIFERAY_ORGANIZATION_GROUP_PREFIX);
-			if (group != null) {
-				organizationGroups.put(organization.getId(), group.getId());
-				return group.getId();
-			}
-		} catch (AuthenticationRequired e) {
-			throw new AuthenticationRequired(
-					"Cannot connect to inner service 'GroupService'. Authentication Required. ");
-		}
-
-		return -1;
-	}
-
-	@Override
-	public void authorizedServerConnection(String address, String protocol, int port, String webservicesPath,
-			String authenticationToken, String loginUser, String password) {
-		// Standard behavior.
-		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser,
-				password);
-		// Disconnect previous connections.
-		try {
-			groupService.disconnect();
-			organizationService.disconnect();
-		} catch (Exception e) {
-
-		}
-		// Some user information is in the contact object.
-		groupService = new GroupService();
-		groupService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
-				loginUser, password);
-
-		organizationService = new OrganizationService();
-		organizationService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
-				loginUser, password);
-	}
-
-	@Override
-	public void disconnect() {
-		super.disconnect();
-		groupService.disconnect();
-		organizationService.disconnect();
-	}
-
-	/**
-	 * Gets all users that have a specific role in an organization.
-	 * 
-	 * @throws WebServiceAccessError
-	 * @throws AuthenticationRequired
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 */
-	public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException,
-			IOException, NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
-		Set<IUser<Long>> usersOfOrganizationWithRole = new HashSet<IUser<Long>>();
-		Set<IUser<Long>> usersOfOrganization = organizationService.getOrganizationUsers(organization);
-
-		for (IUser<Long> user : usersOfOrganization) {
-			Set<IRole<Long>> roles = getUserRolesOfOrganization(user, organization);
-			if (roles.contains(role)) {
-				usersOfOrganizationWithRole.add(user);
-			}
-		}
-
-		return usersOfOrganizationWithRole;
 	}
 }

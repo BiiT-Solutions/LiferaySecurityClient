@@ -37,11 +37,11 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 	private final static String JSON_AUTHENTICATION_REQUIRED_STRING = "Authenticated access required";
 	private final static VerificationService instance = new VerificationService();
 
-	public static VerificationService getInstance() {
-		return instance;
+	private VerificationService() {
 	}
 
-	private VerificationService() {
+	public static VerificationService getInstance() {
+		return instance;
 	}
 
 	private void closeClient(CloseableHttpClient httpClient) {

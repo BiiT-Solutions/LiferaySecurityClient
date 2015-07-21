@@ -16,10 +16,6 @@ public enum RoleType {
 		this.liferayCode = liferayCode;
 	}
 
-	public int getLiferayCode() {
-		return liferayCode;
-	}
-
 	public static RoleType getRoleType(int liferayCode) {
 		for (RoleType roleType : RoleType.values()) {
 			if (roleType.getLiferayCode() == liferayCode) {
@@ -27,5 +23,9 @@ public enum RoleType {
 			}
 		}
 		return RoleType.UNKNOWN;
+	}
+
+	public int getLiferayCode() {
+		return liferayCode;
 	}
 }

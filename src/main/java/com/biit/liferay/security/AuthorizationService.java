@@ -112,6 +112,67 @@ public abstract class AuthorizationService implements IAuthorizationService<Long
 		}
 	}
 
+	@Override
+	public IRole<Long> getRole(Long roleId) throws UserManagementException {
+		if (roleId != null) {
+			try {
+				return roleService.getRole(roleId);
+			} catch (RemoteException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleId + "'");
+			} catch (NotConnectedToWebServiceException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleId + "'");
+			} catch (WebServiceAccessError e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleId + "'");
+			} catch (ClientProtocolException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException(e.getMessage());
+			} catch (IOException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException(e.getMessage());
+			} catch (AuthenticationRequired e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException(e.getMessage());
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public IRole<Long> getRole(String roleName) throws UserManagementException {
+		if (roleName != null) {
+			try {
+				IGroup<Long> company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance()
+						.getVirtualHost());
+				return roleService.getRole(roleName, company.getId());
+			} catch (RemoteException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleName + "'");
+			} catch (NotConnectedToWebServiceException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleName + "'");
+			} catch (WebServiceAccessError e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleName + "'");
+			} catch (JsonParseException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException(e.getMessage());
+			} catch (JsonMappingException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException(e.getMessage());
+			} catch (IOException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException(e.getMessage());
+			} catch (AuthenticationRequired e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException(e.getMessage());
+			}
+		}
+		return null;
+	}
+
 	private Set<IActivity> getUserActivitiesAllowed(IUser<Long> user) throws UserManagementException {
 		Set<IActivity> activities = new HashSet<IActivity>();
 		if (user != null) {
@@ -294,6 +355,27 @@ public abstract class AuthorizationService implements IAuthorizationService<Long
 		}
 	}
 
+	public Set<IGroup<Long>> getUserOrganizationsWhereIsAuthorized(IUser<Long> user, IActivity... activities)
+			throws UserManagementException {
+		Set<IGroup<Long>> organizations = new HashSet<IGroup<Long>>();
+		organizations = getUserOrganizations(user);
+		Iterator<IGroup<Long>> itr = organizations.iterator();
+		while (itr.hasNext()) {
+			IGroup<Long> organization = itr.next();
+			boolean remove = true;
+			for (IActivity activity : activities) {
+				if (isAuthorizedActivity(user, organization, activity)) {
+					remove = false;
+					break;
+				}
+			}
+			if (remove) {
+				itr.remove();
+			}
+		}
+		return organizations;
+	}
+
 	@Override
 	public Set<IRole<Long>> getUserRoles(IUser<Long> user) throws UserManagementException {
 		if (user != null) {
@@ -354,67 +436,6 @@ public abstract class AuthorizationService implements IAuthorizationService<Long
 		return new HashSet<IRole<Long>>();
 	}
 
-	@Override
-	public IRole<Long> getRole(Long roleId) throws UserManagementException {
-		if (roleId != null) {
-			try {
-				return roleService.getRole(roleId);
-			} catch (RemoteException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '" + roleId + "'");
-			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '" + roleId + "'");
-			} catch (WebServiceAccessError e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '" + roleId + "'");
-			} catch (ClientProtocolException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(e.getMessage());
-			} catch (IOException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(e.getMessage());
-			} catch (AuthenticationRequired e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(e.getMessage());
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public IRole<Long> getRole(String roleName) throws UserManagementException {
-		if (roleName != null) {
-			try {
-				IGroup<Long> company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance()
-						.getVirtualHost());
-				return roleService.getRole(roleName, company.getId());
-			} catch (RemoteException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '" + roleName + "'");
-			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '" + roleName + "'");
-			} catch (WebServiceAccessError e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '" + roleName + "'");
-			} catch (JsonParseException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(e.getMessage());
-			} catch (JsonMappingException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(e.getMessage());
-			} catch (IOException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(e.getMessage());
-			} catch (AuthenticationRequired e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(e.getMessage());
-			}
-		}
-		return null;
-	}
-
 	/**
 	 * IUser<Long> is allowed to do an activity.
 	 * 
@@ -459,27 +480,6 @@ public abstract class AuthorizationService implements IAuthorizationService<Long
 			return authorized;
 		}
 		return false;
-	}
-
-	public Set<IGroup<Long>> getUserOrganizationsWhereIsAuthorized(IUser<Long> user, IActivity... activities)
-			throws UserManagementException {
-		Set<IGroup<Long>> organizations = new HashSet<IGroup<Long>>();
-		organizations = getUserOrganizations(user);
-		Iterator<IGroup<Long>> itr = organizations.iterator();
-		while (itr.hasNext()) {
-			IGroup<Long> organization = itr.next();
-			boolean remove = true;
-			for (IActivity activity : activities) {
-				if (isAuthorizedActivity(user, organization, activity)) {
-					remove = false;
-					break;
-				}
-			}
-			if (remove) {
-				itr.remove();
-			}
-		}
-		return organizations;
 	}
 
 	public void reset() {

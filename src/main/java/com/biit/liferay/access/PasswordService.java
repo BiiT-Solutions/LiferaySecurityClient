@@ -20,6 +20,12 @@ import com.liferay.portal.model.User;
 
 public class PasswordService extends UserService {
 
+	@Override
+	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass) throws JsonParseException,
+			JsonMappingException, IOException {
+		return null;
+	}
+
 	/**
 	 * Updates the password of a user.
 	 * 
@@ -53,12 +59,6 @@ public class PasswordService extends UserService {
 					+ "'.");
 			return obtainedUser;
 		}
-		return null;
-	}
-
-	@Override
-	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass) throws JsonParseException,
-			JsonMappingException, IOException {
 		return null;
 	}
 }

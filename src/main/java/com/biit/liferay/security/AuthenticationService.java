@@ -26,17 +26,13 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class AuthenticationService implements IAuthenticationService<Long, Long> {
-	public static AuthenticationService getInstance() {
-		return instance;
-	}
-
 	private final static AuthenticationService instance = new AuthenticationService();
+
 	private IGroup<Long> company = null;
 	private UserService userService = new UserService();
 	private CompanyService companyService = new CompanyService();
 	private UserGroupService userGroupService = new UserGroupService();
 	private ContactService contactService = new ContactService();
-
 	private PasswordService passwordService = new PasswordService();
 
 	protected AuthenticationService() {
@@ -45,6 +41,10 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 		userGroupService.serverConnection();
 		contactService.serverConnection();
 		passwordService.serverConnection();
+	}
+
+	public static AuthenticationService getInstance() {
+		return instance;
 	}
 
 	/**
@@ -239,6 +239,13 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 		return false;
 	}
 
+	public void reset() {
+		userGroupService.reset();
+		companyService.reset();
+		userService.reset();
+		passwordService.reset();
+	}
+
 	@Override
 	public IUser<Long> updatePassword(IUser<Long> user, String plainTextPassword) throws UserManagementException {
 		try {
@@ -265,12 +272,5 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException(e.getMessage());
 		}
-	}
-
-	public void reset() {
-		userGroupService.reset();
-		companyService.reset();
-		userService.reset();
-		passwordService.reset();
 	}
 }

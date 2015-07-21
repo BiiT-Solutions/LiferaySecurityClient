@@ -70,296 +70,6 @@ public class Role implements java.io.Serializable, IRole<Long> {
 		this.uuid = uuid;
 	}
 
-	/**
-	 * Gets the classNameId value for this RoleSoap.
-	 * 
-	 * @return classNameId
-	 */
-	public long getClassNameId() {
-		return classNameId;
-	}
-
-	/**
-	 * Sets the classNameId value for this RoleSoap.
-	 * 
-	 * @param classNameId
-	 */
-	public void setClassNameId(long classNameId) {
-		this.classNameId = classNameId;
-	}
-
-	/**
-	 * Gets the classPK value for this RoleSoap.
-	 * 
-	 * @return classPK
-	 */
-	public long getClassPK() {
-		return classPK;
-	}
-
-	/**
-	 * Sets the classPK value for this RoleSoap.
-	 * 
-	 * @param classPK
-	 */
-	public void setClassPK(long classPK) {
-		this.classPK = classPK;
-	}
-
-	/**
-	 * Gets the companyId value for this RoleSoap.
-	 * 
-	 * @return companyId
-	 */
-	public long getCompanyId() {
-		return companyId;
-	}
-
-	/**
-	 * Sets the companyId value for this RoleSoap.
-	 * 
-	 * @param companyId
-	 */
-	public void setCompanyId(long companyId) {
-		this.companyId = companyId;
-	}
-
-	/**
-	 * Gets the createDate value for this RoleSoap.
-	 * 
-	 * @return createDate
-	 */
-	public java.util.Calendar getCreateDate() {
-		return createDate;
-	}
-
-	/**
-	 * Sets the createDate value for this RoleSoap.
-	 * 
-	 * @param createDate
-	 */
-	public void setCreateDate(java.util.Calendar createDate) {
-		this.createDate = createDate;
-	}
-
-	/**
-	 * Gets the description value for this RoleSoap.
-	 * 
-	 * @return description
-	 */
-	public java.lang.String getDescription() {
-		return description;
-	}
-
-	/**
-	 * Sets the description value for this RoleSoap.
-	 * 
-	 * @param description
-	 */
-	public void setDescription(java.lang.String description) {
-		this.description = description;
-	}
-
-	/**
-	 * Gets the modifiedDate value for this RoleSoap.
-	 * 
-	 * @return modifiedDate
-	 */
-	public java.util.Calendar getModifiedDate() {
-		return modifiedDate;
-	}
-
-	/**
-	 * Sets the modifiedDate value for this RoleSoap.
-	 * 
-	 * @param modifiedDate
-	 */
-	public void setModifiedDate(java.util.Calendar modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	/**
-	 * Gets the name value for this RoleSoap.
-	 * 
-	 * @return name
-	 */
-	public java.lang.String getName() {
-		return name;
-	}
-
-	/**
-	 * Sets the name value for this RoleSoap.
-	 * 
-	 * @param name
-	 */
-	public void setName(java.lang.String name) {
-		this.name = name;
-	}
-
-	/**
-	 * Gets the primaryKey value for this RoleSoap.
-	 * 
-	 * @return primaryKey
-	 */
-	public long getPrimaryKey() {
-		return primaryKey;
-	}
-
-	/**
-	 * Sets the primaryKey value for this RoleSoap.
-	 * 
-	 * @param primaryKey
-	 */
-	public void setPrimaryKey(long primaryKey) {
-		this.primaryKey = primaryKey;
-	}
-
-	/**
-	 * Gets the roleId value for this RoleSoap.
-	 * 
-	 * @return roleId
-	 */
-	@Override
-	public Long getId() {
-		return roleId;
-	}
-
-	/**
-	 * Sets the roleId value for this RoleSoap.
-	 * 
-	 * @param roleId
-	 */
-	public void setRoleId(long roleId) {
-		this.roleId = roleId;
-	}
-
-	/**
-	 * Gets the subtype value for this RoleSoap.
-	 * 
-	 * @return subtype
-	 */
-	public java.lang.String getSubtype() {
-		return subtype;
-	}
-
-	/**
-	 * Sets the subtype value for this RoleSoap.
-	 * 
-	 * @param subtype
-	 */
-	public void setSubtype(java.lang.String subtype) {
-		this.subtype = subtype;
-	}
-
-	/**
-	 * Gets the title value for this RoleSoap.
-	 * 
-	 * @return title
-	 */
-	public java.lang.String getTitle() {
-		return title;
-	}
-
-	/**
-	 * Sets the title value for this RoleSoap.
-	 * 
-	 * @param title
-	 */
-	public void setTitle(java.lang.String title) {
-		this.title = title;
-	}
-
-	/**
-	 * Gets the type value for this RoleSoap.
-	 * 
-	 * @return type
-	 */
-	public int getType() {
-		return type;
-	}
-
-	/**
-	 * Sets the type value for this RoleSoap.
-	 * 
-	 * @param type
-	 */
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	/**
-	 * Gets the userId value for this RoleSoap.
-	 * 
-	 * @return userId
-	 */
-	public long getUserId() {
-		return userId;
-	}
-
-	/**
-	 * Sets the userId value for this RoleSoap.
-	 * 
-	 * @param userId
-	 */
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
-	/**
-	 * Gets the userName value for this RoleSoap.
-	 * 
-	 * @return userName
-	 */
-	public java.lang.String getUserName() {
-		return userName;
-	}
-
-	/**
-	 * Sets the userName value for this RoleSoap.
-	 * 
-	 * @param userName
-	 */
-	public void setUserName(java.lang.String userName) {
-		this.userName = userName;
-	}
-
-	/**
-	 * Gets the uuid value for this RoleSoap.
-	 * 
-	 * @return uuid
-	 */
-	public java.lang.String getUuid() {
-		return uuid;
-	}
-
-	protected java.lang.String getDescriptionCurrentValue() {
-		return descriptionCurrentValue;
-	}
-
-	protected void setDescriptionCurrentValue(java.lang.String descriptionCurrentValue) {
-		this.descriptionCurrentValue = descriptionCurrentValue;
-	}
-
-	protected java.lang.String getTitleCurrentValue() {
-		return titleCurrentValue;
-	}
-
-	protected void setTitleCurrentValue(java.lang.String titleCurrentValue) {
-		this.titleCurrentValue = titleCurrentValue;
-	}
-
-	public String toString() {
-		return getName();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (roleId ^ (roleId >>> 32));
-		return result;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -374,16 +84,306 @@ public class Role implements java.io.Serializable, IRole<Long> {
 		return true;
 	}
 
+	/**
+	 * Gets the classNameId value for this RoleSoap.
+	 * 
+	 * @return classNameId
+	 */
+	public long getClassNameId() {
+		return classNameId;
+	}
+
+	/**
+	 * Gets the classPK value for this RoleSoap.
+	 * 
+	 * @return classPK
+	 */
+	public long getClassPK() {
+		return classPK;
+	}
+
+	/**
+	 * Gets the companyId value for this RoleSoap.
+	 * 
+	 * @return companyId
+	 */
+	public long getCompanyId() {
+		return companyId;
+	}
+
+	/**
+	 * Gets the createDate value for this RoleSoap.
+	 * 
+	 * @return createDate
+	 */
+	public java.util.Calendar getCreateDate() {
+		return createDate;
+	}
+
+	/**
+	 * Gets the description value for this RoleSoap.
+	 * 
+	 * @return description
+	 */
+	public java.lang.String getDescription() {
+		return description;
+	}
+
+	protected java.lang.String getDescriptionCurrentValue() {
+		return descriptionCurrentValue;
+	}
+
+	/**
+	 * Gets the roleId value for this RoleSoap.
+	 * 
+	 * @return roleId
+	 */
+	@Override
+	public Long getId() {
+		return roleId;
+	}
+
+	/**
+	 * Gets the modifiedDate value for this RoleSoap.
+	 * 
+	 * @return modifiedDate
+	 */
+	public java.util.Calendar getModifiedDate() {
+		return modifiedDate;
+	}
+
+	/**
+	 * Gets the name value for this RoleSoap.
+	 * 
+	 * @return name
+	 */
+	public java.lang.String getName() {
+		return name;
+	}
+
+	/**
+	 * Gets the primaryKey value for this RoleSoap.
+	 * 
+	 * @return primaryKey
+	 */
+	public long getPrimaryKey() {
+		return primaryKey;
+	}
+
 	public RoleType getRoleType() {
 		return RoleType.getRoleType(getType());
+	}
+
+	/**
+	 * Gets the subtype value for this RoleSoap.
+	 * 
+	 * @return subtype
+	 */
+	public java.lang.String getSubtype() {
+		return subtype;
+	}
+
+	/**
+	 * Gets the title value for this RoleSoap.
+	 * 
+	 * @return title
+	 */
+	public java.lang.String getTitle() {
+		return title;
+	}
+
+	protected java.lang.String getTitleCurrentValue() {
+		return titleCurrentValue;
+	}
+
+	/**
+	 * Gets the type value for this RoleSoap.
+	 * 
+	 * @return type
+	 */
+	public int getType() {
+		return type;
+	}
+
+	@Override
+	public String getUniqueName() {
+		return getName();
+	}
+
+	/**
+	 * Gets the userId value for this RoleSoap.
+	 * 
+	 * @return userId
+	 */
+	public long getUserId() {
+		return userId;
+	}
+
+	/**
+	 * Gets the userName value for this RoleSoap.
+	 * 
+	 * @return userName
+	 */
+	public java.lang.String getUserName() {
+		return userName;
+	}
+
+	/**
+	 * Gets the uuid value for this RoleSoap.
+	 * 
+	 * @return uuid
+	 */
+	public java.lang.String getUuid() {
+		return uuid;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (roleId ^ (roleId >>> 32));
+		return result;
+	}
+
+	/**
+	 * Sets the classNameId value for this RoleSoap.
+	 * 
+	 * @param classNameId
+	 */
+	public void setClassNameId(long classNameId) {
+		this.classNameId = classNameId;
+	}
+
+	/**
+	 * Sets the classPK value for this RoleSoap.
+	 * 
+	 * @param classPK
+	 */
+	public void setClassPK(long classPK) {
+		this.classPK = classPK;
+	}
+
+	/**
+	 * Sets the companyId value for this RoleSoap.
+	 * 
+	 * @param companyId
+	 */
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
+	/**
+	 * Sets the createDate value for this RoleSoap.
+	 * 
+	 * @param createDate
+	 */
+	public void setCreateDate(java.util.Calendar createDate) {
+		this.createDate = createDate;
+	}
+
+	/**
+	 * Sets the description value for this RoleSoap.
+	 * 
+	 * @param description
+	 */
+	public void setDescription(java.lang.String description) {
+		this.description = description;
+	}
+
+	protected void setDescriptionCurrentValue(java.lang.String descriptionCurrentValue) {
+		this.descriptionCurrentValue = descriptionCurrentValue;
+	}
+
+	/**
+	 * Sets the modifiedDate value for this RoleSoap.
+	 * 
+	 * @param modifiedDate
+	 */
+	public void setModifiedDate(java.util.Calendar modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	/**
+	 * Sets the name value for this RoleSoap.
+	 * 
+	 * @param name
+	 */
+	public void setName(java.lang.String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Sets the primaryKey value for this RoleSoap.
+	 * 
+	 * @param primaryKey
+	 */
+	public void setPrimaryKey(long primaryKey) {
+		this.primaryKey = primaryKey;
+	}
+
+	/**
+	 * Sets the roleId value for this RoleSoap.
+	 * 
+	 * @param roleId
+	 */
+	public void setRoleId(long roleId) {
+		this.roleId = roleId;
 	}
 
 	public void setRoleType(RoleType roleType) {
 		setType(roleType.getLiferayCode());
 	}
 
-	@Override
-	public String getUniqueName() {
+	/**
+	 * Sets the subtype value for this RoleSoap.
+	 * 
+	 * @param subtype
+	 */
+	public void setSubtype(java.lang.String subtype) {
+		this.subtype = subtype;
+	}
+
+	/**
+	 * Sets the title value for this RoleSoap.
+	 * 
+	 * @param title
+	 */
+	public void setTitle(java.lang.String title) {
+		this.title = title;
+	}
+
+	protected void setTitleCurrentValue(java.lang.String titleCurrentValue) {
+		this.titleCurrentValue = titleCurrentValue;
+	}
+
+	/**
+	 * Sets the type value for this RoleSoap.
+	 * 
+	 * @param type
+	 */
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	/**
+	 * Sets the userId value for this RoleSoap.
+	 * 
+	 * @param userId
+	 */
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	/**
+	 * Sets the userName value for this RoleSoap.
+	 * 
+	 * @param userName
+	 */
+	public void setUserName(java.lang.String userName) {
+		this.userName = userName;
+	}
+
+	public String toString() {
 		return getName();
 	}
 

@@ -41,30 +41,12 @@ public class PortletPreferencesIds implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the companyId value for this PortletPreferencesIds.
-	 * 
-	 * @param companyId
-	 */
-	public void setCompanyId(long companyId) {
-		this.companyId = companyId;
-	}
-
-	/**
 	 * Gets the ownerId value for this PortletPreferencesIds.
 	 * 
 	 * @return ownerId
 	 */
 	public long getOwnerId() {
 		return ownerId;
-	}
-
-	/**
-	 * Sets the ownerId value for this PortletPreferencesIds.
-	 * 
-	 * @param ownerId
-	 */
-	public void setOwnerId(long ownerId) {
-		this.ownerId = ownerId;
 	}
 
 	/**
@@ -77,15 +59,6 @@ public class PortletPreferencesIds implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the ownerType value for this PortletPreferencesIds.
-	 * 
-	 * @param ownerType
-	 */
-	public void setOwnerType(int ownerType) {
-		this.ownerType = ownerType;
-	}
-
-	/**
 	 * Gets the plid value for this PortletPreferencesIds.
 	 * 
 	 * @return plid
@@ -95,21 +68,48 @@ public class PortletPreferencesIds implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the plid value for this PortletPreferencesIds.
-	 * 
-	 * @param plid
-	 */
-	public void setPlid(long plid) {
-		this.plid = plid;
-	}
-
-	/**
 	 * Gets the portletId value for this PortletPreferencesIds.
 	 * 
 	 * @return portletId
 	 */
 	public java.lang.String getPortletId() {
 		return portletId;
+	}
+
+	/**
+	 * Sets the companyId value for this PortletPreferencesIds.
+	 * 
+	 * @param companyId
+	 */
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
+	/**
+	 * Sets the ownerId value for this PortletPreferencesIds.
+	 * 
+	 * @param ownerId
+	 */
+	public void setOwnerId(long ownerId) {
+		this.ownerId = ownerId;
+	}
+
+	/**
+	 * Sets the ownerType value for this PortletPreferencesIds.
+	 * 
+	 * @param ownerType
+	 */
+	public void setOwnerType(int ownerType) {
+		this.ownerType = ownerType;
+	}
+
+	/**
+	 * Sets the plid value for this PortletPreferencesIds.
+	 * 
+	 * @param plid
+	 */
+	public void setPlid(long plid) {
+		this.plid = plid;
 	}
 
 	/**

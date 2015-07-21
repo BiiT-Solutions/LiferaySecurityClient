@@ -67,30 +67,12 @@ public class Website implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the classNameId value for this WebsiteSoap.
-	 * 
-	 * @param classNameId
-	 */
-	public void setClassNameId(long classNameId) {
-		this.classNameId = classNameId;
-	}
-
-	/**
 	 * Gets the classPK value for this WebsiteSoap.
 	 * 
 	 * @return classPK
 	 */
 	public long getClassPK() {
 		return classPK;
-	}
-
-	/**
-	 * Sets the classPK value for this WebsiteSoap.
-	 * 
-	 * @param classPK
-	 */
-	public void setClassPK(long classPK) {
-		this.classPK = classPK;
 	}
 
 	/**
@@ -103,30 +85,12 @@ public class Website implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the companyId value for this WebsiteSoap.
-	 * 
-	 * @param companyId
-	 */
-	public void setCompanyId(long companyId) {
-		this.companyId = companyId;
-	}
-
-	/**
 	 * Gets the createDate value for this WebsiteSoap.
 	 * 
 	 * @return createDate
 	 */
 	public java.util.Calendar getCreateDate() {
 		return createDate;
-	}
-
-	/**
-	 * Sets the createDate value for this WebsiteSoap.
-	 * 
-	 * @param createDate
-	 */
-	public void setCreateDate(java.util.Calendar createDate) {
-		this.createDate = createDate;
 	}
 
 	/**
@@ -139,48 +103,12 @@ public class Website implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the modifiedDate value for this WebsiteSoap.
-	 * 
-	 * @param modifiedDate
-	 */
-	public void setModifiedDate(java.util.Calendar modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	/**
-	 * Gets the primary value for this WebsiteSoap.
-	 * 
-	 * @return primary
-	 */
-	public boolean isPrimary() {
-		return primary;
-	}
-
-	/**
-	 * Sets the primary value for this WebsiteSoap.
-	 * 
-	 * @param primary
-	 */
-	public void setPrimary(boolean primary) {
-		this.primary = primary;
-	}
-
-	/**
 	 * Gets the primaryKey value for this WebsiteSoap.
 	 * 
 	 * @return primaryKey
 	 */
 	public long getPrimaryKey() {
 		return primaryKey;
-	}
-
-	/**
-	 * Sets the primaryKey value for this WebsiteSoap.
-	 * 
-	 * @param primaryKey
-	 */
-	public void setPrimaryKey(long primaryKey) {
-		this.primaryKey = primaryKey;
 	}
 
 	/**
@@ -193,30 +121,12 @@ public class Website implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the typeId value for this WebsiteSoap.
-	 * 
-	 * @param typeId
-	 */
-	public void setTypeId(int typeId) {
-		this.typeId = typeId;
-	}
-
-	/**
 	 * Gets the url value for this WebsiteSoap.
 	 * 
 	 * @return url
 	 */
 	public java.lang.String getUrl() {
 		return url;
-	}
-
-	/**
-	 * Sets the url value for this WebsiteSoap.
-	 * 
-	 * @param url
-	 */
-	public void setUrl(java.lang.String url) {
-		this.url = url;
 	}
 
 	/**
@@ -229,30 +139,12 @@ public class Website implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the userId value for this WebsiteSoap.
-	 * 
-	 * @param userId
-	 */
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
-	/**
 	 * Gets the userName value for this WebsiteSoap.
 	 * 
 	 * @return userName
 	 */
 	public java.lang.String getUserName() {
 		return userName;
-	}
-
-	/**
-	 * Sets the userName value for this WebsiteSoap.
-	 * 
-	 * @param userName
-	 */
-	public void setUserName(java.lang.String userName) {
-		this.userName = userName;
 	}
 
 	/**
@@ -265,21 +157,129 @@ public class Website implements java.io.Serializable {
 	}
 
 	/**
-	 * Sets the uuid value for this WebsiteSoap.
-	 * 
-	 * @param uuid
-	 */
-	public void setUuid(java.lang.String uuid) {
-		this.uuid = uuid;
-	}
-
-	/**
 	 * Gets the websiteId value for this WebsiteSoap.
 	 * 
 	 * @return websiteId
 	 */
 	public long getWebsiteId() {
 		return websiteId;
+	}
+
+	/**
+	 * Gets the primary value for this WebsiteSoap.
+	 * 
+	 * @return primary
+	 */
+	public boolean isPrimary() {
+		return primary;
+	}
+
+	/**
+	 * Sets the classNameId value for this WebsiteSoap.
+	 * 
+	 * @param classNameId
+	 */
+	public void setClassNameId(long classNameId) {
+		this.classNameId = classNameId;
+	}
+
+	/**
+	 * Sets the classPK value for this WebsiteSoap.
+	 * 
+	 * @param classPK
+	 */
+	public void setClassPK(long classPK) {
+		this.classPK = classPK;
+	}
+
+	/**
+	 * Sets the companyId value for this WebsiteSoap.
+	 * 
+	 * @param companyId
+	 */
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
+	/**
+	 * Sets the createDate value for this WebsiteSoap.
+	 * 
+	 * @param createDate
+	 */
+	public void setCreateDate(java.util.Calendar createDate) {
+		this.createDate = createDate;
+	}
+
+	/**
+	 * Sets the modifiedDate value for this WebsiteSoap.
+	 * 
+	 * @param modifiedDate
+	 */
+	public void setModifiedDate(java.util.Calendar modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	/**
+	 * Sets the primary value for this WebsiteSoap.
+	 * 
+	 * @param primary
+	 */
+	public void setPrimary(boolean primary) {
+		this.primary = primary;
+	}
+
+	/**
+	 * Sets the primaryKey value for this WebsiteSoap.
+	 * 
+	 * @param primaryKey
+	 */
+	public void setPrimaryKey(long primaryKey) {
+		this.primaryKey = primaryKey;
+	}
+
+	/**
+	 * Sets the typeId value for this WebsiteSoap.
+	 * 
+	 * @param typeId
+	 */
+	public void setTypeId(int typeId) {
+		this.typeId = typeId;
+	}
+
+	/**
+	 * Sets the url value for this WebsiteSoap.
+	 * 
+	 * @param url
+	 */
+	public void setUrl(java.lang.String url) {
+		this.url = url;
+	}
+
+	/**
+	 * Sets the userId value for this WebsiteSoap.
+	 * 
+	 * @param userId
+	 */
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	/**
+	 * Sets the userName value for this WebsiteSoap.
+	 * 
+	 * @param userName
+	 */
+	public void setUserName(java.lang.String userName) {
+		this.userName = userName;
+	}
+
+	/**
+	 * Sets the uuid value for this WebsiteSoap.
+	 * 
+	 * @param uuid
+	 */
+	public void setUuid(java.lang.String uuid) {
+		this.uuid = uuid;
 	}
 
 	/**
