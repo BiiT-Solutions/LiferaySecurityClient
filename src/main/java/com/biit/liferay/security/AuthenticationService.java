@@ -27,7 +27,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class AuthenticationService implements IAuthenticationService<Long, Long> {
-	private final static AuthenticationService instance = new AuthenticationService();
 
 	private IGroup<Long> company = null;
 	private UserService userService = new UserService();
@@ -36,16 +35,12 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 	private ContactService contactService = new ContactService();
 	private PasswordService passwordService = new PasswordService();
 
-	protected AuthenticationService() {
+	public AuthenticationService() {
 		userService.serverConnection();
 		companyService.serverConnection();
 		userGroupService.serverConnection();
 		contactService.serverConnection();
 		passwordService.serverConnection();
-	}
-
-	public static AuthenticationService getInstance() {
-		return instance;
 	}
 
 	/**

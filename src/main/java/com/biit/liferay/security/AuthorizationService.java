@@ -24,18 +24,21 @@ import com.biit.usermanager.entity.IUser;
 import com.biit.usermanager.entity.pool.AuthorizationPool;
 import com.biit.usermanager.security.IActivity;
 import com.biit.usermanager.security.IAuthorizationService;
+import com.biit.usermanager.security.IRoleActivities;
 import com.biit.usermanager.security.exceptions.AuthenticationRequired;
 import com.biit.usermanager.security.exceptions.UserManagementException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-public abstract class AuthorizationService implements IAuthorizationService<Long, Long, Long> {
+public class AuthorizationService implements IAuthorizationService<Long, Long, Long> {
 	private AuthorizationPool authorizationPool;
 	private RoleService roleService = new RoleService();
 	private UserGroupService userGroupService = new UserGroupService();
 	private OrganizationService organizationService = new OrganizationService();
 	private CompanyService companyService = new CompanyService();
 	private UserService userService = new UserService();
+
+	private IRoleActivities roleActivities;
 
 	public AuthorizationService() {
 		authorizationPool = new AuthorizationPool();
@@ -482,6 +485,7 @@ public abstract class AuthorizationService implements IAuthorizationService<Long
 		return false;
 	}
 
+	@Override
 	public void reset() {
 		authorizationPool.reset();
 		roleService.reset();
@@ -489,5 +493,18 @@ public abstract class AuthorizationService implements IAuthorizationService<Long
 		organizationService.reset();
 		companyService.reset();
 		userService.reset();
+	}
+
+	@Override
+	public Set<IActivity> getRoleActivities(IRole<Long> role) {
+		return roleActivities.getRoleActivities(role);
+	}
+
+	public IRoleActivities getRoleActivities() {
+		return roleActivities;
+	}
+
+	public void setRoleActivities(IRoleActivities roleActivities) {
+		this.roleActivities = roleActivities;
 	}
 }
