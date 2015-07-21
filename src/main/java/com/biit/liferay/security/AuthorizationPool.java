@@ -5,8 +5,9 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.liferay.portal.model.Organization;
-import com.liferay.portal.model.User;
+import com.biit.usermanager.entity.IGroup;
+import com.biit.usermanager.entity.IUser;
+import com.biit.usermanager.security.IActivity;
 
 /**
  * Defines if an activity is authorized by an user or not.
@@ -16,19 +17,19 @@ public class AuthorizationPool {
 	private final static long EXPIRATION_TIME = 300000;// 300 seconds
 
 	// user id -> time.
-	private Map<User, Long> time;
+	private Map<IUser<Long>, Long> time;
 	// Form, user id -> activity -> allowed.
-	private Map<User, Map<IActivity, Boolean>> users;
-	private Map<User, Map<Organization, Map<IActivity, Boolean>>> organizations;
+	private Map<IUser<Long>, Map<IActivity, Boolean>> users;
+	private Map<IUser<Long>, Map<IGroup<Long>, Map<IActivity, Boolean>>> organizations;
 
 	public AuthorizationPool() {
 		reset();
 	}
 
 	public void reset() {
-		time = new HashMap<User, Long>();
-		users = new HashMap<User, Map<IActivity, Boolean>>();
-		organizations = new HashMap<User, Map<Organization, Map<IActivity, Boolean>>>();
+		time = new HashMap<IUser<Long>, Long>();
+		users = new HashMap<IUser<Long>, Map<IActivity, Boolean>>();
+		organizations = new HashMap<IUser<Long>, Map<IGroup<Long>, Map<IActivity, Boolean>>>();
 	}
 
 	/**
@@ -39,12 +40,12 @@ public class AuthorizationPool {
 	 * @param activity
 	 * @return
 	 */
-	public Boolean isAuthorizedActivity(User user, IActivity activity) {
+	public Boolean isAuthorizedActivity(IUser<Long> user, IActivity activity) {
 		long now = System.currentTimeMillis();
-		User userForm = null;
+		IUser<Long> userForm = null;
 
 		if (time.size() > 0) {
-			Iterator<User> userEnum = new HashMap<>(time).keySet().iterator();
+			Iterator<IUser<Long>> userEnum = new HashMap<IUser<Long>, Long>(time).keySet().iterator();
 			while (userEnum.hasNext()) {
 				userForm = userEnum.next();
 				try {
@@ -65,12 +66,12 @@ public class AuthorizationPool {
 		return null;
 	}
 
-	public Boolean isAuthorizedActivity(User user, Organization organization, IActivity activity) {
+	public Boolean isAuthorizedActivity(IUser<Long> user, IGroup<Long> organization, IActivity activity) {
 		long now = System.currentTimeMillis();
-		User authorizedUser = null;
+		IUser<Long> authorizedUser = null;
 
 		if (time.size() > 0) {
-			Iterator<User> userEnum = new HashMap<>(time).keySet().iterator();
+			Iterator<IUser<Long>> userEnum = new HashMap<IUser<Long>, Long>(time).keySet().iterator();
 			while (userEnum.hasNext()) {
 				authorizedUser = userEnum.next();
 				try {
@@ -92,7 +93,7 @@ public class AuthorizationPool {
 		return null;
 	}
 
-	public void addUser(User user, IActivity activity, Boolean authorized) {
+	public void addUser(IUser<Long> user, IActivity activity, Boolean authorized) {
 		if (user != null && activity != null && authorized != null) {
 			if (users.get(user) == null) {
 				users.put(user, new Hashtable<IActivity, Boolean>());
@@ -103,10 +104,10 @@ public class AuthorizationPool {
 		}
 	}
 
-	public void addUser(User user, Organization organization, IActivity activity, Boolean authorized) {
+	public void addUser(IUser<Long> user, IGroup<Long> organization, IActivity activity, Boolean authorized) {
 		if (user != null && organization != null && activity != null && authorized != null) {
 			if (organizations.get(user) == null) {
-				organizations.put(user, new HashMap<Organization, Map<IActivity, Boolean>>());
+				organizations.put(user, new HashMap<IGroup<Long>, Map<IActivity, Boolean>>());
 			}
 
 			if (organizations.get(user).get(organization) == null) {
@@ -118,7 +119,7 @@ public class AuthorizationPool {
 		}
 	}
 
-	public void removeUser(User user) {
+	public void removeUser(IUser<Long> user) {
 		if (user != null) {
 			time.remove(user);
 			users.remove(user);

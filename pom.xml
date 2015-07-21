@@ -1,13 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.biit.liferay</groupId>
 	<artifactId>liferay-authentication-client</artifactId>
 	<packaging>jar</packaging>
-	<version>0.7.6-SNAPSHOT</version>
+	<version>0.8.0-SNAPSHOT</version>
 	<name>Liferay Authentication Client with Web Services</name>
 	<description>Obtain users, groups and roles information from liferay</description>
-	
+
 	<distributionManagement>
 		<repository>
 			<id>central</id>
@@ -20,7 +21,7 @@
 			<url>https://dev.biit-solutions.com:8443/mavenartifactory/libs-snapshot</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<scm>
 		<connection>scm:git:dev.biit-solutions.com:LiferaySecurityClient.git</connection>
 		<developerConnection>scm:git:dev.biit-solutions.com:LiferaySecurityClient.git</developerConnection>
@@ -29,7 +30,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.jdk.version>1.7</java.jdk.version>
+		<java.jdk.version>1.6</java.jdk.version>
 		<plugin.compiler.version>2.3.2</plugin.compiler.version>
 		<plugin.exec.version>1.2.1</plugin.exec.version>
 		<org.testng.version>6.8</org.testng.version>
@@ -41,7 +42,8 @@
 		<maven-scm-provider-gitexe.version>1.9.2</maven-scm-provider-gitexe.version>
 		<project.scm.id>git</project.scm.id>
 		<!-- BiiT dependencies -->
-		<biit-liferay-common-utils.version>[0.6,0.7)</biit-liferay-common-utils.version>
+		<biit-liferay-common-utils.version>[0.7,0.8)</biit-liferay-common-utils.version>
+		<user-manager.version>[0.1,0.2)</user-manager.version>
 	</properties>
 
 	<build>
@@ -91,6 +93,12 @@
 	</build>
 
 	<dependencies>
+		<!-- User Management -->
+		<dependency>
+			<groupId>com.biit</groupId>
+			<artifactId>user-manager</artifactId>
+			<version>${user-manager.version}</version>
+		</dependency>
 		<!-- SHA1Encryption -->
 		<dependency>
 			<groupId>com.biit.security</groupId>

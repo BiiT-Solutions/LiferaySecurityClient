@@ -7,7 +7,9 @@
 
 package com.liferay.portal.model;
 
-public class Role implements java.io.Serializable {
+import com.biit.usermanager.entity.IRole;
+
+public class Role implements java.io.Serializable, IRole<Long> {
 	private static final long serialVersionUID = 7329105650809872362L;
 
 	private long classNameId;
@@ -217,7 +219,8 @@ public class Role implements java.io.Serializable {
 	 * 
 	 * @return roleId
 	 */
-	public long getRoleId() {
+	@Override
+	public Long getId() {
 		return roleId;
 	}
 
@@ -377,6 +380,11 @@ public class Role implements java.io.Serializable {
 
 	public void setRoleType(RoleType roleType) {
 		setType(roleType.getLiferayCode());
+	}
+
+	@Override
+	public String getUniqueName() {
+		return getName();
 	}
 
 }

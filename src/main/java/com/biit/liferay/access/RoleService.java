@@ -3,8 +3,11 @@ package com.biit.liferay.access;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -16,6 +19,10 @@ import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.RoleNotDeletedException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.log.LiferayClientLogger;
+import com.biit.usermanager.entity.IGroup;
+import com.biit.usermanager.entity.IRole;
+import com.biit.usermanager.entity.IUser;
+import com.biit.usermanager.entity.pool.RolePool;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -23,25 +30,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Role;
-import com.liferay.portal.model.User;
-import com.liferay.portal.model.UserGroup;
 
 /**
  * This class allows to manage roles from Liferay portal.
  */
-public class RoleService extends ServiceAccess<Role> {
+public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 	private static final String LIFERAY_ORGANIZATION_GROUP_PREFIX = " LFR_ORGANIZATION";
 	private GroupService groupService;
 	private OrganizationService organizationService;
 	// Relationship between organization and groups.
 	private HashMap<Long, Long> organizationGroups;
+	private RolePool<Long, Long, Long> rolePool;
 
 	public RoleService() {
 		organizationGroups = new HashMap<Long, Long>();
+		rolePool = new RolePool<Long, Long, Long>();
 	}
 
 	public void reset() {
-		RolePool.getInstance().reset();
+		rolePool.reset();
 	}
 
 	/**
@@ -57,7 +64,7 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws WebServiceAccessError
 	 * @throws DuplicatedLiferayElement
 	 */
-	public Role addRole(String name, int type, Map<String, String> titleMap, Map<String, String> descriptionMap)
+	public IRole<Long> addRole(String name, int type, Map<String, String> titleMap, Map<String, String> descriptionMap)
 			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
 			WebServiceAccessError, DuplicatedLiferayElement {
 		if (name != null && name.length() > 0) {
@@ -70,7 +77,7 @@ public class RoleService extends ServiceAccess<Role> {
 			params.add(new BasicNameValuePair("type", Integer.toString(type)));
 
 			String result = getHttpResponse("role/add-role", params);
-			Role role = null;
+			IRole<Long> role = null;
 			if (result != null) {
 				// Check some errors
 				if (result.contains("DuplicateRoleException")) {
@@ -79,7 +86,8 @@ public class RoleService extends ServiceAccess<Role> {
 
 				// A Simple JSON Response Read
 				role = decodeFromJson(result, Role.class);
-				LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getName() + "' added.");
+				LiferayClientLogger
+						.info(this.getClass().getName(), "IRole<Long> '" + role.getUniqueName() + "' added.");
 				return role;
 			}
 		}
@@ -96,9 +104,9 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public void addRoleGroup(Role role, UserGroup userGroup) throws NotConnectedToWebServiceException,
+	public void addRoleGroup(IRole<Long> role, IGroup<Long> userGroup) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired {
-		List<UserGroup> groups = new ArrayList<UserGroup>();
+		List<IGroup<Long>> groups = new ArrayList<IGroup<Long>>();
 		groups.add(userGroup);
 		addRoleGroups(role, groups);
 	}
@@ -113,8 +121,8 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public void addRoleGroups(Role role, List<UserGroup> userGroups) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired {
+	public void addRoleGroups(IRole<Long> role, List<IGroup<Long>> userGroups)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		if (userGroups != null && role != null && userGroups.size() > 0) {
 			checkConnection();
 			String groupIds = "";
@@ -122,7 +130,7 @@ public class RoleService extends ServiceAccess<Role> {
 				groupIds = "[";
 			}
 			for (int i = 0; i < userGroups.size(); i++) {
-				groupIds += userGroups.get(i).getUserGroupId();
+				groupIds += userGroups.get(i).getId();
 				if (i < userGroups.size() - 1) {
 					groupIds += ",";
 				}
@@ -132,21 +140,21 @@ public class RoleService extends ServiceAccess<Role> {
 			}
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("roleId", Long.toString(role.getRoleId())));
+			params.add(new BasicNameValuePair("roleId", Long.toString(role.getId())));
 			params.add(new BasicNameValuePair("groupIds", groupIds));
 
 			getHttpResponse("group/add-role-groups", params);
 			LiferayClientLogger.info(this.getClass().getName(),
-					"Groups ids " + groupIds + " added to role '" + role.getName() + "'");
-			for (UserGroup group : userGroups) {
-				RolePool.getInstance().addUserGroupRole(group, role);
+					"Groups ids " + groupIds + " added to role '" + role.getUniqueName() + "'");
+			for (IGroup<Long> group : userGroups) {
+				rolePool.addGroupRole(group, role);
 			}
 		}
 	}
 
-	public void addRoleOrganization(Role role, Organization organization) throws ClientProtocolException,
+	public void addRoleOrganization(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException,
 			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
-		List<Organization> organizations = new ArrayList<Organization>();
+		List<IGroup<Long>> organizations = new ArrayList<IGroup<Long>>();
 		organizations.add(organization);
 		addRoleOrganizations(role, organizations);
 	}
@@ -162,7 +170,7 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
-	public void addRoleOrganizations(Role role, List<Organization> organizations)
+	public void addRoleOrganizations(IRole<Long> role, List<IGroup<Long>> organizations)
 			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
 		if (organizations != null && role != null && organizations.size() > 0) {
@@ -182,18 +190,18 @@ public class RoleService extends ServiceAccess<Role> {
 			}
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("roleId", Long.toString(role.getRoleId())));
+			params.add(new BasicNameValuePair("roleId", Long.toString(role.getId())));
 			params.add(new BasicNameValuePair("groupIds", groupIds));
 
 			getHttpResponse("group/add-role-groups", params);
 			LiferayClientLogger.info(this.getClass().getName(),
-					"Groups ids " + groupIds + " added to role '" + role.getName() + "'");
+					"Groups ids " + groupIds + " added to role '" + role.getUniqueName() + "'");
 		}
 	}
 
-	public void addRoleUser(User user, Role role) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException, AuthenticationRequired {
-		List<User> users = new ArrayList<User>();
+	public void addRoleUser(IUser<Long> user, IRole<Long> role) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		List<IUser<Long>> users = new ArrayList<IUser<Long>>();
 		users.add(user);
 		addRoleUsers(users, role);
 	}
@@ -208,7 +216,7 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws IOException
 	 * @throws AuthenticationRequired
 	 */
-	public void addRoleUsers(List<User> users, Role role) throws NotConnectedToWebServiceException,
+	public void addRoleUsers(List<IUser<Long>> users, IRole<Long> role) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired {
 		if (users != null && users.size() > 0) {
 			checkConnection();
@@ -218,7 +226,7 @@ public class RoleService extends ServiceAccess<Role> {
 				userIds = "[";
 			}
 			for (int i = 0; i < users.size(); i++) {
-				userIds += users.get(i).getUserId();
+				userIds += users.get(i).getId();
 				if (i < users.size() - 1) {
 					userIds += ",";
 				}
@@ -228,17 +236,17 @@ public class RoleService extends ServiceAccess<Role> {
 			}
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("roleId", Long.toString(role.getRoleId())));
+			params.add(new BasicNameValuePair("roleId", Long.toString(role.getId())));
 			params.add(new BasicNameValuePair("userIds", userIds));
 
 			getHttpResponse("user/add-role-users", params);
 
-			for (User user : users) {
-				RolePool.getInstance().addUserRole(user, role);
+			for (IUser<Long> user : users) {
+				rolePool.addUserRole(user, role);
 			}
 
-			LiferayClientLogger.info(this.getClass().getName(),
-					"User ids " + userIds + " added to role '" + role.getName() + "'");
+			LiferayClientLogger.info(this.getClass().getName(), "IUser<Long> ids " + userIds + " added to role '"
+					+ role.getUniqueName() + "'");
 		}
 	}
 
@@ -252,9 +260,9 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public void addUserRole(User user, Role role) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException, AuthenticationRequired {
-		List<Role> roles = new ArrayList<Role>();
+	public void addUserRole(IUser<Long> user, IRole<Long> role) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		List<IRole<Long>> roles = new ArrayList<IRole<Long>>();
 		roles.add(role);
 		addUserRoles(user, roles);
 	}
@@ -269,7 +277,7 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public void addUserRoles(User user, List<Role> roles) throws NotConnectedToWebServiceException,
+	public void addUserRoles(IUser<Long> user, List<IRole<Long>> roles) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired {
 		if (user != null && roles != null && roles.size() > 0) {
 			checkConnection();
@@ -279,7 +287,7 @@ public class RoleService extends ServiceAccess<Role> {
 				rolesIds = "[";
 			}
 			for (int i = 0; i < roles.size(); i++) {
-				rolesIds += roles.get(i).getRoleId();
+				rolesIds += roles.get(i).getId();
 				if (i < roles.size() - 1) {
 					rolesIds += ",";
 				}
@@ -289,24 +297,24 @@ public class RoleService extends ServiceAccess<Role> {
 			}
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("userId", Long.toString(user.getUserId())));
+			params.add(new BasicNameValuePair("userId", Long.toString(user.getId())));
 			params.add(new BasicNameValuePair("roleIds", rolesIds));
 
 			getHttpResponse("role/add-user-roles", params);
 
-			for (Role role : roles) {
-				RolePool.getInstance().addUserRole(user, role);
+			for (IRole<Long> role : roles) {
+				rolePool.addUserRole(user, role);
 			}
 
 			LiferayClientLogger.info(this.getClass().getName(),
-					"Roles ids " + rolesIds + " added to user '" + user.getScreenName() + "'");
+					"Roles ids " + rolesIds + " added to user '" + user.getUniqueName() + "'");
 		}
 	}
 
 	@Override
-	public List<Role> decodeListFromJson(String json, Class<Role> objectClass) throws JsonParseException,
+	public Set<IRole<Long>> decodeListFromJson(String json, Class<Role> objectClass) throws JsonParseException,
 			JsonMappingException, IOException {
-		List<Role> myObjects = new ObjectMapper().readValue(json, new TypeReference<List<Role>>() {
+		Set<IRole<Long>> myObjects = new ObjectMapper().readValue(json, new TypeReference<Set<Role>>() {
 		});
 
 		return myObjects;
@@ -321,18 +329,18 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public void deleteRole(Role role) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired {
+	public void deleteRole(IRole<Long> role) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException, AuthenticationRequired {
 		if (role != null) {
 			checkConnection();
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("roleId", role.getRoleId() + ""));
+			params.add(new BasicNameValuePair("roleId", role.getId() + ""));
 
 			getHttpResponse("role/delete-role", params);
 
-			RolePool.getInstance().removeRole(role);
-			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getName() + "' deleted.");
+			rolePool.removeRole(role);
+			LiferayClientLogger.info(this.getClass().getName(), "IRole<Long> '" + role.getUniqueName() + "' deleted.");
 
 		}
 	}
@@ -347,22 +355,22 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public void deleteRole(User user, Role role) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException, AuthenticationRequired, RoleNotDeletedException {
+	public void deleteRole(IUser<Long> user, IRole<Long> role) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired, RoleNotDeletedException {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("userId", user.getUserId() + ""));
-		params.add(new BasicNameValuePair("roleId", role.getRoleId() + ""));
+		params.add(new BasicNameValuePair("userId", user.getId() + ""));
+		params.add(new BasicNameValuePair("roleId", role.getId() + ""));
 
 		String result = getHttpResponse("user/delete-role-user", params);
 
 		if (result == null || result.length() < 3) {
-			RolePool.getInstance().removeUserRole(user, role);
-			LiferayClientLogger.info(this.getClass().getName(),
-					"Role '" + role.getName() + "' of user '" + user.getScreenName() + "' deleted.");
+			rolePool.removeUserRole(user, role);
+			LiferayClientLogger.info(this.getClass().getName(), "IRole<Long> '" + role.getUniqueName() + "' of user '"
+					+ user.getUniqueName() + "' deleted.");
 		} else {
-			throw new RoleNotDeletedException("Role '" + role.getName() + "' (id:" + role.getRoleId()
+			throw new RoleNotDeletedException("IRole<Long> '" + role.getUniqueName() + "' (id:" + role.getId()
 					+ ") not deleted correctly. ");
 		}
 	}
@@ -377,25 +385,25 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public List<Role> getGroupRoles(UserGroup group) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException, AuthenticationRequired {
-		List<Role> roles = new ArrayList<Role>();
+	public Set<IRole<Long>> getGroupRoles(IGroup<Long> group) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 		if (group != null) {
-			List<Role> groupRoles = RolePool.getInstance().getGroupRoles(group);
+			Set<IRole<Long>> groupRoles = rolePool.getGroupRoles(group);
 			if (groupRoles != null) {
 				return groupRoles;
 			}
 			checkConnection();
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("groupId", group.getUserGroupId() + ""));
+			params.add(new BasicNameValuePair("groupId", group.getId() + ""));
 
 			String result = getHttpResponse("role/get-group-roles", params);
 
 			if (result != null) {
 				// A Simple JSON Response Read
 				roles = decodeListFromJson(result, Role.class);
-				RolePool.getInstance().addUserGroupRoles(group, roles);
+				rolePool.addGroupRoles(group, roles);
 				return roles;
 			}
 
@@ -415,11 +423,11 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
-	public List<Role> getOrganizationRoles(Organization organization) throws NotConnectedToWebServiceException,
+	public Set<IRole<Long>> getOrganizationRoles(IGroup<Long> organization) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
-		List<Role> roles = new ArrayList<Role>();
+		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 		if (organization != null) {
-			List<Role> groupRoles = RolePool.getInstance().getOrganizationRoles(organization);
+			Set<IRole<Long>> groupRoles = rolePool.getGroupRoles(organization);
 			if (groupRoles != null) {
 				return groupRoles;
 			}
@@ -433,7 +441,7 @@ public class RoleService extends ServiceAccess<Role> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				roles = decodeListFromJson(result, Role.class);
-				RolePool.getInstance().addOrganizationRoles(organization, roles);
+				rolePool.addGroupRoles(organization, roles);
 				return roles;
 			}
 
@@ -454,15 +462,15 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
-	public Role getRole(long roleId) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired, WebServiceAccessError {
+	public IRole<Long> getRole(long roleId) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException, AuthenticationRequired, WebServiceAccessError {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("roleId", Long.toString(roleId)));
 
 		String result = getHttpResponse("role/get-role", params);
-		Role role = null;
+		IRole<Long> role = null;
 		if (result != null) {
 			// A Simple JSON Response Read
 			role = decodeFromJson(result, Role.class);
@@ -484,7 +492,7 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
-	public Role getRole(String roleName, long companyId) throws NotConnectedToWebServiceException,
+	public IRole<Long> getRole(String roleName, long companyId) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
 		checkConnection();
 
@@ -493,7 +501,7 @@ public class RoleService extends ServiceAccess<Role> {
 		params.add(new BasicNameValuePair("name", roleName));
 
 		String result = getHttpResponse("role/get-role", params);
-		Role role = null;
+		IRole<Long> role = null;
 		if (result != null) {
 			// A Simple JSON Response Read
 			role = decodeFromJson(result, Role.class);
@@ -513,24 +521,24 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public List<Role> getUserRoles(User user) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException, AuthenticationRequired {
-		List<Role> roles = new ArrayList<Role>();
+	public Set<IRole<Long>> getUserRoles(IUser<Long> user) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired {
+		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 		if (user != null) {
-			List<Role> userRoles = RolePool.getInstance().getUserRoles(user);
+			Set<IRole<Long>> userRoles = rolePool.getUserRoles(user);
 			if (userRoles != null) {
 				return userRoles;
 			}
 			checkConnection();
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("userId", user.getUserId() + ""));
+			params.add(new BasicNameValuePair("userId", user.getId() + ""));
 
 			String result = getHttpResponse("role/get-user-roles", params);
 			if (result != null) {
 				// A Simple JSON Response Read
 				roles = decodeListFromJson(result, Role.class);
-				RolePool.getInstance().addUserRoles(user, roles);
+				rolePool.addUserRoles(user, roles);
 				return roles;
 			}
 
@@ -550,12 +558,12 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws IOException
 	 * @throws AuthenticationRequired
 	 */
-	public List<Role> getUserRolesOfGroup(Long userId, Long groupId) throws NotConnectedToWebServiceException,
+	public Set<IRole<Long>> getUserRolesOfGroup(Long userId, Long groupId) throws NotConnectedToWebServiceException,
 			ClientProtocolException, IOException, AuthenticationRequired {
-		List<Role> roles = new ArrayList<Role>();
+		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 
 		if (groupId != null && userId != null) {
-			List<Role> groupRoles = RolePool.getInstance().getUserRolesOfGroup(userId, groupId);
+			Set<IRole<Long>> groupRoles = rolePool.getUserRolesOfGroup(userId, groupId);
 
 			if (groupRoles != null) {
 				return groupRoles;
@@ -570,7 +578,7 @@ public class RoleService extends ServiceAccess<Role> {
 			if (result != null) {
 				// A Simple JSON Response Read
 				roles = decodeListFromJson(result, Role.class);
-				RolePool.getInstance().addUserRolesOfGroup(userId, groupId, roles);
+				rolePool.addUserRolesOfGroup(userId, groupId, roles);
 				return roles;
 			}
 
@@ -590,12 +598,12 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws IOException
 	 * @throws AuthenticationRequired
 	 */
-	public List<Role> getUserRolesOfGroup(User user, Group group) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired {
+	public Set<IRole<Long>> getUserRolesOfGroup(IUser<Long> user, Group group)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		if (group != null && user != null) {
-			return getUserRolesOfGroup(user.getUserId(), group.getGroupId());
+			return getUserRolesOfGroup(user.getId(), group.getGroupId());
 		}
-		return new ArrayList<Role>();
+		return new HashSet<IRole<Long>>();
 	}
 
 	/**
@@ -610,14 +618,15 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws WebServiceAccessError
 	 */
-	public List<Role> getUserRolesOfOrganization(User user, Organization organization) throws ClientProtocolException,
-			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
+	public Set<IRole<Long>> getUserRolesOfOrganization(IUser<Long> user, IGroup<Long> organization)
+			throws ClientProtocolException, NotConnectedToWebServiceException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
 		if (user != null && organization != null) {
 			// Get the group of the organization.
 			Long groupId = getOrganizationGroupId(organization);
-			return getUserRolesOfGroup(user.getUserId(), groupId);
+			return getUserRolesOfGroup(user.getId(), groupId);
 		}
-		return new ArrayList<Role>();
+		return new HashSet<IRole<Long>>();
 	}
 
 	/**
@@ -630,7 +639,7 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public void unsetRoleFromGroups(Role role, List<Group> groups) throws ClientProtocolException, IOException,
+	public void unsetRoleFromGroups(IRole<Long> role, List<Group> groups) throws ClientProtocolException, IOException,
 			NotConnectedToWebServiceException, AuthenticationRequired {
 		if (role != null && groups != null && !groups.isEmpty()) {
 			checkConnection();
@@ -650,17 +659,17 @@ public class RoleService extends ServiceAccess<Role> {
 			}
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("roleId", role.getRoleId() + ""));
+			params.add(new BasicNameValuePair("roleId", role.getId() + ""));
 			params.add(new BasicNameValuePair("groupIds", groupIds));
 
 			getHttpResponse("group/unset-role-groups", params);
 
 			for (Group group : groups) {
-				RolePool.getInstance().removeGroupRole(role, group);
+				rolePool.removeGroupRole(role, group);
 			}
 
-			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getName() + "' unsetted from groups "
-					+ groupIds);
+			LiferayClientLogger.info(this.getClass().getName(), "IRole<Long> '" + role.getUniqueName()
+					+ "' unsetted from groups " + groupIds);
 		}
 	}
 
@@ -675,8 +684,9 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws WebServiceAccessError
 	 */
-	public void unsetRoleFromOrganization(Role role, List<Organization> organizations) throws ClientProtocolException,
-			IOException, NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
+	public void unsetRoleFromOrganization(IRole<Long> role, List<IGroup<Long>> organizations)
+			throws ClientProtocolException, IOException, NotConnectedToWebServiceException, AuthenticationRequired,
+			WebServiceAccessError {
 		if (role != null && organizations != null && !organizations.isEmpty()) {
 			checkConnection();
 
@@ -695,16 +705,16 @@ public class RoleService extends ServiceAccess<Role> {
 			}
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("roleId", role.getRoleId() + ""));
+			params.add(new BasicNameValuePair("roleId", role.getId() + ""));
 			params.add(new BasicNameValuePair("groupIds", groupIds));
 
 			getHttpResponse("group/unset-role-groups", params);
 
-			for (Organization organization : organizations) {
-				RolePool.getInstance().removeOrganizationRole(role, organization);
+			for (IGroup<Long> organization : organizations) {
+				rolePool.removeGroupRole(role, organization);
 			}
 
-			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getName()
+			LiferayClientLogger.info(this.getClass().getName(), "IRole<Long> '" + role.getUniqueName()
 					+ "' unsetted from organizations " + groupIds);
 		}
 	}
@@ -719,7 +729,7 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public void addUserGroupRoles(Long userId, Long groupId, List<Role> roles)
+	public void addUserGroupRoles(Long userId, Long groupId, Set<IRole<Long>> roles)
 			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		if (userId != null && groupId != null && roles != null && !roles.isEmpty()) {
 			checkConnection();
@@ -728,11 +738,13 @@ public class RoleService extends ServiceAccess<Role> {
 			if (roles.size() > 0) {
 				rolesIds = "[";
 			}
-			for (int i = 0; i < roles.size(); i++) {
-				rolesIds += roles.get(i).getRoleId();
-				if (i < roles.size() - 1) {
+			Iterator<IRole<Long>> iterator = roles.iterator();
+			while (iterator != null && iterator.hasNext()) {
+				rolesIds += iterator.next().getId();
+				if (iterator.hasNext()) {
 					rolesIds += ",";
 				}
+
 			}
 			if (rolesIds.length() > 0) {
 				rolesIds += "]";
@@ -745,7 +757,7 @@ public class RoleService extends ServiceAccess<Role> {
 
 			getHttpResponse("usergrouprole/add-user-group-roles", params);
 
-			RolePool.getInstance().addUserRolesOfGroup(userId, groupId, roles);
+			rolePool.addUserRolesOfGroup(userId, groupId, roles);
 
 			LiferayClientLogger.info(this.getClass().getName(), "Roles ids " + rolesIds + " added to group '" + groupId
 					+ "' and user '" + userId + "'");
@@ -764,12 +776,12 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
-	public void addUserOrganizationRoles(User user, Organization organization, List<Role> roles)
+	public void addUserOrganizationRoles(IUser<Long> user, IGroup<Long> organization, Set<IRole<Long>> roles)
 			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
 		if (user != null && organization != null && roles != null && !roles.isEmpty()) {
 			long organizationGroupId = getOrganizationGroupId(organization);
-			addUserGroupRoles(user.getUserId(), organizationGroupId, roles);
+			addUserGroupRoles(user.getId(), organizationGroupId, roles);
 		}
 	}
 
@@ -783,10 +795,10 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public void addUserGroupRoles(User user, UserGroup userGroup, List<Role> roles)
+	public void addUserGroupRoles(IUser<Long> user, IGroup<Long> userGroup, Set<IRole<Long>> roles)
 			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		if (user != null && userGroup != null && roles != null && !roles.isEmpty()) {
-			addUserGroupRoles(user.getUserId(), userGroup.getUserGroupId(), roles);
+			addUserGroupRoles(user.getId(), userGroup.getId(), roles);
 		}
 	}
 
@@ -801,11 +813,11 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
-	public void addUserOrganizationRole(User user, Organization organization, Role role)
+	public void addUserOrganizationRole(IUser<Long> user, IGroup<Long> organization, IRole<Long> role)
 			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
 			WebServiceAccessError {
 		if (user != null && organization != null && role != null) {
-			List<Role> roles = new ArrayList<Role>();
+			Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 			roles.add(role);
 			addUserOrganizationRoles(user, organization, roles);
 		}
@@ -821,9 +833,9 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	public void addUserGroupRole(User user, UserGroup userGroup, Role role) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired {
-		List<Role> roles = new ArrayList<Role>();
+	public void addUserGroupRole(IUser<Long> user, IGroup<Long> userGroup, IRole<Long> role)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 		roles.add(role);
 		addUserGroupRoles(user, userGroup, roles);
 	}
@@ -839,19 +851,19 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
-	public long getOrganizationGroupId(Organization organization) throws ClientProtocolException,
+	public long getOrganizationGroupId(IGroup<Long> organization) throws ClientProtocolException,
 			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
 
-		if (organizationGroups.get(organization.getOrganizationId()) != null) {
-			return organizationGroups.get(organization.getOrganizationId());
+		if (organizationGroups.get(organization.getId()) != null) {
+			return organizationGroups.get(organization.getId());
 		}
 
 		try {
-			Group group = groupService.getGroup(organization.getCompanyId(), organization.getName()
-					+ LIFERAY_ORGANIZATION_GROUP_PREFIX);
+			IGroup<Long> group = groupService.getGroup(((Organization) organization).getCompanyId(),
+					organization.getUniqueName() + LIFERAY_ORGANIZATION_GROUP_PREFIX);
 			if (group != null) {
-				organizationGroups.put(organization.getOrganizationId(), group.getGroupId());
-				return group.getGroupId();
+				organizationGroups.put(organization.getId(), group.getId());
+				return group.getId();
 			}
 		} catch (AuthenticationRequired e) {
 			throw new AuthenticationRequired(
@@ -900,13 +912,13 @@ public class RoleService extends ServiceAccess<Role> {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public List<User> getUsers(Role role, Organization organization) throws ClientProtocolException, IOException,
-			NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
-		List<User> usersOfOrganizationWithRole = new ArrayList<User>();
-		List<User> usersOfOrganization = organizationService.getOrganizationUsers(organization.getOrganizationId());
+	public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException,
+			IOException, NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
+		Set<IUser<Long>> usersOfOrganizationWithRole = new HashSet<IUser<Long>>();
+		Set<IUser<Long>> usersOfOrganization = organizationService.getOrganizationUsers(organization);
 
-		for (User user : usersOfOrganization) {
-			List<Role> roles = getUserRolesOfOrganization(user, organization);
+		for (IUser<Long> user : usersOfOrganization) {
+			Set<IRole<Long>> roles = getUserRolesOfOrganization(user, organization);
 			if (roles.contains(role)) {
 				usersOfOrganizationWithRole.add(user);
 			}

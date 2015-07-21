@@ -3,6 +3,7 @@ package com.biit.liferay.access;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -26,12 +27,13 @@ import org.apache.http.util.EntityUtils;
 import com.biit.liferay.access.exceptions.AuthenticationRequired;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.configuration.ConfigurationReader;
+import com.biit.usermanager.entity.IGroup;
+import com.biit.usermanager.entity.IUser;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
 
-public class VerificationService extends ServiceAccess<User> {
+public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 	private final static String JSON_AUTHENTICATION_REQUIRED_STRING = "Authenticated access required";
 	private final static VerificationService instance = new VerificationService();
 
@@ -52,12 +54,12 @@ public class VerificationService extends ServiceAccess<User> {
 	}
 
 	@Override
-	public List<User> decodeListFromJson(String json, Class<User> objectClass) throws JsonParseException,
+	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass) throws JsonParseException,
 			JsonMappingException, IOException {
 		return null;
 	}
 
-	public boolean testConnection(Company company, String emailAddress, String password)
+	public boolean testConnection(IGroup<Long> company, String emailAddress, String password)
 			throws ClientProtocolException, IOException, NotConnectedToWebServiceException, AuthenticationRequired {
 
 		if (isNotConnected()) {
@@ -84,7 +86,7 @@ public class VerificationService extends ServiceAccess<User> {
 
 		// Set
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("companyId", company.getCompanyId() + ""));
+		params.add(new BasicNameValuePair("companyId", company.getId() + ""));
 		params.add(new BasicNameValuePair("emailAddress", emailAddress));
 
 		// Set authentication param if defined.
