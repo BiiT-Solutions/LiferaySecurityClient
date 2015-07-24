@@ -440,6 +440,43 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	}
 
 	/**
+	 * Get users from a role in an organization.
+	 * 
+	 * @param role
+	 * @param organization
+	 * @return
+	 */
+	@Override
+	public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws UserManagementException {
+		if (role != null && organization != null) {
+			try {
+				return roleService.getUsers(role, organization);
+			} catch (ClientProtocolException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the user's for the role '" + role.getUniqueName()
+						+ "'.");
+			} catch (IOException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the user's for the role '" + role.getUniqueName()
+						+ "'.");
+			} catch (NotConnectedToWebServiceException e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the user's for the role '" + role.getUniqueName()
+						+ "'.");
+			} catch (AuthenticationRequired e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the user's for the role '" + role.getUniqueName()
+						+ "'.");
+			} catch (WebServiceAccessError e) {
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the user's for the role '" + role.getUniqueName()
+						+ "'.");
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * IUser<Long> is allowed to do an activity.
 	 * 
 	 * @param user
