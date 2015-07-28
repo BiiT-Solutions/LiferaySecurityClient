@@ -91,7 +91,10 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	}
 
 	@Override
-	public IGroup<Long> getOrganization(long organizationId) throws UserManagementException {
+	public IGroup<Long> getOrganization(Long organizationId) throws UserManagementException {
+		if (organizationId == null) {
+			return null;
+		}
 		try {
 			return organizationService.getOrganization(organizationId);
 		} catch (NotConnectedToWebServiceException e) {
