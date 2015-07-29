@@ -35,7 +35,6 @@ import com.liferay.portal.model.Role;
  * This class allows to manage roles from Liferay portal.
  */
 public class RoleService extends ServiceAccess<IRole<Long>, Role> {
-	private static final String LIFERAY_ORGANIZATION_GROUP_PREFIX = " LFR_ORGANIZATION";
 	private GroupService groupService;
 	private OrganizationService organizationService;
 	// Relationship between organization and groups.
@@ -579,7 +578,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 
 		try {
 			IGroup<Long> group = groupService.getGroup(((Organization) organization).getCompanyId(),
-					organization.getUniqueName() + LIFERAY_ORGANIZATION_GROUP_PREFIX);
+					organization.getUniqueName() + LIFERAY_ORGANIZATION_GROUP_SUFIX);
 			if (group != null) {
 				organizationGroups.put(organization.getId(), group.getId());
 				return group.getId();

@@ -9,8 +9,10 @@ import java.util.Set;
 import org.apache.http.client.ClientProtocolException;
 
 import com.biit.liferay.access.CompanyService;
+import com.biit.liferay.access.GroupService;
 import com.biit.liferay.access.OrganizationService;
 import com.biit.liferay.access.RoleService;
+import com.biit.liferay.access.ServiceAccess;
 import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
@@ -34,6 +36,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	private AuthorizationPool authorizationPool;
 	private RoleService roleService = new RoleService();
 	private UserGroupService userGroupService = new UserGroupService();
+	private GroupService groupService = new GroupService();
 	private OrganizationService organizationService = new OrganizationService();
 	private CompanyService companyService = new CompanyService();
 	private UserService userService = new UserService();
@@ -43,6 +46,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	public AuthorizationService() {
 		authorizationPool = new AuthorizationPool();
 		roleService.serverConnection();
+		groupService.serverConnection();
 		userGroupService.serverConnection();
 		organizationService.serverConnection();
 		companyService.serverConnection();
@@ -115,6 +119,46 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		} catch (AuthenticationRequired e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException("Error retrieving the organization with id '" + organizationId + "'.");
+		}
+	}
+
+	/**
+	 * Gets the organization from its name. Returns a group not an organization.
+	 * 
+	 * @param organizationId
+	 * @return
+	 * @throws UserManagementException
+	 */
+	@Override
+	public IGroup<Long> getOrganization(String organizationName) throws UserManagementException {
+		if (organizationName == null) {
+			return null;
+		}
+		try {
+			IGroup<Long> company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance()
+					.getVirtualHost());
+			IGroup<Long> organizationGroup = groupService.getGroup(company.getId(), organizationName
+					+ ServiceAccess.LIFERAY_ORGANIZATION_GROUP_SUFIX);
+			// Id of organization is 1 less than its group.
+			return organizationService.getOrganization(organizationGroup.getId() - 1);
+		} catch (NotConnectedToWebServiceException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
+		} catch (WebServiceAccessError e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
+		} catch (JsonParseException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
+		} catch (JsonMappingException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
+		} catch (IOException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
+		} catch (AuthenticationRequired e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
 		}
 	}
 
@@ -533,6 +577,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		organizationService.reset();
 		companyService.reset();
 		userService.reset();
+		groupService.reset();
 	}
 
 	@Override
