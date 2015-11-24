@@ -32,8 +32,7 @@ import com.biit.usermanager.security.exceptions.UserManagementException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-public class AuthorizationService implements
-		IAuthorizationService<Long, Long, Long> {
+public class AuthorizationService implements IAuthorizationService<Long, Long, Long> {
 	private AuthorizationPool authorizationPool;
 	private RoleService roleService = new RoleService();
 	private UserGroupService userGroupService = new UserGroupService();
@@ -59,97 +58,67 @@ public class AuthorizationService implements
 		Set<IUser<Long>> users = new HashSet<IUser<Long>>();
 		try {
 			IGroup<Long> company = companyService
-					.getCompanyByVirtualHost(ConfigurationReader.getInstance()
-							.getVirtualHost());
+					.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
 			return userService.getCompanyUsers(company);
 		} catch (IOException e) {
 
 		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException("Error retrieving all users.");
 		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException("Error retrieving all users.");
 		} catch (WebServiceAccessError e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException("Error retrieving all users.");
 		}
 		return users;
 	}
 
 	@Override
-	public Set<IUser<Long>> getAllUsers(IGroup<Long> organization)
-			throws UserManagementException {
+	public Set<IUser<Long>> getAllUsers(IGroup<Long> organization) throws UserManagementException {
 		try {
 			return organizationService.getOrganizationUsers(organization);
 		} catch (IOException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the users from organization with id '"
-							+ organization.getId() + "'.");
+					"Error retrieving the users from organization with id '" + organization.getId() + "'.");
 		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the users from organization with id '"
-							+ organization.getId() + "'.");
+					"Error retrieving the users from organization with id '" + organization.getId() + "'.");
 		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the users from organization with id '"
-							+ organization.getId() + "'.");
+					"Error retrieving the users from organization with id '" + organization.getId() + "'.");
 		}
 	}
 
 	@Override
-	public IGroup<Long> getOrganization(Long organizationId)
-			throws UserManagementException {
+	public IGroup<Long> getOrganization(Long organizationId) throws UserManagementException {
 		if (organizationId == null) {
 			return null;
 		}
 		try {
 			return organizationService.getOrganization(organizationId);
 		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization with id '"
-							+ organizationId + "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization with id '" + organizationId + "'.");
 		} catch (WebServiceAccessError e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization with id '"
-							+ organizationId + "'.");
+			LiferayClientLogger.warning(AuthorizationService.class.getName(), e.getMessage());
+			throw new UserManagementException("Error retrieving the organization with id '" + organizationId + "'.");
 		} catch (JsonParseException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization with id '"
-							+ organizationId + "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization with id '" + organizationId + "'.");
 		} catch (JsonMappingException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization with id '"
-							+ organizationId + "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization with id '" + organizationId + "'.");
 		} catch (IOException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization with id '"
-							+ organizationId + "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization with id '" + organizationId + "'.");
 		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization with id '"
-							+ organizationId + "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization with id '" + organizationId + "'.");
 		}
 	}
 
@@ -161,57 +130,35 @@ public class AuthorizationService implements
 	 * @throws UserManagementException
 	 */
 	@Override
-	public IGroup<Long> getOrganization(String organizationName)
-			throws UserManagementException {
+	public IGroup<Long> getOrganization(String organizationName) throws UserManagementException {
 		if (organizationName == null) {
 			return null;
 		}
 		try {
 			IGroup<Long> company = companyService
-					.getCompanyByVirtualHost(ConfigurationReader.getInstance()
-							.getVirtualHost());
-			IGroup<Long> organizationGroup = groupService.getGroup(
-					company.getId(), organizationName
-							+ ServiceAccess.LIFERAY_ORGANIZATION_GROUP_SUFIX);
+					.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
+			IGroup<Long> organizationGroup = groupService.getGroup(company.getId(),
+					organizationName + ServiceAccess.LIFERAY_ORGANIZATION_GROUP_SUFIX);
 			// Id of organization is 1 less than its group.
-			return organizationService.getOrganization(organizationGroup
-					.getId() - 1);
+			return organizationService.getOrganization(organizationGroup.getId() - 1);
 		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization '" + organizationName
-							+ "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
 		} catch (WebServiceAccessError e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization '" + organizationName
-							+ "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
 		} catch (JsonParseException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization '" + organizationName
-							+ "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
 		} catch (JsonMappingException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization '" + organizationName
-							+ "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
 		} catch (IOException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization '" + organizationName
-							+ "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
 		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving the organization '" + organizationName
-							+ "'.");
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
 		}
 	}
 
@@ -221,31 +168,22 @@ public class AuthorizationService implements
 			try {
 				return roleService.getRole(roleId);
 			} catch (RemoteException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '"
-						+ roleId + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleId + "'");
 			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '"
-						+ roleId + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleId + "'");
 			} catch (WebServiceAccessError e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '"
-						+ roleId + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleId + "'");
 			} catch (ClientProtocolException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(e.getMessage());
 			} catch (IOException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(e.getMessage());
 			} catch (AuthenticationRequired e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(e.getMessage());
 			}
 		}
@@ -257,47 +195,35 @@ public class AuthorizationService implements
 		if (roleName != null) {
 			try {
 				IGroup<Long> company = companyService
-						.getCompanyByVirtualHost(ConfigurationReader
-								.getInstance().getVirtualHost());
+						.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
 				return roleService.getRole(roleName, company.getId());
 			} catch (RemoteException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '"
-						+ roleName + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleName + "'");
 			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '"
-						+ roleName + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleName + "'");
 			} catch (WebServiceAccessError e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
-				throw new UserManagementException("Error retrieving the role '"
-						+ roleName + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+				throw new UserManagementException("Error retrieving the role '" + roleName + "'");
 			} catch (JsonParseException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(e.getMessage());
 			} catch (JsonMappingException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(e.getMessage());
 			} catch (IOException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(e.getMessage());
 			} catch (AuthenticationRequired e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(e.getMessage());
 			}
 		}
 		return null;
 	}
 
-	private Set<IActivity> getUserActivitiesAllowed(IUser<Long> user)
-			throws UserManagementException {
+	private Set<IActivity> getUserActivitiesAllowed(IUser<Long> user) throws UserManagementException {
 		Set<IActivity> activities = new HashSet<IActivity>();
 		if (user != null) {
 			Set<IRole<Long>> roles = getUserRoles(user);
@@ -325,8 +251,8 @@ public class AuthorizationService implements
 		return activities;
 	}
 
-	private Set<IActivity> getUserActivitiesAllowed(IUser<Long> user,
-			IGroup<Long> organization) throws UserManagementException {
+	private Set<IActivity> getUserActivitiesAllowed(IUser<Long> user, IGroup<Long> organization)
+			throws UserManagementException {
 		Set<IActivity> organizationActivities = new HashSet<IActivity>();
 		if (user != null && organization != null) {
 			// Add roles obtained by organization.
@@ -343,94 +269,60 @@ public class AuthorizationService implements
 	}
 
 	@Override
-	public Set<IRole<Long>> getUserGroupRoles(IGroup<Long> group)
-			throws UserManagementException {
+	public Set<IRole<Long>> getUserGroupRoles(IGroup<Long> group) throws UserManagementException {
 		if (group != null) {
 			try {
-				return new HashSet<IRole<Long>>(
-						roleService.getGroupRoles(group));
+				return new HashSet<IRole<Long>>(roleService.getGroupRoles(group));
 			} catch (RemoteException e) {
-				LiferayClientLogger.error(
-						AuthorizationService.class.getName(),
-						"Error retrieving the group's roles for "
-								+ group.getUniqueName() + "'");
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the group's roles for " + group.getUniqueName() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.error(
-						AuthorizationService.class.getName(),
-						"Error retrieving the group's roles for "
-								+ group.getUniqueName() + "'");
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the group's roles for " + group.getUniqueName() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (ClientProtocolException e) {
-				LiferayClientLogger.error(
-						AuthorizationService.class.getName(),
-						"Error retrieving the group's roles for "
-								+ group.getUniqueName() + "'");
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the group's roles for " + group.getUniqueName() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (IOException e) {
-				LiferayClientLogger.error(
-						AuthorizationService.class.getName(),
-						"Error retrieving the group's roles for "
-								+ group.getUniqueName() + "'");
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the group's roles for " + group.getUniqueName() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (AuthenticationRequired e) {
-				LiferayClientLogger.error(
-						AuthorizationService.class.getName(),
-						"Error retrieving the group's roles for "
-								+ group.getUniqueName() + "'");
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the group's roles for " + group.getUniqueName() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
 		return new HashSet<IRole<Long>>();
 	}
 
 	@Override
-	public Set<IGroup<Long>> getUserGroups(IUser<Long> user)
-			throws UserManagementException {
+	public Set<IGroup<Long>> getUserGroups(IUser<Long> user) throws UserManagementException {
 		if (user != null) {
 			try {
-				return new HashSet<IGroup<Long>>(
-						userGroupService.getUserUserGroups(user));
+				return new HashSet<IGroup<Long>>(userGroupService.getUserUserGroups(user));
 			} catch (RemoteException e) {
-				LiferayClientLogger.error(
-						AuthorizationService.class.getName(),
-						"Error retrieving the user's groups for "
-								+ user.getEmailAddress() + "'");
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the user's groups for " + user.getEmailAddress() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.error(
-						AuthorizationService.class.getName(),
-						"Error retrieving the user's groups for "
-								+ user.getEmailAddress() + "'");
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the user's groups for " + user.getEmailAddress() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (ClientProtocolException e) {
-				LiferayClientLogger.error(
-						AuthorizationService.class.getName(),
-						"Error retrieving the user's groups for "
-								+ user.getEmailAddress() + "'");
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the user's groups for " + user.getEmailAddress() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (IOException e) {
-				LiferayClientLogger.error(
-						AuthorizationService.class.getName(),
-						"Error retrieving the user's groups for "
-								+ user.getEmailAddress() + "'");
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the user's groups for " + user.getEmailAddress() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			} catch (AuthenticationRequired e) {
-				LiferayClientLogger.error(
-						AuthorizationService.class.getName(),
-						"Error retrieving the user's groups for "
-								+ user.getEmailAddress() + "'");
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.error(AuthorizationService.class.getName(),
+						"Error retrieving the user's groups for " + user.getEmailAddress() + "'");
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			}
 		}
 		return new HashSet<IGroup<Long>>();
@@ -445,11 +337,9 @@ public class AuthorizationService implements
 	 * @throws UserManagementException
 	 */
 	@Override
-	public Set<IGroup<Long>> getUserOrganizations(IUser<Long> user)
-			throws UserManagementException {
+	public Set<IGroup<Long>> getUserOrganizations(IUser<Long> user) throws UserManagementException {
 		try {
-			Set<IGroup<Long>> organizations = new HashSet<IGroup<Long>>(
-					organizationService.getUserOrganizations(user));
+			Set<IGroup<Long>> organizations = new HashSet<IGroup<Long>>(organizationService.getUserOrganizations(user));
 			Set<IGroup<Long>> applicationOrganizations = new HashSet<IGroup<Long>>();
 			for (IGroup<Long> organization : organizations) {
 				if (!getUserRoles(user, organization).isEmpty()) {
@@ -458,41 +348,30 @@ public class AuthorizationService implements
 			}
 			return applicationOrganizations;
 		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the user's organizations for '"
-							+ user.getEmailAddress() + "'");
+					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 		} catch (WebServiceAccessError e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the user's organizations for '"
-							+ user.getEmailAddress() + "'");
+					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 		} catch (ClientProtocolException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the user's organizations for '"
-							+ user.getEmailAddress() + "'");
+					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 		} catch (IOException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the user's organizations for '"
-							+ user.getEmailAddress() + "'");
+					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the user's organizations for '"
-							+ user.getEmailAddress() + "'");
+					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 		}
 	}
 
 	@Override
-	public Set<IGroup<Long>> getUserOrganizations(IUser<Long> user,
-			IGroup<Long> site) throws UserManagementException {
+	public Set<IGroup<Long>> getUserOrganizations(IUser<Long> user, IGroup<Long> site) throws UserManagementException {
 		try {
 			Set<IGroup<Long>> organizations = new HashSet<IGroup<Long>>(
 					organizationService.getOrganizations(site, user));
@@ -504,40 +383,29 @@ public class AuthorizationService implements
 			}
 			return applicationOrganizations;
 		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the user's organizations for '"
-							+ user.getEmailAddress() + "'");
+					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 		} catch (ClientProtocolException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the user's organizations for '"
-							+ user.getEmailAddress() + "'");
+					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 		} catch (IOException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the user's organizations for '"
-							+ user.getEmailAddress() + "'");
+					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the user's organizations for '"
-							+ user.getEmailAddress() + "'");
+					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 		} catch (PortletNotInstalledException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the user's organizations for '"
-							+ user.getEmailAddress() + "'");
+					"Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
 		}
 	}
 
-	public Set<IGroup<Long>> getUserOrganizationsWhereIsAuthorized(
-			IUser<Long> user, IActivity... activities)
+	public Set<IGroup<Long>> getUserOrganizationsWhereIsAuthorized(IUser<Long> user, IActivity... activities)
 			throws UserManagementException {
 		Set<IGroup<Long>> organizations = new HashSet<IGroup<Long>>();
 		organizations = getUserOrganizations(user);
@@ -559,125 +427,89 @@ public class AuthorizationService implements
 	}
 
 	@Override
-	public Set<IRole<Long>> getUserRoles(IUser<Long> user)
-			throws UserManagementException {
+	public Set<IRole<Long>> getUserRoles(IUser<Long> user) throws UserManagementException {
 		if (user != null) {
 			try {
 				return new HashSet<IRole<Long>>(roleService.getUserRoles(user));
 			} catch (RemoteException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's roles for '"
-								+ user.getEmailAddress() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's roles for '"
-								+ user.getEmailAddress() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 			} catch (ClientProtocolException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's roles for '"
-								+ user.getEmailAddress() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 			} catch (IOException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's roles for '"
-								+ user.getEmailAddress() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 			} catch (AuthenticationRequired e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's roles for '"
-								+ user.getEmailAddress() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 			}
 		}
 		return new HashSet<IRole<Long>>();
 	}
 
 	@Override
-	public Set<IRole<Long>> getUserRoles(IUser<Long> user,
-			IGroup<Long> organization) throws UserManagementException {
+	public Set<IRole<Long>> getUserRoles(IUser<Long> user, IGroup<Long> organization) throws UserManagementException {
 		if (user != null && organization != null) {
 			try {
-				return new HashSet<IRole<Long>>(
-						roleService.getUserRolesOfOrganization(user,
-								organization));
+				return new HashSet<IRole<Long>>(roleService.getUserRolesOfOrganization(user, organization));
 			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's roles for '"
-								+ user.getEmailAddress() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 			} catch (WebServiceAccessError e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's roles for '"
-								+ user.getEmailAddress() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 			} catch (ClientProtocolException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's roles for '"
-								+ user.getEmailAddress() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 			} catch (IOException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's roles for '"
-								+ user.getEmailAddress() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 			} catch (AuthenticationRequired e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's roles for '"
-								+ user.getEmailAddress() + "'");
+						"Error retrieving the user's roles for '" + user.getEmailAddress() + "'");
 			}
 		}
 		return new HashSet<IRole<Long>>();
 	}
 
 	@Override
-	public Set<IRole<Long>> getAllRoles(IGroup<Long> organization)
-			throws UserManagementException {
+	public Set<IRole<Long>> getAllRoles(IGroup<Long> organization) throws UserManagementException {
 		try {
-			return new HashSet<IRole<Long>>(
-					roleService.getOrganizationRoles(organization));
+			return new HashSet<IRole<Long>>(roleService.getOrganizationRoles(organization));
 		} catch (ClientProtocolException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the organization's roles for '"
-							+ organization.getUniqueName() + "'");
+					"Error retrieving the organization's roles for '" + organization.getUniqueName() + "'");
 		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the organization's roles for '"
-							+ organization.getUniqueName() + "'");
+					"Error retrieving the organization's roles for '" + organization.getUniqueName() + "'");
 		} catch (IOException e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the organization's roles for '"
-							+ organization.getUniqueName() + "'");
+					"Error retrieving the organization's roles for '" + organization.getUniqueName() + "'");
 		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the organization's roles for '"
-							+ organization.getUniqueName() + "'");
+					"Error retrieving the organization's roles for '" + organization.getUniqueName() + "'");
 		} catch (WebServiceAccessError e) {
-			LiferayClientLogger.errorMessage(
-					AuthorizationService.class.getName(), e);
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
-					"Error retrieving the organization's roles for '"
-							+ organization.getUniqueName() + "'");
+					"Error retrieving the organization's roles for '" + organization.getUniqueName() + "'");
 		}
 	}
 
@@ -689,41 +521,30 @@ public class AuthorizationService implements
 	 * @return
 	 */
 	@Override
-	public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization)
-			throws UserManagementException {
+	public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws UserManagementException {
 		if (role != null && organization != null) {
 			try {
 				return roleService.getUsers(role, organization);
 			} catch (ClientProtocolException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's for the role '"
-								+ role.getUniqueName() + "'.");
+						"Error retrieving the user's for the role '" + role.getUniqueName() + "'.");
 			} catch (IOException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's for the role '"
-								+ role.getUniqueName() + "'.");
+						"Error retrieving the user's for the role '" + role.getUniqueName() + "'.");
 			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's for the role '"
-								+ role.getUniqueName() + "'.");
+						"Error retrieving the user's for the role '" + role.getUniqueName() + "'.");
 			} catch (AuthenticationRequired e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's for the role '"
-								+ role.getUniqueName() + "'.");
+						"Error retrieving the user's for the role '" + role.getUniqueName() + "'.");
 			} catch (WebServiceAccessError e) {
-				LiferayClientLogger.errorMessage(
-						AuthorizationService.class.getName(), e);
+				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException(
-						"Error retrieving the user's for the role '"
-								+ role.getUniqueName() + "'.");
+						"Error retrieving the user's for the role '" + role.getUniqueName() + "'.");
 			}
 		}
 		return null;
@@ -738,14 +559,12 @@ public class AuthorizationService implements
 	 * @throws UserManagementException
 	 */
 	@Override
-	public boolean isAuthorizedActivity(IUser<Long> user, IActivity activity)
-			throws UserManagementException {
+	public boolean isAuthorizedActivity(IUser<Long> user, IActivity activity) throws UserManagementException {
 		if (user == null) {
 			return false;
 		}
 		// Is it in the pool?
-		Boolean authorized = authorizationPool.isAuthorizedActivity(user,
-				activity);
+		Boolean authorized = authorizationPool.isAuthorizedActivity(user, activity);
 		if (authorized != null) {
 			return authorized;
 		}
@@ -756,8 +575,7 @@ public class AuthorizationService implements
 	}
 
 	@Override
-	public boolean isAuthorizedActivity(IUser<Long> user,
-			IGroup<Long> organization, IActivity activity)
+	public boolean isAuthorizedActivity(IUser<Long> user, IGroup<Long> organization, IActivity activity)
 			throws UserManagementException {
 		if (user != null) {
 			// If user has the permission... no need to check the organization.
@@ -766,14 +584,12 @@ public class AuthorizationService implements
 			}
 
 			// Is it in the pool?
-			Boolean authorized = authorizationPool.isAuthorizedActivity(user,
-					organization, activity);
+			Boolean authorized = authorizationPool.isAuthorizedActivity(user, organization, activity);
 			if (authorized != null) {
 				return authorized;
 			}
 
-			authorized = getUserActivitiesAllowed(user, organization).contains(
-					activity);
+			authorized = getUserActivitiesAllowed(user, organization).contains(activity);
 			authorizationPool.addUser(user, organization, activity, authorized);
 			return authorized;
 		}
