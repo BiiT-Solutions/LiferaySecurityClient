@@ -162,6 +162,39 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		}
 	}
 
+	/**
+	 * Gets all the organizations of a company
+	 * 
+	 * @param organizationId
+	 * @return
+	 * @throws UserManagementException
+	 */
+	public Set<IGroup<Long>> getAllAvailableOrganizations() throws UserManagementException {
+		try {
+			IGroup<Long> company = companyService
+					.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
+			return organizationService.getOrganizations(company);
+		} catch (NotConnectedToWebServiceException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving all organizations of a company.");
+		} catch (WebServiceAccessError e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving all organizations of a company.");
+		} catch (JsonParseException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving all organizations of a company.");
+		} catch (JsonMappingException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving all organizations of a company.");
+		} catch (IOException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving all organizations of a company.");
+		} catch (AuthenticationRequired e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving all organizations of a company.");
+		}
+	}
+
 	@Override
 	public IRole<Long> getRole(Long roleId) throws UserManagementException {
 		if (roleId != null) {
