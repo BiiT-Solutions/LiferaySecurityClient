@@ -26,6 +26,9 @@ import com.biit.usermanager.security.exceptions.UserManagementException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+/**
+ * Implements Liferay service access for authentication. 
+ */
 public class AuthenticationService implements IAuthenticationService<Long, Long> {
 
 	private IGroup<Long> company = null;
