@@ -264,9 +264,6 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException(e.getMessage());
-		} catch (PBKDF2EncryptorException e) {
-			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-			throw new UserManagementException(e.getMessage());
 		} catch (IOException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException(e.getMessage());

@@ -11,7 +11,6 @@ import org.apache.http.message.BasicNameValuePair;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.log.LiferayClientLogger;
-import com.biit.security.exceptions.PBKDF2EncryptorException;
 import com.biit.usermanager.entity.IUser;
 import com.biit.usermanager.security.exceptions.AuthenticationRequired;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -21,8 +20,7 @@ import com.liferay.portal.model.User;
 public class PasswordService extends UserService {
 
 	@Override
-	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass) throws JsonParseException,
-			JsonMappingException, IOException {
+	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass) throws JsonParseException, JsonMappingException, IOException {
 		return null;
 	}
 
@@ -32,15 +30,13 @@ public class PasswordService extends UserService {
 	 * @param user
 	 * @param plainTextPassword
 	 * @throws NotConnectedToWebServiceException
-	 * @throws PBKDF2EncryptorException
 	 * @throws IOException
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
-	public IUser<Long> updatePassword(IUser<Long> user, String plainTextPassword)
-			throws NotConnectedToWebServiceException, PBKDF2EncryptorException, JsonParseException,
+	public IUser<Long> updatePassword(IUser<Long> user, String plainTextPassword) throws NotConnectedToWebServiceException, JsonParseException,
 			JsonMappingException, IOException, AuthenticationRequired, WebServiceAccessError {
 		checkConnection();
 
@@ -55,8 +51,7 @@ public class PasswordService extends UserService {
 			// A Simple JSON Response Read
 			IUser<Long> obtainedUser = decodeFromJson(result, User.class);
 			user.setPassword(obtainedUser.getPassword());
-			LiferayClientLogger.info(this.getClass().getName(), "User has change its password '" + user.getUniqueName()
-					+ "'.");
+			LiferayClientLogger.info(this.getClass().getName(), "User has change its password '" + user.getUniqueName() + "'.");
 			return obtainedUser;
 		}
 		return null;
