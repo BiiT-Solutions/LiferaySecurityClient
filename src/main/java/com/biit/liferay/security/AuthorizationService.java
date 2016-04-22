@@ -18,12 +18,12 @@ import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.PortletNotInstalledException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
-import com.biit.liferay.configuration.ConfigurationReader;
+import com.biit.liferay.configuration.LiferayConfigurationReader;
 import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.usermanager.entity.IGroup;
 import com.biit.usermanager.entity.IRole;
 import com.biit.usermanager.entity.IUser;
-import com.biit.usermanager.entity.pool.AuthorizationPool;
+import com.biit.usermanager.entity.pool.ActivityAuthorizationPool;
 import com.biit.usermanager.security.IActivity;
 import com.biit.usermanager.security.IAuthorizationService;
 import com.biit.usermanager.security.IRoleActivities;
@@ -33,7 +33,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class AuthorizationService implements IAuthorizationService<Long, Long, Long> {
-	private AuthorizationPool authorizationPool;
+	private ActivityAuthorizationPool authorizationPool;
 	private RoleService roleService = new RoleService();
 	private UserGroupService userGroupService = new UserGroupService();
 	private GroupService groupService = new GroupService();
@@ -44,7 +44,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	private IRoleActivities roleActivities;
 
 	public AuthorizationService() {
-		authorizationPool = new AuthorizationPool();
+		authorizationPool = new ActivityAuthorizationPool();
 		roleService.serverConnection();
 		groupService.serverConnection();
 		userGroupService.serverConnection();
@@ -58,7 +58,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		Set<IUser<Long>> users = new HashSet<IUser<Long>>();
 		try {
 			IGroup<Long> company = companyService
-					.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
+					.getCompanyByVirtualHost(LiferayConfigurationReader.getInstance().getVirtualHost());
 			return userService.getCompanyUsers(company);
 		} catch (IOException e) {
 
@@ -136,7 +136,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		}
 		try {
 			IGroup<Long> company = companyService
-					.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
+					.getCompanyByVirtualHost(LiferayConfigurationReader.getInstance().getVirtualHost());
 			IGroup<Long> organizationGroup = groupService.getGroup(company.getId(),
 					organizationName + ServiceAccess.LIFERAY_ORGANIZATION_GROUP_SUFIX);
 			// Id of organization is 1 less than its group.
@@ -172,7 +172,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	public Set<IGroup<Long>> getAllAvailableOrganizations() throws UserManagementException {
 		try {
 			IGroup<Long> company = companyService
-					.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
+					.getCompanyByVirtualHost(LiferayConfigurationReader.getInstance().getVirtualHost());
 			return organizationService.getOrganizations(company);
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
@@ -228,7 +228,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		if (roleName != null) {
 			try {
 				IGroup<Long> company = companyService
-						.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
+						.getCompanyByVirtualHost(LiferayConfigurationReader.getInstance().getVirtualHost());
 				return roleService.getRole(roleName, company.getId());
 			} catch (RemoteException e) {
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
