@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.biit.liferay.access.exceptions.NotValidPasswordException;
-import com.biit.liferay.configuration.ConfigurationReader;
+import com.biit.liferay.configuration.LiferayConfigurationReader;
 import com.biit.liferay.log.LiferayClientLogger;
 
 public class AccessUtils {
@@ -52,12 +52,12 @@ public class AccessUtils {
 	protected static URL getLiferayUrl(String remoteUser, String password, String serviceName) {
 		try {
 			checkPassword(password);
-			URL url = new URL(ConfigurationReader.getInstance().getLiferayProtocol() + "://"
+			URL url = new URL(LiferayConfigurationReader.getInstance().getLiferayProtocol() + "://"
 					+ URLEncoder.encode(remoteUser, "UTF-8") + ":" + password + "@"
-					+ ConfigurationReader.getInstance().getVirtualHost() + ":"
-					+ ConfigurationReader.getInstance().getConnectionPort() + "/"
-					+ ConfigurationReader.getInstance().getWebAppName()
-					+ ConfigurationReader.getInstance().getWebServicesPath() + serviceName);
+					+ LiferayConfigurationReader.getInstance().getVirtualHost() + ":"
+					+ LiferayConfigurationReader.getInstance().getConnectionPort() + "/"
+					+ LiferayConfigurationReader.getInstance().getWebAppName()
+					+ LiferayConfigurationReader.getInstance().getWebServicesPath() + serviceName);
 			return url;
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

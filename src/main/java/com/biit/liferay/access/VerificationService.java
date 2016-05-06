@@ -25,7 +25,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
-import com.biit.liferay.configuration.ConfigurationReader;
+import com.biit.liferay.configuration.LiferayConfigurationReader;
 import com.biit.usermanager.entity.IGroup;
 import com.biit.usermanager.entity.IUser;
 import com.biit.usermanager.security.exceptions.AuthenticationRequired;
@@ -92,7 +92,7 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 		// Set authentication param if defined.
 		setAuthParam(params);
 
-		HttpPost post = new HttpPost("/" + ConfigurationReader.getInstance().getWebServicesPath()
+		HttpPost post = new HttpPost("/" + LiferayConfigurationReader.getInstance().getWebServicesPath()
 				+ "user/get-user-by-email-address");
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
 		post.setEntity(entity);
