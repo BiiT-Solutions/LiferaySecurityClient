@@ -14,7 +14,7 @@ import com.biit.liferay.access.VerificationService;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.UserDoesNotExistException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
-import com.biit.liferay.configuration.ConfigurationReader;
+import com.biit.liferay.configuration.LiferayConfigurationReader;
 import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.usermanager.entity.IGroup;
 import com.biit.usermanager.entity.IUser;
@@ -24,6 +24,7 @@ import com.biit.usermanager.security.exceptions.InvalidCredentialsException;
 import com.biit.usermanager.security.exceptions.UserManagementException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.liferay.portal.model.User;
 
 /**
  * Implements Liferay service access for authentication.
@@ -90,23 +91,23 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 			return user;
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-			throw new UserManagementException("Error connecting to Liferay service with '" + ConfigurationReader.getInstance().getUser() + " at "
-					+ ConfigurationReader.getInstance().getVirtualHost() + ":" + ConfigurationReader.getInstance().getConnectionPort()
+			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
+					+ LiferayConfigurationReader.getInstance().getVirtualHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
 		} catch (WebServiceAccessError e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-			throw new UserManagementException("Error connecting to Liferay service with '" + ConfigurationReader.getInstance().getUser() + " at "
-					+ ConfigurationReader.getInstance().getVirtualHost() + ":" + ConfigurationReader.getInstance().getConnectionPort()
+			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
+					+ LiferayConfigurationReader.getInstance().getVirtualHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
 		} catch (ClientProtocolException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-			throw new UserManagementException("Error connecting to Liferay service with '" + ConfigurationReader.getInstance().getUser() + " at "
-					+ ConfigurationReader.getInstance().getVirtualHost() + ":" + ConfigurationReader.getInstance().getConnectionPort()
+			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
+					+ LiferayConfigurationReader.getInstance().getVirtualHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
 		} catch (IOException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-			throw new UserManagementException("Error connecting to Liferay service with '" + ConfigurationReader.getInstance().getUser() + " at "
-					+ ConfigurationReader.getInstance().getVirtualHost() + ":" + ConfigurationReader.getInstance().getConnectionPort()
+			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
+					+ LiferayConfigurationReader.getInstance().getVirtualHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
 		}
 	}
@@ -114,13 +115,13 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 	private IGroup<Long> getCompany() throws NotConnectedToWebServiceException {
 		try {
 			if (company == null) {
-				company = companyService.getCompanyByVirtualHost(ConfigurationReader.getInstance().getVirtualHost());
+				company = companyService.getCompanyByVirtualHost(LiferayConfigurationReader.getInstance().getVirtualHost());
 			}
 			return company;
 		} catch (Exception ar) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), ar);
-			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '" + ConfigurationReader.getInstance().getUser() + " at "
-					+ ConfigurationReader.getInstance().getVirtualHost() + ":" + ConfigurationReader.getInstance().getConnectionPort()
+			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser()
+					+ " at " + LiferayConfigurationReader.getInstance().getVirtualHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
 		}
 	}
@@ -263,5 +264,31 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException(e.getMessage());
 		}
+	}
+
+	@Override
+	public IUser<Long> updateUser(IUser<Long> user) throws UserManagementException {
+		if (user instanceof User) {
+			try {
+				return userService.updateUser((User) user);
+			} catch (ClientProtocolException e) {
+				LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+				throw new UserManagementException(e.getMessage());
+			} catch (NotConnectedToWebServiceException e) {
+				LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+				throw new UserManagementException(e.getMessage());
+			} catch (IOException e) {
+				LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+				throw new UserManagementException(e.getMessage());
+			} catch (AuthenticationRequired e) {
+				LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+				throw new UserManagementException(e.getMessage());
+			} catch (WebServiceAccessError e) {
+				LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+				throw new UserManagementException(e.getMessage());
+			}
+		}
+		LiferayClientLogger.error(this.getClass().getName(), "Invalid user " + user);
+		return null;
 	}
 }
