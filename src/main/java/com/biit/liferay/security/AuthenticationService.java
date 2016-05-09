@@ -234,11 +234,13 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 		return false;
 	}
 
+	@Override
 	public void reset() {
 		userGroupService.reset();
 		companyService.reset();
 		userService.reset();
 		passwordService.reset();
+		contactService.reset();
 	}
 
 	@Override

@@ -33,7 +33,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class AuthorizationService implements IAuthorizationService<Long, Long, Long> {
-	private AuthorizationPool authorizationPool;
+	private AuthorizationPool<Long, Long> authorizationPool;
 	private RoleService roleService = new RoleService();
 	private UserGroupService userGroupService = new UserGroupService();
 	private GroupService groupService = new GroupService();
