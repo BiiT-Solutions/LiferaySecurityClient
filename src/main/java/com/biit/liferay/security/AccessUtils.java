@@ -54,7 +54,7 @@ public class AccessUtils {
 			checkPassword(password);
 			URL url = new URL(LiferayConfigurationReader.getInstance().getLiferayProtocol() + "://"
 					+ URLEncoder.encode(remoteUser, "UTF-8") + ":" + password + "@"
-					+ LiferayConfigurationReader.getInstance().getVirtualHost() + ":"
+					+ LiferayConfigurationReader.getInstance().getHost() + ":"
 					+ LiferayConfigurationReader.getInstance().getConnectionPort() + "/"
 					+ LiferayConfigurationReader.getInstance().getWebAppName()
 					+ LiferayConfigurationReader.getInstance().getWebServicesPath() + serviceName);

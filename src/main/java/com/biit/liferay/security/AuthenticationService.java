@@ -94,22 +94,22 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
-					+ LiferayConfigurationReader.getInstance().getVirtualHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
+					+ LiferayConfigurationReader.getInstance().getHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
 		} catch (WebServiceAccessError e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
-					+ LiferayConfigurationReader.getInstance().getVirtualHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
+					+ LiferayConfigurationReader.getInstance().getHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
 		} catch (ClientProtocolException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
-					+ LiferayConfigurationReader.getInstance().getVirtualHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
+					+ LiferayConfigurationReader.getInstance().getHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
 		} catch (IOException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
-					+ LiferayConfigurationReader.getInstance().getVirtualHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
+					+ LiferayConfigurationReader.getInstance().getHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
 		}
 	}
