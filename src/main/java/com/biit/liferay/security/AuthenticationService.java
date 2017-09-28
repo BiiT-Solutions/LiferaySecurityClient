@@ -95,22 +95,22 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
 					+ LiferayConfigurationReader.getInstance().getHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
-					+ "'.\n Check configuration at 'liferay.conf' file.");
+					+ "'. Check configuration at 'liferay.conf' file.");
 		} catch (WebServiceAccessError e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
 					+ LiferayConfigurationReader.getInstance().getHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
-					+ "'.\n Check configuration at 'liferay.conf' file.");
+					+ "'. Check configuration at 'liferay.conf' file.");
 		} catch (ClientProtocolException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
 					+ LiferayConfigurationReader.getInstance().getHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
-					+ "'.\n Check configuration at 'liferay.conf' file.");
+					+ "'. Check configuration at 'liferay.conf' file.");
 		} catch (IOException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser() + " at "
 					+ LiferayConfigurationReader.getInstance().getHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
-					+ "'.\n Check configuration at 'liferay.conf' file.");
+					+ "'. Check configuration at 'liferay.conf' file.");
 		}
 	}
 
