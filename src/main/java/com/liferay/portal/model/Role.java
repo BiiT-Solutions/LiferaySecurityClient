@@ -1,5 +1,5 @@
 /**
- * RoleSoap.java
+ * Role.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
@@ -85,7 +85,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the classNameId value for this RoleSoap.
+	 * Gets the classNameId value for this Role.
 	 * 
 	 * @return classNameId
 	 */
@@ -94,7 +94,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the classPK value for this RoleSoap.
+	 * Gets the classPK value for this Role.
 	 * 
 	 * @return classPK
 	 */
@@ -103,7 +103,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the companyId value for this RoleSoap.
+	 * Gets the companyId value for this Role.
 	 * 
 	 * @return companyId
 	 */
@@ -112,7 +112,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the createDate value for this RoleSoap.
+	 * Gets the createDate value for this Role.
 	 * 
 	 * @return createDate
 	 */
@@ -121,7 +121,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the description value for this RoleSoap.
+	 * Gets the description value for this Role.
 	 * 
 	 * @return description
 	 */
@@ -134,7 +134,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the roleId value for this RoleSoap.
+	 * Gets the roleId value for this Role.
 	 * 
 	 * @return roleId
 	 */
@@ -144,7 +144,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the modifiedDate value for this RoleSoap.
+	 * Gets the modifiedDate value for this Role.
 	 * 
 	 * @return modifiedDate
 	 */
@@ -153,7 +153,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the name value for this RoleSoap.
+	 * Gets the name value for this Role.
 	 * 
 	 * @return name
 	 */
@@ -162,7 +162,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the primaryKey value for this RoleSoap.
+	 * Gets the primaryKey value for this Role.
 	 * 
 	 * @return primaryKey
 	 */
@@ -175,7 +175,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the subtype value for this RoleSoap.
+	 * Gets the subtype value for this Role.
 	 * 
 	 * @return subtype
 	 */
@@ -184,7 +184,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the title value for this RoleSoap.
+	 * Gets the title value for this Role.
 	 * 
 	 * @return title
 	 */
@@ -197,7 +197,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the type value for this RoleSoap.
+	 * Gets the type value for this Role.
 	 * 
 	 * @return type
 	 */
@@ -211,7 +211,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the userId value for this RoleSoap.
+	 * Gets the userId value for this Role.
 	 * 
 	 * @return userId
 	 */
@@ -220,7 +220,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the userName value for this RoleSoap.
+	 * Gets the userName value for this Role.
 	 * 
 	 * @return userName
 	 */
@@ -229,7 +229,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Gets the uuid value for this RoleSoap.
+	 * Gets the uuid value for this Role.
 	 * 
 	 * @return uuid
 	 */
@@ -246,7 +246,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the classNameId value for this RoleSoap.
+	 * Sets the classNameId value for this Role.
 	 * 
 	 * @param classNameId
 	 */
@@ -255,7 +255,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the classPK value for this RoleSoap.
+	 * Sets the classPK value for this Role.
 	 * 
 	 * @param classPK
 	 */
@@ -264,7 +264,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the companyId value for this RoleSoap.
+	 * Sets the companyId value for this Role.
 	 * 
 	 * @param companyId
 	 */
@@ -273,7 +273,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the createDate value for this RoleSoap.
+	 * Sets the createDate value for this Role.
 	 * 
 	 * @param createDate
 	 */
@@ -282,7 +282,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the description value for this RoleSoap.
+	 * Sets the description value for this Role.
 	 * 
 	 * @param description
 	 */
@@ -295,7 +295,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the modifiedDate value for this RoleSoap.
+	 * Sets the modifiedDate value for this Role.
 	 * 
 	 * @param modifiedDate
 	 */
@@ -304,7 +304,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the name value for this RoleSoap.
+	 * Sets the name value for this Role.
 	 * 
 	 * @param name
 	 */
@@ -313,7 +313,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the primaryKey value for this RoleSoap.
+	 * Sets the primaryKey value for this Role.
 	 * 
 	 * @param primaryKey
 	 */
@@ -322,7 +322,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the roleId value for this RoleSoap.
+	 * Sets the roleId value for this Role.
 	 * 
 	 * @param roleId
 	 */
@@ -335,7 +335,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the subtype value for this RoleSoap.
+	 * Sets the subtype value for this Role.
 	 * 
 	 * @param subtype
 	 */
@@ -344,7 +344,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the title value for this RoleSoap.
+	 * Sets the title value for this Role.
 	 * 
 	 * @param title
 	 */
@@ -357,7 +357,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the type value for this RoleSoap.
+	 * Sets the type value for this Role.
 	 * 
 	 * @param type
 	 */
@@ -366,7 +366,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the userId value for this RoleSoap.
+	 * Sets the userId value for this Role.
 	 * 
 	 * @param userId
 	 */
@@ -375,7 +375,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	}
 
 	/**
-	 * Sets the userName value for this RoleSoap.
+	 * Sets the userName value for this Role.
 	 * 
 	 * @param userName
 	 */

@@ -88,6 +88,15 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		return null;
 	}
 
+	public IRole<Long> addRole(Role role) throws ClientProtocolException, NotConnectedToWebServiceException, IOException, AuthenticationRequired,
+			WebServiceAccessError, DuplicatedLiferayElement {
+		Map<String, String> titleMap = new HashMap<String, String>();
+		Map<String, String> descriptionMap = new HashMap<String, String>();
+		titleMap.put("en", role.getTitle());
+		descriptionMap.put("en", role.getDescription());
+		return addRole(role.getName(), role.getType(), titleMap, descriptionMap);
+	}
+
 	/**
 	 * Add a role to a group. For testing only.
 	 * 
