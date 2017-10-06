@@ -245,7 +245,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 				rolePool.addUserRole(user, role);
 			}
 
-			LiferayClientLogger.info(this.getClass().getName(), "IUser<Long> ids " + userIds + " added to role '" + role.getUniqueName() + "'");
+			LiferayClientLogger.info(this.getClass().getName(), "Users " + users + " added to role '" + role + "'");
 		}
 	}
 
@@ -474,7 +474,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 			getHttpResponse("role/delete-role", params);
 
 			rolePool.removeRole(role);
-			LiferayClientLogger.info(this.getClass().getName(), "IRole<Long> '" + role.getUniqueName() + "' deleted.");
+			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getUniqueName() + "' deleted.");
 
 		}
 	}
@@ -501,9 +501,9 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 
 		if (result == null || result.length() < 3) {
 			rolePool.removeUserRole(user, role);
-			LiferayClientLogger.info(this.getClass().getName(), "IRole<Long> '" + role.getUniqueName() + "' of user '" + user.getUniqueName() + "' deleted.");
+			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getUniqueName() + "' of user '" + user.getUniqueName() + "' deleted.");
 		} else {
-			throw new RoleNotDeletedException("IRole<Long> '" + role.getUniqueName() + "' (id:" + role.getId() + ") not deleted correctly. ");
+			throw new RoleNotDeletedException("Role '" + role.getUniqueName() + "' (id:" + role.getId() + ") not deleted correctly. ");
 		}
 	}
 
@@ -867,7 +867,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 				rolePool.removeGroupRole(role, group);
 			}
 
-			LiferayClientLogger.info(this.getClass().getName(), "IRole<Long> '" + role.getUniqueName() + "' unsetted from groups " + groupIds);
+			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role + "' unsetted from groups '" + groups + "'.");
 		}
 	}
 
@@ -911,7 +911,8 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 				rolePool.removeGroupRole(role, organization);
 			}
 
-			LiferayClientLogger.info(this.getClass().getName(), "IRole<Long> '" + role.getUniqueName() + "' unsetted from organizations " + groupIds);
+			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getUniqueName() + "' unsetted from organizations '" + organizations
+					+ "'.");
 		}
 	}
 }
