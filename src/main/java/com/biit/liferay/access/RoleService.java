@@ -195,7 +195,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 			params.add(new BasicNameValuePair("groupIds", groupIds));
 
 			getHttpResponse("group/add-role-groups", params);
-			LiferayClientLogger.info(this.getClass().getName(), "Groups ids " + groupIds + " added to role '" + role.getUniqueName() + "'");
+			LiferayClientLogger.info(this.getClass().getName(), "Organizations " + organizations + " added to role '" + role + "'");
 		}
 	}
 
