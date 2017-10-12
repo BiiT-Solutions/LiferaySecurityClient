@@ -39,6 +39,11 @@ public class PasswordService extends UserService {
 	public IUser<Long> updatePassword(IUser<Long> user, String plainTextPassword) throws NotConnectedToWebServiceException, JsonParseException,
 			JsonMappingException, IOException, AuthenticationRequired, WebServiceAccessError {
 		checkConnection();
+		
+		if(user==null){
+			LiferayClientLogger.info(this.getClass().getName(), "User is null.");
+			return null;
+		}
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("userId", user.getId() + ""));
