@@ -343,17 +343,54 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	}
 
 	/**
-	 * Return all user organization of the application. An organization is in
+	 * Return all user's organization of the application. An organization is in
 	 * the application if it has a role that exists in the application.
 	 * 
 	 * @param user
-	 * @return
+	 *            the user
+	 * @return a set of organizations.
 	 * @throws UserManagementException
 	 */
 	@Override
 	public Set<IGroup<Long>> getUserOrganizations(IUser<Long> user) throws UserManagementException {
 		try {
 			Set<IGroup<Long>> organizations = new HashSet<IGroup<Long>>(organizationService.getUserOrganizations(user));
+			Set<IGroup<Long>> applicationOrganizations = new HashSet<IGroup<Long>>();
+			for (IGroup<Long> organization : organizations) {
+				if (!getUserRoles(user, organization).isEmpty()) {
+					applicationOrganizations.add(organization);
+				}
+			}
+			return applicationOrganizations;
+		} catch (NotConnectedToWebServiceException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
+		} catch (WebServiceAccessError e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
+		} catch (ClientProtocolException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
+		} catch (IOException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
+		} catch (AuthenticationRequired e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error retrieving the user's organizations for '" + user.getEmailAddress() + "'");
+		}
+	}
+
+	@Override
+	public Set<IGroup<Long>> getUserParentOrganizations(IUser<Long> user) throws UserManagementException {
+		return getUserChildrenOrganizations(user, null);
+	}
+
+	@Override
+	public Set<IGroup<Long>> getUserChildrenOrganizations(IUser<Long> user, IGroup<Long> parentOrganization) throws UserManagementException {
+		try {
+			IGroup<Long> company = companyService.getCompanyByVirtualHost(LiferayConfigurationReader.getInstance().getVirtualHost());
+			Set<IGroup<Long>> organizations = new HashSet<IGroup<Long>>(organizationService.getOrganizations(company, user,
+					parentOrganization != null ? parentOrganization.getId() : null));
 			Set<IGroup<Long>> applicationOrganizations = new HashSet<IGroup<Long>>();
 			for (IGroup<Long> organization : organizations) {
 				if (!getUserRoles(user, organization).isEmpty()) {
