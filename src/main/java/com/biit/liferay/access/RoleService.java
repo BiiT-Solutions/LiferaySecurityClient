@@ -34,7 +34,7 @@ import com.liferay.portal.model.Role;
 /**
  * This class allows to manage roles from Liferay portal.
  */
-public class RoleService extends ServiceAccess<IRole<Long>, Role> {
+public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRoleService {
 	private GroupService groupService;
 	private OrganizationService organizationService;
 	// Relationship between organization and groups.
@@ -46,22 +46,13 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		rolePool = new RolePool<Long, Long, Long>();
 	}
 
-	/**
-	 * Creates a new RoleSoap on Liferay. For testing use only.
-	 * 
-	 * @param name
-	 *            name of the new RoleSoap.
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
-	 * @throws DuplicatedLiferayElement
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addRole(java.lang.String, int, java.util.Map, java.util.Map)
 	 */
+	@Override
 	public IRole<Long> addRole(String name, int type, Map<String, String> titleMap, Map<String, String> descriptionMap)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError,
-			DuplicatedLiferayElement {
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			WebServiceAccessError, DuplicatedLiferayElement {
 		if (name != null && name.length() > 0) {
 			checkConnection();
 
@@ -88,8 +79,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		return null;
 	}
 
-	public IRole<Long> addRole(Role role) throws ClientProtocolException, NotConnectedToWebServiceException, IOException, AuthenticationRequired,
-			WebServiceAccessError, DuplicatedLiferayElement {
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addRole(com.liferay.portal.model.Role)
+	 */
+	@Override
+	public IRole<Long> addRole(Role role) throws ClientProtocolException, NotConnectedToWebServiceException,
+			IOException, AuthenticationRequired, WebServiceAccessError, DuplicatedLiferayElement {
 		Map<String, String> titleMap = new HashMap<String, String>();
 		Map<String, String> descriptionMap = new HashMap<String, String>();
 		titleMap.put("en", role.getTitle());
@@ -97,35 +92,23 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		return addRole(role.getName(), role.getType(), titleMap, descriptionMap);
 	}
 
-	/**
-	 * Add a role to a group. For testing only.
-	 * 
-	 * @param role
-	 * @param userGroup
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addRoleGroup(com.biit.usermanager.entity.IRole, com.biit.usermanager.entity.IGroup)
 	 */
-	public void addRoleGroup(IRole<Long> role, IGroup<Long> userGroup) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired {
+	@Override
+	public void addRoleGroup(IRole<Long> role, IGroup<Long> userGroup)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		List<IGroup<Long>> groups = new ArrayList<IGroup<Long>>();
 		groups.add(userGroup);
 		addRoleGroups(role, groups);
 	}
 
-	/**
-	 * Add a role to a list of groups. For testing only.
-	 * 
-	 * @param role
-	 * @param userGroups
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addRoleGroups(com.biit.usermanager.entity.IRole, java.util.List)
 	 */
-	public void addRoleGroups(IRole<Long> role, List<IGroup<Long>> userGroups) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired {
+	@Override
+	public void addRoleGroups(IRole<Long> role, List<IGroup<Long>> userGroups)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		if (userGroups != null && role != null && userGroups.size() > 0) {
 			checkConnection();
 			String groupIds = "";
@@ -147,33 +130,32 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 			params.add(new BasicNameValuePair("groupIds", groupIds));
 
 			getHttpResponse("group/add-role-groups", params);
-			LiferayClientLogger.info(this.getClass().getName(), "Groups ids " + groupIds + " added to role '" + role.getUniqueName() + "'");
+			LiferayClientLogger.info(this.getClass().getName(),
+					"Groups ids " + groupIds + " added to role '" + role.getUniqueName() + "'");
 			for (IGroup<Long> group : userGroups) {
 				rolePool.addGroupRole(group, role);
 			}
 		}
 	}
 
-	public void addRoleOrganization(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException, NotConnectedToWebServiceException,
-			IOException, AuthenticationRequired, WebServiceAccessError {
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addRoleOrganization(com.biit.usermanager.entity.IRole, com.biit.usermanager.entity.IGroup)
+	 */
+	@Override
+	public void addRoleOrganization(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException,
+			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
 		List<IGroup<Long>> organizations = new ArrayList<IGroup<Long>>();
 		organizations.add(organization);
 		addRoleOrganizations(role, organizations);
 	}
 
-	/**
-	 * Add a role to a list of organizations. For testing only.
-	 * 
-	 * @param role
-	 * @param userGroups
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addRoleOrganizations(com.biit.usermanager.entity.IRole, java.util.List)
 	 */
-	public void addRoleOrganizations(IRole<Long> role, List<IGroup<Long>> organizations) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException, AuthenticationRequired, WebServiceAccessError {
+	@Override
+	public void addRoleOrganizations(IRole<Long> role, List<IGroup<Long>> organizations)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
 		if (organizations != null && role != null && organizations.size() > 0) {
 			checkConnection();
 			String groupIds = "";
@@ -195,29 +177,28 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 			params.add(new BasicNameValuePair("groupIds", groupIds));
 
 			getHttpResponse("group/add-role-groups", params);
-			LiferayClientLogger.info(this.getClass().getName(), "Organizations " + organizations + " added to role '" + role + "'");
+			LiferayClientLogger.info(this.getClass().getName(),
+					"Organizations " + organizations + " added to role '" + role + "'");
 		}
 	}
 
-	public void addRoleUser(IUser<Long> user, IRole<Long> role) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired {
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addRoleUser(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IRole)
+	 */
+	@Override
+	public void addRoleUser(IUser<Long> user, IRole<Long> role)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		List<IUser<Long>> users = new ArrayList<IUser<Long>>();
 		users.add(user);
 		addRoleUsers(users, role);
 	}
 
-	/**
-	 * Add a list of users to a role
-	 * 
-	 * @param users
-	 * @param role
-	 * @throws NotConnectedToWebServiceException
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addRoleUsers(java.util.List, com.biit.usermanager.entity.IRole)
 	 */
-	public void addRoleUsers(List<IUser<Long>> users, IRole<Long> role) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired {
+	@Override
+	public void addRoleUsers(List<IUser<Long>> users, IRole<Long> role)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		if (users != null && users.size() > 0) {
 			checkConnection();
 
@@ -249,52 +230,34 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		}
 	}
 
-	/**
-	 * Add a role from a user group to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param role
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addUserGroupRole(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IGroup, com.biit.usermanager.entity.IRole)
 	 */
-	public void addUserGroupRole(IUser<Long> user, IGroup<Long> userGroup, IRole<Long> role) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException, AuthenticationRequired {
+	@Override
+	public void addUserGroupRole(IUser<Long> user, IGroup<Long> userGroup, IRole<Long> role)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 		roles.add(role);
 		addUserGroupRoles(user, userGroup, roles);
 	}
 
-	/**
-	 * Add a list of roles from a user group to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param roles
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addUserGroupRoles(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IGroup, java.util.Set)
 	 */
-	public void addUserGroupRoles(IUser<Long> user, IGroup<Long> userGroup, Set<IRole<Long>> roles) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired {
+	@Override
+	public void addUserGroupRoles(IUser<Long> user, IGroup<Long> userGroup, Set<IRole<Long>> roles)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		if (user != null && userGroup != null && roles != null && !roles.isEmpty()) {
 			addUserGroupRoles(user.getId(), userGroup.getId(), roles);
 		}
 	}
 
-	/**
-	 * Add a list of roles to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param roles
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addUserGroupRoles(java.lang.Long, java.lang.Long, java.util.Set)
 	 */
-	public void addUserGroupRoles(Long userId, Long groupId, Set<IRole<Long>> roles) throws NotConnectedToWebServiceException, ClientProtocolException,
-			IOException, AuthenticationRequired {
+	@Override
+	public void addUserGroupRoles(Long userId, Long groupId, Set<IRole<Long>> roles)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		if (userId != null && groupId != null && roles != null && !roles.isEmpty()) {
 			checkConnection();
 
@@ -323,24 +286,19 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 
 			rolePool.addUserRolesOfGroup(userId, groupId, roles);
 
-			LiferayClientLogger.info(this.getClass().getName(), "Roles ids " + rolesIds + " added to group '" + groupId + "' and user '" + userId + "'");
+			LiferayClientLogger.info(this.getClass().getName(),
+					"Roles ids " + rolesIds + " added to group '" + groupId + "' and user '" + userId + "'");
 
 		}
 	}
 
-	/**
-	 * Add a role from a organization to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param role
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addUserOrganizationRole(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IGroup, com.biit.usermanager.entity.IRole)
 	 */
-	public void addUserOrganizationRole(IUser<Long> user, IGroup<Long> organization, IRole<Long> role) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
+	@Override
+	public void addUserOrganizationRole(IUser<Long> user, IGroup<Long> organization, IRole<Long> role)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
 		if (user != null && organization != null && role != null) {
 			Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 			roles.add(role);
@@ -348,54 +306,36 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		}
 	}
 
-	/**
-	 * Add a list of roles from a organization to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param roles
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addUserOrganizationRoles(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IGroup, java.util.Set)
 	 */
-	public void addUserOrganizationRoles(IUser<Long> user, IGroup<Long> organization, Set<IRole<Long>> roles) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
+	@Override
+	public void addUserOrganizationRoles(IUser<Long> user, IGroup<Long> organization, Set<IRole<Long>> roles)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
 		if (user != null && organization != null && roles != null && !roles.isEmpty()) {
 			long organizationGroupId = getOrganizationGroupId(organization);
 			addUserGroupRoles(user.getId(), organizationGroupId, roles);
 		}
 	}
 
-	/**
-	 * Add a role to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param role
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addUserRole(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IRole)
 	 */
-	public void addUserRole(IUser<Long> user, IRole<Long> role) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired {
+	@Override
+	public void addUserRole(IUser<Long> user, IRole<Long> role)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		List<IRole<Long>> roles = new ArrayList<IRole<Long>>();
 		roles.add(role);
 		addUserRoles(user, roles);
 	}
 
-	/**
-	 * Add a list of roles to a user. For testing use only.
-	 * 
-	 * @param user
-	 * @param roles
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#addUserRoles(com.biit.usermanager.entity.IUser, java.util.List)
 	 */
-	public void addUserRoles(IUser<Long> user, List<IRole<Long>> roles) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired {
+	@Override
+	public void addUserRoles(IUser<Long> user, List<IRole<Long>> roles)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		if (user != null && roles != null && roles.size() > 0) {
 			checkConnection();
 
@@ -423,15 +363,20 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 				rolePool.addUserRole(user, role);
 			}
 
-			LiferayClientLogger.info(this.getClass().getName(), "Roles ids " + rolesIds + " added to user '" + user.getUniqueName() + "'");
+			LiferayClientLogger.info(this.getClass().getName(),
+					"Roles ids " + rolesIds + " added to user '" + user.getUniqueName() + "'");
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#authorizedServerConnection(java.lang.String, java.lang.String, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
-	public void authorizedServerConnection(String address, String protocol, int port, String webservicesPath, String authenticationToken, String loginUser,
-			String password) {
+	public void authorizedServerConnection(String address, String protocol, int port, String webservicesPath,
+			String authenticationToken, String loginUser, String password) {
 		// Standard behavior.
-		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser, password);
+		super.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser,
+				password);
 		// Disconnect previous connections.
 		try {
 			groupService.disconnect();
@@ -441,30 +386,32 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		}
 		// Some user information is in the contact object.
 		groupService = new GroupService();
-		groupService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser, password);
+		groupService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
+				loginUser, password);
 
 		organizationService = new OrganizationService();
-		organizationService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken, loginUser, password);
+		organizationService.authorizedServerConnection(address, protocol, port, webservicesPath, authenticationToken,
+				loginUser, password);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#decodeListFromJson(java.lang.String, java.lang.Class)
+	 */
 	@Override
-	public Set<IRole<Long>> decodeListFromJson(String json, Class<Role> objectClass) throws JsonParseException, JsonMappingException, IOException {
+	public Set<IRole<Long>> decodeListFromJson(String json, Class<Role> objectClass)
+			throws JsonParseException, JsonMappingException, IOException {
 		Set<IRole<Long>> myObjects = new ObjectMapper().readValue(json, new TypeReference<Set<Role>>() {
 		});
 
 		return myObjects;
 	}
 
-	/**
-	 * Removes a RoleSoap from Liferay portal. For testing use only.
-	 * 
-	 * @param role
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#deleteRole(com.biit.usermanager.entity.IRole)
 	 */
-	public void deleteRole(IRole<Long> role) throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+	@Override
+	public void deleteRole(IRole<Long> role)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		if (role != null) {
 			checkConnection();
 
@@ -479,18 +426,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		}
 	}
 
-	/**
-	 * Removes the RoleSoap from the user. For testing use only.
-	 * 
-	 * @param role
-	 * @param user
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#deleteRole(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IRole)
 	 */
-	public void deleteRole(IUser<Long> user, IRole<Long> role) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired, RoleNotDeletedException {
+	@Override
+	public void deleteRole(IUser<Long> user, IRole<Long> role) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired, RoleNotDeletedException {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -501,9 +442,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 
 		if (result == null || result.length() < 3) {
 			rolePool.removeUserRole(user, role);
-			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getUniqueName() + "' of user '" + user.getUniqueName() + "' deleted.");
+			LiferayClientLogger.info(this.getClass().getName(),
+					"Role '" + role.getUniqueName() + "' of user '" + user.getUniqueName() + "' deleted.");
 		} else {
-			throw new RoleNotDeletedException("Role '" + role.getUniqueName() + "' (id:" + role.getId() + ") not deleted correctly. ");
+			throw new RoleNotDeletedException(
+					"Role '" + role.getUniqueName() + "' (id:" + role.getId() + ") not deleted correctly. ");
 		}
 	}
 
@@ -524,7 +467,8 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 */
-	private Set<IRole<Long>> getGroupRoles(Long groupId) throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+	private Set<IRole<Long>> getGroupRoles(Long groupId)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 		if (groupId != null) {
 			Set<IRole<Long>> groupRoles = rolePool.getGroupRoles(groupId);
@@ -550,18 +494,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		return roles;
 	}
 
-	/**
-	 * Get a list of roles of a group.
-	 * 
-	 * @param group
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#getGroupRoles(com.biit.usermanager.entity.IGroup)
 	 */
-	public Set<IRole<Long>> getGroupRoles(IGroup<Long> group) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired {
+	@Override
+	public Set<IRole<Long>> getGroupRoles(IGroup<Long> group)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 		if (group != null) {
 			return getGroupRoles(group.getId());
@@ -569,19 +507,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		return roles;
 	}
 
-	/**
-	 * Get a list of roles from an organization.
-	 * 
-	 * @param group
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#getOrganizationRoles(com.biit.usermanager.entity.IGroup)
 	 */
-	public Set<IRole<Long>> getOrganizationRoles(IGroup<Long> organization) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired, WebServiceAccessError {
+	@Override
+	public Set<IRole<Long>> getOrganizationRoles(IGroup<Long> organization) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
 		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 		if (organization != null) {
 			return getGroupRoles(getOrganizationGroupId(organization));
@@ -589,52 +520,38 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		return roles;
 	}
 
-	/**
-	 * Gets the Group Id related to an organization.
-	 * 
-	 * @param organization
-	 * @return
-	 * @throws ClientProtocolException
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#getOrganizationGroupId(com.biit.usermanager.entity.IGroup)
 	 */
-	public long getOrganizationGroupId(IGroup<Long> organization) throws ClientProtocolException, NotConnectedToWebServiceException, IOException,
-			AuthenticationRequired, WebServiceAccessError {
+	@Override
+	public long getOrganizationGroupId(IGroup<Long> organization) throws ClientProtocolException,
+			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
 
 		if (organizationGroups.get(organization.getId()) != null) {
 			return organizationGroups.get(organization.getId());
 		}
 
 		try {
-			IGroup<Long> group = groupService.getGroup(((Organization) organization).getCompanyId(), organization.getUniqueName()
-					+ LIFERAY_ORGANIZATION_GROUP_SUFIX);
+			IGroup<Long> group = groupService.getGroup(((Organization) organization).getCompanyId(),
+					organization.getUniqueName() + LIFERAY_ORGANIZATION_GROUP_SUFIX);
 			if (group != null) {
 				organizationGroups.put(organization.getId(), group.getId());
 				return group.getId();
 			}
 		} catch (AuthenticationRequired e) {
-			throw new AuthenticationRequired("Cannot connect to inner service 'GroupService'. Authentication Required. ");
+			throw new AuthenticationRequired(
+					"Cannot connect to inner service 'GroupService'. Authentication Required. ");
 		}
 
 		return -1;
 	}
 
-	/**
-	 * Creates a new role on Liferay. For testing use only.
-	 * 
-	 * @param name
-	 *            name of the new RoleSoap.
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#getRole(long)
 	 */
-	public IRole<Long> getRole(long roleId) throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
-			WebServiceAccessError {
+	@Override
+	public IRole<Long> getRole(long roleId) throws NotConnectedToWebServiceException, ClientProtocolException,
+			IOException, AuthenticationRequired, WebServiceAccessError {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -651,20 +568,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		return null;
 	}
 
-	/**
-	 * Creates a new RoleSoap on Liferay. For testing use only.
-	 * 
-	 * @param name
-	 *            name of the new RoleSoap.
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
-	 * @throws WebServiceAccessError
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#getRole(java.lang.String, long)
 	 */
-	public IRole<Long> getRole(String roleName, long companyId) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired, WebServiceAccessError {
+	@Override
+	public IRole<Long> getRole(String roleName, long companyId) throws NotConnectedToWebServiceException,
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -682,18 +591,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		return null;
 	}
 
-	/**
-	 * Get the list of roles for a user.
-	 * 
-	 * @param user
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#getUserRoles(com.biit.usermanager.entity.IUser)
 	 */
-	public Set<IRole<Long>> getUserRoles(IUser<Long> user) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired {
+	@Override
+	public Set<IRole<Long>> getUserRoles(IUser<Long> user)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 		if (user != null) {
 			Set<IRole<Long>> userRoles = rolePool.getUserRoles(user);
@@ -718,38 +621,24 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		return roles;
 	}
 
-	/**
-	 * Gets the roles of a user in a group.
-	 * 
-	 * @param user
-	 * @param group
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#getUserRolesOfGroup(com.biit.usermanager.entity.IUser, com.liferay.portal.model.Group)
 	 */
-	public Set<IRole<Long>> getUserRolesOfGroup(IUser<Long> user, Group group) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired {
+	@Override
+	public Set<IRole<Long>> getUserRolesOfGroup(IUser<Long> user, Group group)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		if (group != null && user != null) {
 			return getUserRolesOfGroup(user.getId(), group.getGroupId());
 		}
 		return new HashSet<IRole<Long>>();
 	}
 
-	/**
-	 * Gets the roles of a user in a group.
-	 * 
-	 * @param userId
-	 * @param groupId
-	 * @return
-	 * @throws NotConnectedToWebServiceException
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 * @throws AuthenticationRequired
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#getUserRolesOfGroup(java.lang.Long, java.lang.Long)
 	 */
-	public Set<IRole<Long>> getUserRolesOfGroup(Long userId, Long groupId) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired {
+	@Override
+	public Set<IRole<Long>> getUserRolesOfGroup(Long userId, Long groupId)
+			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
 		Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 
 		if (groupId != null && userId != null) {
@@ -777,21 +666,13 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		return roles;
 	}
 
-	/**
-	 * Gets all roles of a user for an organization. Needs the use of
-	 * GroupService
-	 * 
-	 * @param userId
-	 * @param organizationId
-	 * @return
-	 * @throws AuthenticationRequired
-	 * @throws IOException
-	 * @throws NotConnectedToWebServiceException
-	 * @throws ClientProtocolException
-	 * @throws WebServiceAccessError
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#getUserRolesOfOrganization(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IGroup)
 	 */
-	public Set<IRole<Long>> getUserRolesOfOrganization(IUser<Long> user, IGroup<Long> organization) throws ClientProtocolException,
-			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
+	@Override
+	public Set<IRole<Long>> getUserRolesOfOrganization(IUser<Long> user, IGroup<Long> organization)
+			throws ClientProtocolException, NotConnectedToWebServiceException, IOException, AuthenticationRequired,
+			WebServiceAccessError {
 		if (user != null && organization != null) {
 			// Get the group of the organization.
 			Long groupId = getOrganizationGroupId(organization);
@@ -800,17 +681,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		return new HashSet<IRole<Long>>();
 	}
 
-	/**
-	 * Gets all users that have a specific role in an organization.
-	 * 
-	 * @throws WebServiceAccessError
-	 * @throws AuthenticationRequired
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#getUsers(com.biit.usermanager.entity.IRole, com.biit.usermanager.entity.IGroup)
 	 */
-	public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException, IOException,
-			NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
+	@Override
+	public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException,
+			IOException, NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
 		Set<IUser<Long>> usersOfOrganizationWithRole = new HashSet<IUser<Long>>();
 		Set<IUser<Long>> usersOfOrganization = organizationService.getOrganizationUsers(organization);
 
@@ -828,18 +704,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 		rolePool.reset();
 	}
 
-	/**
-	 * Unset a role from a group but does not deletes it.
-	 * 
-	 * @param role
-	 * @param group
-	 * @throws AuthenticationRequired
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#unsetRoleFromGroups(com.biit.usermanager.entity.IRole, java.util.List)
 	 */
-	public void unsetRoleFromGroups(IRole<Long> role, List<Group> groups) throws ClientProtocolException, IOException, NotConnectedToWebServiceException,
-			AuthenticationRequired {
+	@Override
+	public void unsetRoleFromGroups(IRole<Long> role, List<Group> groups)
+			throws ClientProtocolException, IOException, NotConnectedToWebServiceException, AuthenticationRequired {
 		if (role != null && groups != null && !groups.isEmpty()) {
 			checkConnection();
 
@@ -867,23 +737,18 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 				rolePool.removeGroupRole(role, group);
 			}
 
-			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role + "' unsetted from groups '" + groups + "'.");
+			LiferayClientLogger.info(this.getClass().getName(),
+					"Role '" + role + "' unsetted from groups '" + groups + "'.");
 		}
 	}
 
-	/**
-	 * Unset a role from a group but does not deletes it.
-	 * 
-	 * @param role
-	 * @param group
-	 * @throws AuthenticationRequired
-	 * @throws NotConnectedToWebServiceException
-	 * @throws IOException
-	 * @throws ClientProtocolException
-	 * @throws WebServiceAccessError
+	/* (non-Javadoc)
+	 * @see com.biit.liferay.access.IRoleService#unsetRoleFromOrganization(com.biit.usermanager.entity.IRole, java.util.List)
 	 */
-	public void unsetRoleFromOrganization(IRole<Long> role, List<IGroup<Long>> organizations) throws ClientProtocolException, IOException,
-			NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
+	@Override
+	public void unsetRoleFromOrganization(IRole<Long> role, List<IGroup<Long>> organizations)
+			throws ClientProtocolException, IOException, NotConnectedToWebServiceException, AuthenticationRequired,
+			WebServiceAccessError {
 		if (role != null && organizations != null && !organizations.isEmpty()) {
 			checkConnection();
 
@@ -911,8 +776,8 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> {
 				rolePool.removeGroupRole(role, organization);
 			}
 
-			LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getUniqueName() + "' unsetted from organizations '" + organizations
-					+ "'.");
+			LiferayClientLogger.info(this.getClass().getName(),
+					"Role '" + role.getUniqueName() + "' unsetted from organizations '" + organizations + "'.");
 		}
 	}
 }
