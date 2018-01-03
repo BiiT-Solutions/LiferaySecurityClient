@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.liferay.portal.model.User;
 
 public class VerificationService extends ServiceAccess<IUser<Long>, User> {
-	private final static String JSON_AUTHENTICATION_REQUIRED_STRING = "Authenticated access required for accessing to Liferay.";
+	private final static String JSON_AUTHENTICATION_REQUIRED_STRING = "Authenticated access required";
 	private final static VerificationService instance = new VerificationService();
 
 	private VerificationService() {
