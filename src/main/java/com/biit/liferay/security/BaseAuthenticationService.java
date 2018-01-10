@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import com.biit.liferay.log.LiferayClientLogger;
 import com.biit.usermanager.entity.IGroup;
 import com.biit.usermanager.entity.IUser;
@@ -17,14 +19,14 @@ import com.liferay.portal.model.Role;
 
 /**
  * Common methods for Liferay based authentication services.
- *
  */
 public class BaseAuthenticationService extends AuthorizationService {
+
+	@Inject
 	private IAuthenticationService<Long, Long> authenticationService;
 
 	protected BaseAuthenticationService() {
 		super();
-		authenticationService = new AuthenticationService();
 	}
 
 	public IAuthenticationService<Long, Long> getAuthenticationService() {

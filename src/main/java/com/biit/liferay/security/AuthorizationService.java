@@ -6,19 +6,19 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import org.apache.http.client.ClientProtocolException;
 
-import com.biit.liferay.access.CompanyService;
-import com.biit.liferay.access.GroupService;
-import com.biit.liferay.access.OrganizationService;
-import com.biit.liferay.access.OrganizationType;
-import com.biit.liferay.access.RoleService;
+import com.biit.liferay.access.ICompanyService;
+import com.biit.liferay.access.IGroupService;
+import com.biit.liferay.access.IOrganizationService;
+import com.biit.liferay.access.IRoleService;
+import com.biit.liferay.access.IUserGroupService;
+import com.biit.liferay.access.IUserService;
 import com.biit.liferay.access.ServiceAccess;
-import com.biit.liferay.access.UserGroupService;
-import com.biit.liferay.access.UserService;
-import com.biit.liferay.access.exceptions.DuplicatedLiferayElement;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
-import com.biit.liferay.access.exceptions.OrganizationNotDeletedException;
 import com.biit.liferay.access.exceptions.PortletNotInstalledException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.configuration.LiferayConfigurationReader;
@@ -37,17 +37,34 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class AuthorizationService implements IAuthorizationService<Long, Long, Long> {
 	private AuthorizationPool<Long, Long> authorizationPool;
-	private RoleService roleService = new RoleService();
-	private UserGroupService userGroupService = new UserGroupService();
-	private GroupService groupService = new GroupService();
-	private OrganizationService organizationService = new OrganizationService();
-	private CompanyService companyService = new CompanyService();
-	private UserService userService = new UserService();
 
+	@Inject
+	private IRoleService roleService;
+
+	@Inject
+	private IUserGroupService userGroupService;
+
+	@Inject
+	private IGroupService groupService;
+
+	@Inject
+	private IOrganizationService organizationService;
+
+	@Inject
+	private ICompanyService companyService;
+
+	@Inject
+	private IUserService userService;
+
+	// Which activities pertain to which role.
 	private IRoleActivities roleActivities;
 
 	public AuthorizationService() {
 		authorizationPool = new AuthorizationPool<Long, Long>();
+	}
+
+	@PostConstruct
+	public void connect() {
 		roleService.serverConnection();
 		groupService.serverConnection();
 		userGroupService.serverConnection();
@@ -683,16 +700,20 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			return true;
 		} catch (ClientProtocolException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+			throw new UserManagementException(
+					"Connection error adding the user's for the role '" + role.getUniqueName() + "'.");
 		} catch (IOException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+			throw new UserManagementException(
+					"IO error adding the user's for the role '" + role.getUniqueName() + "'.");
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+			throw new UserManagementException(
+					"Connection error adding the user's for the role '" + role.getUniqueName() + "'.");
 		} catch (AuthenticationRequired e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+			throw new UserManagementException(
+					"Authentication error adding the user's for the role '" + role.getUniqueName() + "'.");
 		}
 	}
 
@@ -704,196 +725,25 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			return true;
 		} catch (ClientProtocolException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName()
+			throw new UserManagementException("Connection error adding the user's for the role '" + role.getUniqueName()
 					+ "' in organization '" + organization.getUniqueName() + "'.");
 		} catch (IOException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName()
+			throw new UserManagementException("IO error adding the user's for the role '" + role.getUniqueName()
 					+ "' in organization '" + organization.getUniqueName() + "'.");
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName()
+			throw new UserManagementException("Connection error adding the user's for the role '" + role.getUniqueName()
 					+ "' in organization '" + organization.getUniqueName() + "'.");
 		} catch (AuthenticationRequired e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName()
-					+ "' in organization '" + organization.getUniqueName() + "'.");
+			throw new UserManagementException("Authentication error adding the user's for the role '"
+					+ role.getUniqueName() + "' in organization '" + organization.getUniqueName() + "'.");
 		} catch (WebServiceAccessError e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName()
+			throw new UserManagementException("Connection error adding the user's for the role '" + role.getUniqueName()
 					+ "' in organization '" + organization.getUniqueName() + "'.");
 		}
-
-	}
-
-	@Override
-	public boolean addUserToOrganization(IUser<Long> user, IGroup<Long> organization) throws UserManagementException {
-		try {
-			organizationService.addUserToOrganization(user, organization);
-			return true;
-		} catch (ClientProtocolException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error adding the user's in the organization '" + organization.getUniqueName() + "'.");
-		} catch (IOException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error adding the user's in the organization '" + organization.getUniqueName() + "'.");
-		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error adding the user's in the organization '" + organization.getUniqueName() + "'.");
-		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error adding the user's in the organization '" + organization.getUniqueName() + "'.");
-		}
-	}
-
-	@Override
-	public void removeUserFromOrganization(IUser<Long> user, IGroup<Long> organization) throws UserManagementException {
-		try {
-			organizationService.removeUserFromOrganization(user, organization);
-		} catch (ClientProtocolException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error removing the user's from the organization '" + organization.getUniqueName() + "'.");
-		} catch (IOException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error removing the user's from the organization '" + organization.getUniqueName() + "'.");
-		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error removing the user's from the organization '" + organization.getUniqueName() + "'.");
-		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error removing the user's from the organization '" + organization.getUniqueName() + "'.");
-		}
-	}
-	@Override
-	public IGroup<Long> getDefaultCompany() throws UserManagementException{
-		try {
-			return companyService.getDefaultCompany();
-		} catch (JsonParseException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving default company.");
-		} catch (JsonMappingException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving default company.");
-		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving default company.");
-		} catch (IOException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving default company.");
-		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving default company.");
-		} catch (WebServiceAccessError e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error retrieving default company.");
-		}
-	}
-	
-	@Override
-	public IGroup<Long> addOrganization(IGroup<Long> company, Long parentOrganizationId, String name, Long regionId, Long countryId,
-			String comments) throws UserManagementException {
-		try {
-			return organizationService.addOrganization(company,parentOrganizationId, name, OrganizationType.REGULAR_ORGANIZATION,regionId,countryId,organizationService.getOrganizationStatus(),comments, false);
-		} catch (ClientProtocolException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error adding company '" + company.getUniqueName() + "'.");
-		} catch (IOException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error adding company '" + company.getUniqueName() + "'.");
-		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error adding company '" + company.getUniqueName() + "'.");
-		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error adding company '" + company.getUniqueName() + "'.");
-		} catch (WebServiceAccessError e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error adding company '" + company.getUniqueName() + "'.");
-		} catch (DuplicatedLiferayElement e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Already exists company with name '" + company.getUniqueName() + "' in this organization.");
-		}
-	}
-	
-	@Override
-	public IGroup<Long> updateOrganization(IGroup<Long> company, Long organizationId, Long parentOrganizationId, String name, Long regionId,
-			Long countryId, String comments, boolean site) throws UserManagementException{
-		
-		try {
-			return organizationService.updateOrganization(company, organizationId, parentOrganizationId, name, OrganizationType.REGULAR_ORGANIZATION, regionId, countryId, organizationService.getOrganizationStatus(), comments, site);
-		}catch (ClientProtocolException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error updating company with Id '" + organizationId + "'.");
-		} catch (IOException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error updating company with Id '" + organizationId + "'.");
-		} catch (NotConnectedToWebServiceException e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error updating company with Id '" + organizationId + "'.");
-		} catch (AuthenticationRequired e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error updating company with Id '" + organizationId + "'.");
-		} catch (WebServiceAccessError e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Error updating company with Id '" + organizationId + "'.");
-		} catch (DuplicatedLiferayElement e) {
-			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException(
-					"Already exists company with name '" + company.getUniqueName() + "' in this organization.");
-		}
-		
-	}
-	
-	@Override
-	public boolean deleteOrganization(IGroup<Long> company, Long organizationId) throws UserManagementException {
-		try {
-			return organizationService.deleteOrganization(company, organizationId);
-		}catch (ClientProtocolException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(
-						"Error removing company '" + company.getUniqueName() + "'.");
-			} catch (IOException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(
-						"Error removing company'" + company.getUniqueName() + "'.");
-			} catch (NotConnectedToWebServiceException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(
-						"Error removing company '" + company.getUniqueName() + "'.");
-			} catch (AuthenticationRequired e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(
-						"Error removing company '" + company.getUniqueName() + "'.");
-			} catch (OrganizationNotDeletedException e) {
-				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-				throw new UserManagementException(
-						"Error removing company '" + company.getUniqueName() + "'.");
-			}
 	}
 
 	@Override

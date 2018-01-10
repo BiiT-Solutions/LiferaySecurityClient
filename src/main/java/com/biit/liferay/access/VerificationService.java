@@ -54,8 +54,8 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 	}
 
 	@Override
-	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass) throws JsonParseException,
-			JsonMappingException, IOException {
+	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass)
+			throws JsonParseException, JsonMappingException, IOException {
 		return null;
 	}
 
@@ -92,8 +92,8 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 		// Set authentication param if defined.
 		setAuthParam(params);
 
-		HttpPost post = new HttpPost("/" + LiferayConfigurationReader.getInstance().getWebServicesPath()
-				+ "user/get-user-by-email-address");
+		HttpPost post = new HttpPost(
+				"/" + LiferayConfigurationReader.getInstance().getWebServicesPath() + "user/get-user-by-email-address");
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
 		post.setEntity(entity);
 		HttpResponse response = httpClient.execute(getTargetHost(), post, httpContext);
@@ -112,6 +112,10 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 		closeClient(httpClient);
 		return false;
 
+	}
+
+	@Override
+	public void reset() {
 	}
 
 }

@@ -20,7 +20,8 @@ import com.liferay.portal.model.User;
 public class PasswordService extends UserService {
 
 	@Override
-	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass) throws JsonParseException, JsonMappingException, IOException {
+	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass)
+			throws JsonParseException, JsonMappingException, IOException {
 		return null;
 	}
 
@@ -36,11 +37,12 @@ public class PasswordService extends UserService {
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
-	public IUser<Long> updatePassword(IUser<Long> user, String plainTextPassword) throws NotConnectedToWebServiceException, JsonParseException,
-			JsonMappingException, IOException, AuthenticationRequired, WebServiceAccessError {
+	public IUser<Long> updatePassword(IUser<Long> user, String plainTextPassword)
+			throws NotConnectedToWebServiceException, JsonParseException, JsonMappingException, IOException,
+			AuthenticationRequired, WebServiceAccessError {
 		checkConnection();
-		
-		if(user==null){
+
+		if (user == null) {
 			LiferayClientLogger.info(this.getClass().getName(), "User is null.");
 			return null;
 		}
@@ -56,7 +58,8 @@ public class PasswordService extends UserService {
 			// A Simple JSON Response Read
 			IUser<Long> obtainedUser = decodeFromJson(result, User.class);
 			user.setPassword(obtainedUser.getPassword());
-			LiferayClientLogger.info(this.getClass().getName(), "User has change its password '" + user.getUniqueName() + "'.");
+			LiferayClientLogger.info(this.getClass().getName(),
+					"User has change its password '" + user.getUniqueName() + "'.");
 			return obtainedUser;
 		}
 		return null;

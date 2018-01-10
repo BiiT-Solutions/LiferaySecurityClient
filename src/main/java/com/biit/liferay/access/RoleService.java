@@ -46,8 +46,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		rolePool = new RolePool<Long, Long, Long>();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addRole(java.lang.String, int, java.util.Map, java.util.Map)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#addRole(java.lang.String, int,
+	 * java.util.Map, java.util.Map)
 	 */
 	@Override
 	public IRole<Long> addRole(String name, int type, Map<String, String> titleMap, Map<String, String> descriptionMap)
@@ -79,8 +82,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addRole(com.liferay.portal.model.Role)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#addRole(com.liferay.portal.model.Role)
 	 */
 	@Override
 	public IRole<Long> addRole(Role role) throws ClientProtocolException, NotConnectedToWebServiceException,
@@ -92,8 +98,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return addRole(role.getName(), role.getType(), titleMap, descriptionMap);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addRoleGroup(com.biit.usermanager.entity.IRole, com.biit.usermanager.entity.IGroup)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#addRoleGroup(com.biit.usermanager.entity
+	 * .IRole, com.biit.usermanager.entity.IGroup)
 	 */
 	@Override
 	public void addRoleGroup(IRole<Long> role, IGroup<Long> userGroup)
@@ -103,8 +113,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		addRoleGroups(role, groups);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addRoleGroups(com.biit.usermanager.entity.IRole, java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#addRoleGroups(com.biit.usermanager.
+	 * entity.IRole, java.util.List)
 	 */
 	@Override
 	public void addRoleGroups(IRole<Long> role, List<IGroup<Long>> userGroups)
@@ -138,8 +151,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addRoleOrganization(com.biit.usermanager.entity.IRole, com.biit.usermanager.entity.IGroup)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#addRoleOrganization(com.biit.usermanager
+	 * .entity.IRole, com.biit.usermanager.entity.IGroup)
 	 */
 	@Override
 	public void addRoleOrganization(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException,
@@ -149,8 +166,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		addRoleOrganizations(role, organizations);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addRoleOrganizations(com.biit.usermanager.entity.IRole, java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#addRoleOrganizations(com.biit.
+	 * usermanager.entity.IRole, java.util.List)
 	 */
 	@Override
 	public void addRoleOrganizations(IRole<Long> role, List<IGroup<Long>> organizations)
@@ -182,8 +202,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addRoleUser(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IRole)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#addRoleUser(com.biit.usermanager.entity.
+	 * IUser, com.biit.usermanager.entity.IRole)
 	 */
 	@Override
 	public void addRoleUser(IUser<Long> user, IRole<Long> role)
@@ -193,8 +217,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		addRoleUsers(users, role);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addRoleUsers(java.util.List, com.biit.usermanager.entity.IRole)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#addRoleUsers(java.util.List,
+	 * com.biit.usermanager.entity.IRole)
 	 */
 	@Override
 	public void addRoleUsers(List<IUser<Long>> users, IRole<Long> role)
@@ -230,8 +257,13 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addUserGroupRole(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IGroup, com.biit.usermanager.entity.IRole)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#addUserGroupRole(com.biit.usermanager.
+	 * entity.IUser, com.biit.usermanager.entity.IGroup,
+	 * com.biit.usermanager.entity.IRole)
 	 */
 	@Override
 	public void addUserGroupRole(IUser<Long> user, IGroup<Long> userGroup, IRole<Long> role)
@@ -241,8 +273,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		addUserGroupRoles(user, userGroup, roles);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addUserGroupRoles(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IGroup, java.util.Set)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#addUserGroupRoles(com.biit.usermanager.
+	 * entity.IUser, com.biit.usermanager.entity.IGroup, java.util.Set)
 	 */
 	@Override
 	public void addUserGroupRoles(IUser<Long> user, IGroup<Long> userGroup, Set<IRole<Long>> roles)
@@ -252,8 +288,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addUserGroupRoles(java.lang.Long, java.lang.Long, java.util.Set)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#addUserGroupRoles(java.lang.Long,
+	 * java.lang.Long, java.util.Set)
 	 */
 	@Override
 	public void addUserGroupRoles(Long userId, Long groupId, Set<IRole<Long>> roles)
@@ -292,8 +331,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addUserOrganizationRole(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IGroup, com.biit.usermanager.entity.IRole)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#addUserOrganizationRole(com.biit.
+	 * usermanager.entity.IUser, com.biit.usermanager.entity.IGroup,
+	 * com.biit.usermanager.entity.IRole)
 	 */
 	@Override
 	public void addUserOrganizationRole(IUser<Long> user, IGroup<Long> organization, IRole<Long> role)
@@ -306,8 +349,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addUserOrganizationRoles(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IGroup, java.util.Set)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#addUserOrganizationRoles(com.biit.
+	 * usermanager.entity.IUser, com.biit.usermanager.entity.IGroup, java.util.Set)
 	 */
 	@Override
 	public void addUserOrganizationRoles(IUser<Long> user, IGroup<Long> organization, Set<IRole<Long>> roles)
@@ -319,8 +365,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addUserRole(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IRole)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#addUserRole(com.biit.usermanager.entity.
+	 * IUser, com.biit.usermanager.entity.IRole)
 	 */
 	@Override
 	public void addUserRole(IUser<Long> user, IRole<Long> role)
@@ -330,8 +380,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		addUserRoles(user, roles);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#addUserRoles(com.biit.usermanager.entity.IUser, java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#addUserRoles(com.biit.usermanager.entity
+	 * .IUser, java.util.List)
 	 */
 	@Override
 	public void addUserRoles(IUser<Long> user, List<IRole<Long>> roles)
@@ -368,8 +422,13 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#authorizedServerConnection(java.lang.String, java.lang.String, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#authorizedServerConnection(java.lang.
+	 * String, java.lang.String, int, java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void authorizedServerConnection(String address, String protocol, int port, String webservicesPath,
@@ -394,8 +453,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 				loginUser, password);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#decodeListFromJson(java.lang.String, java.lang.Class)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#decodeListFromJson(java.lang.String,
+	 * java.lang.Class)
 	 */
 	@Override
 	public Set<IRole<Long>> decodeListFromJson(String json, Class<Role> objectClass)
@@ -406,8 +469,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return myObjects;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#deleteRole(com.biit.usermanager.entity.IRole)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#deleteRole(com.biit.usermanager.entity.
+	 * IRole)
 	 */
 	@Override
 	public void deleteRole(IRole<Long> role)
@@ -426,8 +493,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#deleteRole(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IRole)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#deleteRole(com.biit.usermanager.entity.
+	 * IUser, com.biit.usermanager.entity.IRole)
 	 */
 	@Override
 	public void deleteRole(IUser<Long> user, IRole<Long> role) throws NotConnectedToWebServiceException,
@@ -494,8 +565,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return roles;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#getGroupRoles(com.biit.usermanager.entity.IGroup)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#getGroupRoles(com.biit.usermanager.
+	 * entity.IGroup)
 	 */
 	@Override
 	public Set<IRole<Long>> getGroupRoles(IGroup<Long> group)
@@ -507,8 +581,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return roles;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#getOrganizationRoles(com.biit.usermanager.entity.IGroup)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#getOrganizationRoles(com.biit.
+	 * usermanager.entity.IGroup)
 	 */
 	@Override
 	public Set<IRole<Long>> getOrganizationRoles(IGroup<Long> organization) throws NotConnectedToWebServiceException,
@@ -520,8 +597,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return roles;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#getOrganizationGroupId(com.biit.usermanager.entity.IGroup)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#getOrganizationGroupId(com.biit.
+	 * usermanager.entity.IGroup)
 	 */
 	@Override
 	public long getOrganizationGroupId(IGroup<Long> organization) throws ClientProtocolException,
@@ -546,7 +626,9 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return -1;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.biit.liferay.access.IRoleService#getRole(long)
 	 */
 	@Override
@@ -568,7 +650,9 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.biit.liferay.access.IRoleService#getRole(java.lang.String, long)
 	 */
 	@Override
@@ -591,8 +675,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#getUserRoles(com.biit.usermanager.entity.IUser)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#getUserRoles(com.biit.usermanager.entity
+	 * .IUser)
 	 */
 	@Override
 	public Set<IRole<Long>> getUserRoles(IUser<Long> user)
@@ -621,8 +709,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return roles;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#getUserRolesOfGroup(com.biit.usermanager.entity.IUser, com.liferay.portal.model.Group)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#getUserRolesOfGroup(com.biit.usermanager
+	 * .entity.IUser, com.liferay.portal.model.Group)
 	 */
 	@Override
 	public Set<IRole<Long>> getUserRolesOfGroup(IUser<Long> user, Group group)
@@ -633,8 +725,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return new HashSet<IRole<Long>>();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#getUserRolesOfGroup(java.lang.Long, java.lang.Long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#getUserRolesOfGroup(java.lang.Long,
+	 * java.lang.Long)
 	 */
 	@Override
 	public Set<IRole<Long>> getUserRolesOfGroup(Long userId, Long groupId)
@@ -666,8 +761,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return roles;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#getUserRolesOfOrganization(com.biit.usermanager.entity.IUser, com.biit.usermanager.entity.IGroup)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#getUserRolesOfOrganization(com.biit.
+	 * usermanager.entity.IUser, com.biit.usermanager.entity.IGroup)
 	 */
 	@Override
 	public Set<IRole<Long>> getUserRolesOfOrganization(IUser<Long> user, IGroup<Long> organization)
@@ -681,8 +780,12 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return new HashSet<IRole<Long>>();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#getUsers(com.biit.usermanager.entity.IRole, com.biit.usermanager.entity.IGroup)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#getUsers(com.biit.usermanager.entity.
+	 * IRole, com.biit.usermanager.entity.IGroup)
 	 */
 	@Override
 	public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException,
@@ -700,12 +803,17 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		return usersOfOrganizationWithRole;
 	}
 
+	@Override
 	public void reset() {
 		rolePool.reset();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#unsetRoleFromGroups(com.biit.usermanager.entity.IRole, java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.biit.liferay.access.IRoleService#unsetRoleFromGroups(com.biit.usermanager
+	 * .entity.IRole, java.util.List)
 	 */
 	@Override
 	public void unsetRoleFromGroups(IRole<Long> role, List<Group> groups)
@@ -742,8 +850,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.biit.liferay.access.IRoleService#unsetRoleFromOrganization(com.biit.usermanager.entity.IRole, java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.biit.liferay.access.IRoleService#unsetRoleFromOrganization(com.biit.
+	 * usermanager.entity.IRole, java.util.List)
 	 */
 	@Override
 	public void unsetRoleFromOrganization(IRole<Long> role, List<IGroup<Long>> organizations)

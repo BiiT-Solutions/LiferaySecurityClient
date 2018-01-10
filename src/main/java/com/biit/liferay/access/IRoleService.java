@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Role;
 
-public interface IRoleService {
+public interface IRoleService extends IServiceAccess {
 
 	/**
 	 * Creates a new RoleSoap on Liferay. For testing use only.

@@ -3,6 +3,9 @@ package com.biit.liferay.security;
 import java.io.IOException;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import org.apache.http.client.ClientProtocolException;
 
 import com.biit.liferay.access.CompanyService;
@@ -32,15 +35,25 @@ import com.liferay.portal.model.User;
  * Implements Liferay service access for authentication.
  */
 public class AuthenticationService implements IAuthenticationService<Long, Long> {
-
 	private IGroup<Long> company = null;
-	private UserService userService = new UserService();
-	private CompanyService companyService = new CompanyService();
-	private UserGroupService userGroupService = new UserGroupService();
-	private ContactService contactService = new ContactService();
-	private PasswordService passwordService = new PasswordService();
 
-	public AuthenticationService() {
+	@Inject
+	private UserService userService;
+
+	@Inject
+	private CompanyService companyService;
+
+	@Inject
+	private UserGroupService userGroupService;
+
+	@Inject
+	private ContactService contactService;
+
+	@Inject
+	private PasswordService passwordService;
+
+	@PostConstruct
+	public void connect() {
 		userService.serverConnection();
 		companyService.serverConnection();
 		userGroupService.serverConnection();
