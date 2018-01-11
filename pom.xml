@@ -39,7 +39,6 @@
 		<maven-release-plugin.version>2.5.1</maven-release-plugin.version>
 		<maven-scm-provider-gitexe.version>1.9.2</maven-scm-provider-gitexe.version>
 		<project.scm.id>git</project.scm.id>
-		<org.springframework.version>4.1.5.RELEASE</org.springframework.version>
 		<!-- BiiT dependencies -->
 		<liferay-service-common.version>[0.8,0.9)</liferay-service-common.version>
 	</properties>
@@ -108,11 +107,6 @@
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${org.springframework.version}</version>
 		</dependency>
 	</dependencies>
 

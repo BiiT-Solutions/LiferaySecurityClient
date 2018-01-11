@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.http.client.ClientProtocolException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.biit.liferay.access.ICompanyService;
 import com.biit.liferay.access.IGroupService;
@@ -36,26 +36,26 @@ import com.biit.usermanager.security.exceptions.UserManagementException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-@Component
+@Named
 public class AuthorizationService implements IAuthorizationService<Long, Long, Long> {
 	private AuthorizationPool<Long, Long> authorizationPool;
 
-	@Autowired
+	@Inject
 	private IRoleService roleService;
 
-	@Autowired
+	@Inject
 	private IUserService userService;
 
-	@Autowired
+	@Inject
 	private IGroupService groupService;
 
-	@Autowired
+	@Inject
 	private IOrganizationService organizationService;
 
-	@Autowired
+	@Inject
 	private ICompanyService companyService;
 
-	@Autowired
+	@Inject
 	private IUserGroupService userGroupService;
 
 	// Which activities pertain to which role.

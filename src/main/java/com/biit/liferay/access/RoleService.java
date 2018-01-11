@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Named;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
-import org.springframework.stereotype.Component;
 
 import com.biit.liferay.access.exceptions.DuplicatedLiferayElement;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
@@ -35,7 +36,7 @@ import com.liferay.portal.model.Role;
 /**
  * This class allows to manage roles from Liferay portal.
  */
-@Component
+@Named
 public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRoleService {
 	private GroupService groupService;
 	private OrganizationService organizationService;
