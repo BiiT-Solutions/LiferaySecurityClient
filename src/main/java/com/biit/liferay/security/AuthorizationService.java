@@ -702,4 +702,14 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		return roleActivities.getRoleActivities(role);
 	}
 
+	@Override
+	public IRoleActivities getRoleActivities() {
+		return roleActivities;
+	}
+
+	@Override
+	public void setRoleActivities(IRoleActivities roleActivities) {
+		this.roleActivities = roleActivities;
+	}
+
 }
