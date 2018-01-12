@@ -18,11 +18,8 @@ import com.biit.liferay.access.IOrganizationService;
 import com.biit.liferay.access.IRoleService;
 import com.biit.liferay.access.IUserGroupService;
 import com.biit.liferay.access.IUserService;
-import com.biit.liferay.access.OrganizationType;
 import com.biit.liferay.access.ServiceAccess;
-import com.biit.liferay.access.exceptions.DuplicatedLiferayElement;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
-import com.biit.liferay.access.exceptions.OrganizationNotDeletedException;
 import com.biit.liferay.access.exceptions.PortletNotInstalledException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.configuration.LiferayConfigurationReader;
@@ -60,6 +57,10 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 
 	@Inject
 	private IUserGroupService userGroupService;
+
+	// Which activities pertain to which role.
+	@Inject
+	private IRoleActivities roleActivities;
 
 	public AuthorizationService() {
 		authorizationPool = new AuthorizationPool<Long, Long>();
@@ -694,6 +695,11 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		companyService.reset();
 		userService.reset();
 		groupService.reset();
+	}
+
+	@Override
+	public Set<IActivity> getRoleActivities(IRole<Long> role) {
+		return roleActivities.getRoleActivities(role);
 	}
 
 }
