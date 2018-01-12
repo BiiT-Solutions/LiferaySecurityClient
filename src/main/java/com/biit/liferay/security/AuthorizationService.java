@@ -18,8 +18,11 @@ import com.biit.liferay.access.IOrganizationService;
 import com.biit.liferay.access.IRoleService;
 import com.biit.liferay.access.IUserGroupService;
 import com.biit.liferay.access.IUserService;
+import com.biit.liferay.access.OrganizationType;
 import com.biit.liferay.access.ServiceAccess;
+import com.biit.liferay.access.exceptions.DuplicatedLiferayElement;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
+import com.biit.liferay.access.exceptions.OrganizationNotDeletedException;
 import com.biit.liferay.access.exceptions.PortletNotInstalledException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.configuration.LiferayConfigurationReader;
@@ -634,6 +637,55 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			return authorized;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean addUserRole(IUser<Long> user, IRole<Long> role) throws UserManagementException {
+		try {
+			roleService.addUserRole(user, role);
+			return true;
+		} catch (ClientProtocolException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+		} catch (IOException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+		} catch (NotConnectedToWebServiceException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+		} catch (AuthenticationRequired e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+		}
+	}
+
+	@Override
+	public boolean addUserOrganizationRole(IUser<Long> user, IGroup<Long> organization, IRole<Long> role) throws UserManagementException {
+		try {
+			roleService.addUserOrganizationRole(user, organization, role);
+			return true;
+		} catch (ClientProtocolException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "' in organization '"
+					+ organization.getUniqueName() + "'.");
+		} catch (IOException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "' in organization '"
+					+ organization.getUniqueName() + "'.");
+		} catch (NotConnectedToWebServiceException e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "' in organization '"
+					+ organization.getUniqueName() + "'.");
+		} catch (AuthenticationRequired e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "' in organization '"
+					+ organization.getUniqueName() + "'.");
+		} catch (WebServiceAccessError e) {
+			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
+			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "' in organization '"
+					+ organization.getUniqueName() + "'.");
+		}
+
 	}
 
 	@Override
