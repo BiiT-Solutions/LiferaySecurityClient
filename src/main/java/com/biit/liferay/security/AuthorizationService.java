@@ -61,9 +61,6 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	@Inject
 	private IUserGroupService userGroupService;
 
-	// Which activities pertain to which role.
-	private IRoleActivities roleActivities;
-
 	public AuthorizationService() {
 		authorizationPool = new AuthorizationPool<Long, Long>();
 	}
@@ -697,19 +694,6 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		companyService.reset();
 		userService.reset();
 		groupService.reset();
-	}
-
-	@Override
-	public Set<IActivity> getRoleActivities(IRole<Long> role) {
-		return roleActivities.getRoleActivities(role);
-	}
-
-	public IRoleActivities getRoleActivities() {
-		return roleActivities;
-	}
-
-	public void setRoleActivities(IRoleActivities roleActivities) {
-		this.roleActivities = roleActivities;
 	}
 
 }
