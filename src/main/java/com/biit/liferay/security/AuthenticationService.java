@@ -353,4 +353,23 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 		}
 
 	}
+	
+	@Override 
+	public void deleteUser(IUser<Long> user) throws UserManagementException {
+		try {
+			userService.deleteUser(user);
+		}catch (ClientProtocolException e) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+			throw new UserManagementException("User '" + user.getEmailAddress() + "' not removed correctly.");
+		} catch (NotConnectedToWebServiceException e) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+			throw new UserManagementException("User '" + user.getEmailAddress() + "' not removed correctly.");
+		} catch (IOException e) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+			throw new UserManagementException("User '" + user.getEmailAddress() + "' not removed correctly.");
+		} catch (AuthenticationRequired e) {
+			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+			throw new UserManagementException("User '" + user.getEmailAddress() + "' not removed correctly.");
+		}
+	}
 }
