@@ -17,7 +17,6 @@ import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.VerificationService;
 import com.biit.liferay.access.exceptions.DuplicatedLiferayElement;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
-import com.biit.liferay.access.exceptions.UserDoesNotExistException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.configuration.LiferayConfigurationReader;
 import com.biit.liferay.log.LiferayClientLogger;
@@ -27,6 +26,7 @@ import com.biit.usermanager.entity.IUser;
 import com.biit.usermanager.security.IAuthenticationService;
 import com.biit.usermanager.security.exceptions.AuthenticationRequired;
 import com.biit.usermanager.security.exceptions.InvalidCredentialsException;
+import com.biit.usermanager.security.exceptions.UserDoesNotExistException;
 import com.biit.usermanager.security.exceptions.UserManagementException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -79,10 +79,12 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 	 * @throws JsonParseException
 	 * @throws AuthenticationRequired
 	 * @throws InvalidCredentialsException
+	 * @throws UserDoesNotExistException
 	 * @throws WebServiceAccessError
 	 */
 	@Override
-	public IUser<Long> authenticate(String userMail, String password) throws UserManagementException, AuthenticationRequired, InvalidCredentialsException {
+	public IUser<Long> authenticate(String userMail, String password) throws UserManagementException, AuthenticationRequired, InvalidCredentialsException,
+			UserDoesNotExistException {
 		// Login fails if either the username or password is null
 		if (userMail == null || password == null) {
 			throw new InvalidCredentialsException("No fields filled up.");
@@ -178,7 +180,7 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 	}
 
 	@Override
-	public IUser<Long> getUserByEmail(String userEmail) throws UserManagementException {
+	public IUser<Long> getUserByEmail(String userEmail) throws UserManagementException, UserDoesNotExistException {
 		try {
 			return userService.getUserByEmailAddress(getCompany(), userEmail);
 		} catch (ClientProtocolException e) {
@@ -341,12 +343,12 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 		}
 
 	}
-	
-	@Override 
+
+	@Override
 	public void deleteUser(IUser<Long> user) throws UserManagementException {
 		try {
 			userService.deleteUser(user);
-		}catch (ClientProtocolException e) {
+		} catch (ClientProtocolException e) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), e);
 			throw new UserManagementException("User '" + user.getEmailAddress() + "' not removed correctly.");
 		} catch (NotConnectedToWebServiceException e) {
