@@ -638,52 +638,49 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	}
 
 	@Override
-	public boolean addUserRole(IUser<Long> user, IRole<Long> role) throws UserManagementException {
+	public void addUserRole(IUser<Long> user, IRole<Long> role) throws UserManagementException {
 		try {
 			roleService.addUserRole(user, role);
-			return true;
 		} catch (ClientProtocolException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+			throw new UserManagementException("Error adding the role '" + role.getUniqueName() + "' for user '" + user.getUniqueName() + "'.");
 		} catch (IOException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+			throw new UserManagementException("Error adding the role '" + role.getUniqueName() + "' for user '" + user.getUniqueName() + "'.");
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+			throw new UserManagementException("Error adding the role '" + role.getUniqueName() + "' for user '" + user.getUniqueName() + "'.");
 		} catch (AuthenticationRequired e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "'.");
+			throw new UserManagementException("Error adding the role '" + role.getUniqueName() + "' for user '" + user.getUniqueName() + "'.");
 		}
 	}
 
 	@Override
-	public boolean addUserOrganizationRole(IUser<Long> user, IGroup<Long> organization, IRole<Long> role) throws UserManagementException {
+	public void addUserOrganizationRole(IUser<Long> user, IGroup<Long> organization, IRole<Long> role) throws UserManagementException {
 		try {
 			roleService.addUserOrganizationRole(user, organization, role);
-			return true;
 		} catch (ClientProtocolException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "' in organization '"
+			throw new UserManagementException("Error adding the role '" + role.getUniqueName() + "' for user '" + user.getUniqueName() + "' in organization '"
 					+ organization.getUniqueName() + "'.");
 		} catch (IOException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "' in organization '"
+			throw new UserManagementException("Error adding the role '" + role.getUniqueName() + "' for user '" + user.getUniqueName() + "' in organization '"
 					+ organization.getUniqueName() + "'.");
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "' in organization '"
+			throw new UserManagementException("Error adding the role '" + role.getUniqueName() + "' for user '" + user.getUniqueName() + "' in organization '"
 					+ organization.getUniqueName() + "'.");
 		} catch (AuthenticationRequired e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "' in organization '"
+			throw new UserManagementException("Error adding the role '" + role.getUniqueName() + "' for user '" + user.getUniqueName() + "' in organization '"
 					+ organization.getUniqueName() + "'.");
 		} catch (WebServiceAccessError e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error adding the user's for the role '" + role.getUniqueName() + "' in organization '"
+			throw new UserManagementException("Error adding the role '" + role.getUniqueName() + "' for user '" + user.getUniqueName() + "' in organization '"
 					+ organization.getUniqueName() + "'.");
 		}
-
 	}
 
 	@Override
