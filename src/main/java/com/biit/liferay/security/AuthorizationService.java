@@ -32,6 +32,7 @@ import com.biit.usermanager.security.IActivity;
 import com.biit.usermanager.security.IAuthorizationService;
 import com.biit.usermanager.security.IRoleActivities;
 import com.biit.usermanager.security.exceptions.AuthenticationRequired;
+import com.biit.usermanager.security.exceptions.RoleDoesNotExistsException;
 import com.biit.usermanager.security.exceptions.UserManagementException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -212,7 +213,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	}
 
 	@Override
-	public IRole<Long> getRole(Long roleId) throws UserManagementException {
+	public IRole<Long> getRole(Long roleId) throws UserManagementException, RoleDoesNotExistsException {
 		if (roleId != null) {
 			try {
 				return roleService.getRole(roleId);
@@ -240,7 +241,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	}
 
 	@Override
-	public IRole<Long> getRole(String roleName) throws UserManagementException {
+	public IRole<Long> getRole(String roleName) throws UserManagementException, RoleDoesNotExistsException {
 		if (roleName != null) {
 			try {
 				IGroup<Long> company = companyService.getCompanyByVirtualHost(LiferayConfigurationReader.getInstance().getVirtualHost());

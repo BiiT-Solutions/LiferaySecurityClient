@@ -25,6 +25,7 @@ import com.biit.usermanager.entity.IRole;
 import com.biit.usermanager.entity.IUser;
 import com.biit.usermanager.entity.pool.RolePool;
 import com.biit.usermanager.security.exceptions.AuthenticationRequired;
+import com.biit.usermanager.security.exceptions.RoleDoesNotExistsException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -628,7 +629,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 	 */
 	@Override
 	public IRole<Long> getRole(long roleId) throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
-			WebServiceAccessError {
+			WebServiceAccessError, RoleDoesNotExistsException {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -638,6 +639,10 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		IRole<Long> role = null;
 		if (result != null) {
 			// A Simple JSON Response Read
+			// Check some errors
+			if (result.contains("NoSuchRoleException")) {
+				throw new RoleDoesNotExistsException("Role with id '" + roleId + "' does not exists.");
+			}
 			role = decodeFromJson(result, Role.class);
 			return role;
 		}
@@ -652,7 +657,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 	 */
 	@Override
 	public IRole<Long> getRole(String roleName, long companyId) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired, WebServiceAccessError {
+			AuthenticationRequired, WebServiceAccessError, RoleDoesNotExistsException {
 		checkConnection();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -663,6 +668,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 		IRole<Long> role = null;
 		if (result != null) {
 			// A Simple JSON Response Read
+			// Check some errors
+			if (result.contains("NoSuchRoleException")) {
+				throw new RoleDoesNotExistsException("Role with name '" + roleName + "' does not exists.");
+			}
+
 			role = decodeFromJson(result, Role.class);
 			return role;
 		}

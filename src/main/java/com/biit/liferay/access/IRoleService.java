@@ -15,6 +15,7 @@ import com.biit.usermanager.entity.IGroup;
 import com.biit.usermanager.entity.IRole;
 import com.biit.usermanager.entity.IUser;
 import com.biit.usermanager.security.exceptions.AuthenticationRequired;
+import com.biit.usermanager.security.exceptions.RoleDoesNotExistsException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.liferay.portal.model.Group;
@@ -280,9 +281,10 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
+	 * @throws RoleDoesNotExistsException 
 	 */
 	IRole<Long> getRole(long roleId) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
-			AuthenticationRequired, WebServiceAccessError;
+			AuthenticationRequired, WebServiceAccessError, RoleDoesNotExistsException;
 
 	/**
 	 * Creates a new RoleSoap on Liferay. For testing use only.
@@ -295,9 +297,10 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws ClientProtocolException
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
+	 * @throws RoleDoesNotExistsException
 	 */
 	IRole<Long> getRole(String roleName, long companyId) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError;
+			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError, RoleDoesNotExistsException;
 
 	/**
 	 * Get the list of roles for a user.
