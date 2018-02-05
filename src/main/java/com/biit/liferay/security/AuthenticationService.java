@@ -94,15 +94,12 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 			try {
 				VerificationService.getInstance().testConnection(getCompany(), userMail, password);
 			} catch (AuthenticationRequired ar) {
-				// Cannot access to user, but already has a company. The error
-				// is
-				// with the user or password.
+				// The error is with the user or password.
 				throw new InvalidCredentialsException("Invalid password for user '" + userMail + "'.");
 			}
 			// Get user information.
 			IUser<Long> user = null;
 			user = userService.getUserByEmailAddress(getCompany(), userMail);
-
 			LiferayClientLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'.");
 			return user;
 		} catch (NotConnectedToWebServiceException e) {

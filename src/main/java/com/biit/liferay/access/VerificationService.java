@@ -104,10 +104,10 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 				throw new AuthenticationRequired("Authenticated access required.");
 			}
 			closeClient(httpClient);
+		} else {
+			closeClient(httpClient);
+			throw new AuthenticationRequired("Authenticated access required.");
 		}
-		closeClient(httpClient);
-		throw new AuthenticationRequired("Authenticated access required.");
-
 	}
 
 	@Override
