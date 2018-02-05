@@ -54,13 +54,12 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 	}
 
 	@Override
-	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass)
-			throws JsonParseException, JsonMappingException, IOException {
+	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass) throws JsonParseException, JsonMappingException, IOException {
 		return null;
 	}
 
-	public boolean testConnection(IGroup<Long> company, String emailAddress, String password)
-			throws ClientProtocolException, IOException, NotConnectedToWebServiceException, AuthenticationRequired {
+	public void testConnection(IGroup<Long> company, String emailAddress, String password) throws ClientProtocolException, IOException,
+			NotConnectedToWebServiceException, AuthenticationRequired {
 
 		if (isNotConnected()) {
 			serverConnection();
@@ -68,12 +67,11 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 
 		// Credentials
 		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-		credentialsProvider.setCredentials(new AuthScope(getTargetHost().getHostName(), getTargetHost().getPort()),
-				new UsernamePasswordCredentials(emailAddress, password));
+		credentialsProvider.setCredentials(new AuthScope(getTargetHost().getHostName(), getTargetHost().getPort()), new UsernamePasswordCredentials(
+				emailAddress, password));
 
 		// Client
-		CloseableHttpClient httpClient = HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider)
-				.build();
+		CloseableHttpClient httpClient = HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider).build();
 
 		// Create AuthCache instance
 		AuthCache authCache = new BasicAuthCache();
@@ -92,8 +90,7 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 		// Set authentication param if defined.
 		setAuthParam(params);
 
-		HttpPost post = new HttpPost(
-				"/" + LiferayConfigurationReader.getInstance().getWebServicesPath() + "user/get-user-by-email-address");
+		HttpPost post = new HttpPost("/" + LiferayConfigurationReader.getInstance().getWebServicesPath() + "user/get-user-by-email-address");
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
 		post.setEntity(entity);
 		HttpResponse response = httpClient.execute(getTargetHost(), post, httpContext);
@@ -107,10 +104,9 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 				throw new AuthenticationRequired("Authenticated access required.");
 			}
 			closeClient(httpClient);
-			return true;
 		}
 		closeClient(httpClient);
-		return false;
+		throw new AuthenticationRequired("Authenticated access required.");
 
 	}
 
