@@ -20,7 +20,6 @@ import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
 import com.biit.liferay.configuration.LiferayConfigurationReader;
 import com.biit.liferay.log.LiferayClientLogger;
-import com.biit.logger.BiitCommonLogger;
 import com.biit.usermanager.entity.IGroup;
 import com.biit.usermanager.entity.IUser;
 import com.biit.usermanager.security.IAuthenticationService;
@@ -92,17 +91,14 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 
 		// Check password.
 		try {
-			if (!VerificationService.getInstance().testConnection(getCompany(), userMail, password)) {
-				throw new InvalidCredentialsException("Invalid password for user '" + userMail + "' at company + '" + getCompany() + "'.");
+			try {
+				VerificationService.getInstance().testConnection(getCompany(), userMail, password);
+			} catch (AuthenticationRequired ar) {
+				// Cannot access to user, but already has a company. The error
+				// is
+				// with the user or password.
+				throw new InvalidCredentialsException("Invalid password for user '" + userMail + "'.");
 			}
-		} catch (Exception ar) {
-			// Cannot access to user, but already has a company. The error is
-			// with the user or password.
-			BiitCommonLogger.errorMessageNotification(this.getClass(), ar);
-			throw new InvalidCredentialsException("Invalid user or password.");
-		}
-
-		try {
 			// Get user information.
 			IUser<Long> user = null;
 			user = userService.getUserByEmailAddress(getCompany(), userMail);
