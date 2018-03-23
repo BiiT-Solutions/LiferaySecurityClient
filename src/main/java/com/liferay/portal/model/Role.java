@@ -139,7 +139,7 @@ public class Role implements java.io.Serializable, IRole<Long> {
 	 * @return roleId
 	 */
 	@Override
-	public Long getId() {
+	public Long getUniqueId() {
 		return roleId;
 	}
 

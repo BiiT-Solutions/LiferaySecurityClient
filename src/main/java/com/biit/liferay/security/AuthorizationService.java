@@ -104,13 +104,13 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			return organizationService.getOrganizationUsers(organization);
 		} catch (IOException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error retrieving the users from organization with id '" + organization.getId() + "'.");
+			throw new UserManagementException("Error retrieving the users from organization with id '" + organization.getUniqueId() + "'.");
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error retrieving the users from organization with id '" + organization.getId() + "'.");
+			throw new UserManagementException("Error retrieving the users from organization with id '" + organization.getUniqueId() + "'.");
 		} catch (AuthenticationRequired e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
-			throw new UserManagementException("Error retrieving the users from organization with id '" + organization.getId() + "'.");
+			throw new UserManagementException("Error retrieving the users from organization with id '" + organization.getUniqueId() + "'.");
 		}
 	}
 
@@ -156,9 +156,9 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		}
 		try {
 			IGroup<Long> company = companyService.getCompanyByVirtualHost(LiferayConfigurationReader.getInstance().getVirtualHost());
-			IGroup<Long> organizationGroup = groupService.getGroup(company.getId(), organizationName + ServiceAccess.LIFERAY_ORGANIZATION_GROUP_SUFIX);
+			IGroup<Long> organizationGroup = groupService.getGroup(company.getUniqueId(), organizationName + ServiceAccess.LIFERAY_ORGANIZATION_GROUP_SUFIX);
 			// Id of organization is 1 less than its group.
-			return organizationService.getOrganization(organizationGroup.getId() - 1);
+			return organizationService.getOrganization(organizationGroup.getUniqueId() - 1);
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException("Error retrieving the organization '" + organizationName + "'.");
@@ -245,7 +245,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		if (roleName != null) {
 			try {
 				IGroup<Long> company = companyService.getCompanyByVirtualHost(LiferayConfigurationReader.getInstance().getVirtualHost());
-				return roleService.getRole(roleName, company.getId());
+				return roleService.getRole(roleName, company.getUniqueId());
 			} catch (RemoteException e) {
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 				throw new UserManagementException("Error retrieving the role '" + roleName + "'");
@@ -414,7 +414,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		try {
 			IGroup<Long> company = companyService.getCompanyByVirtualHost(LiferayConfigurationReader.getInstance().getVirtualHost());
 			Set<IGroup<Long>> organizations = new HashSet<IGroup<Long>>(organizationService.getOrganizations(company, user,
-					parentOrganization != null ? parentOrganization.getId() : null));
+					parentOrganization != null ? parentOrganization.getUniqueId() : null));
 			Set<IGroup<Long>> applicationOrganizations = new HashSet<IGroup<Long>>();
 			for (IGroup<Long> organization : organizations) {
 				if (!getUserRoles(user, organization).isEmpty()) {

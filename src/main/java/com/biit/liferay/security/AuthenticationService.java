@@ -239,7 +239,7 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 				throw new UserManagementException(e.getMessage());
 			}
 			for (IGroup<Long> UserGroupSoap : userGroups) {
-				if (UserGroupSoap.getId().equals(group.getId())) {
+				if (UserGroupSoap.getUniqueId().equals(group.getUniqueId())) {
 					return true;
 				}
 			}

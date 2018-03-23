@@ -88,7 +88,7 @@ public class BaseAuthenticationService extends AuthorizationService {
 		try {
 			Set<IGroup<Long>> organizations = getUserOrganizations(user);
 			for (IGroup<Long> organization : organizations) {
-				if (organization.getId().equals(organizationId)) {
+				if (organization.getUniqueId().equals(organizationId)) {
 					return organization;
 				}
 			}

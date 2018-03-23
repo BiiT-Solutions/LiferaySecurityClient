@@ -50,7 +50,7 @@ public class PasswordService extends UserService implements IPasswordService {
 		}
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("userId", user.getId() + ""));
+		params.add(new BasicNameValuePair("userId", user.getUniqueId() + ""));
 		params.add(new BasicNameValuePair("password1", plainTextPassword));
 		params.add(new BasicNameValuePair("password2", plainTextPassword));
 		params.add(new BasicNameValuePair("passwordReset", "false"));

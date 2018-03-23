@@ -84,7 +84,7 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 
 		// Set
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("companyId", company.getId() + ""));
+		params.add(new BasicNameValuePair("companyId", company.getUniqueId() + ""));
 		params.add(new BasicNameValuePair("emailAddress", emailAddress));
 
 		// Set authentication param if defined.
