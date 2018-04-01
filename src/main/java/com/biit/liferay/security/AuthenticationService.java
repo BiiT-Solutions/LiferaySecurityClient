@@ -63,6 +63,22 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 	}
 
 	/**
+	 * If Spring is not available, create the required services. Be carefull, if
+	 * created on this way, each service uses its own pool and is not shared
+	 * with other different beans.
+	 */
+	@Override
+	public void createBeans() {
+		userService = new UserService();
+		companyService = new CompanyService();
+		userGroupService = new UserGroupService();
+		contactService = new ContactService();
+		passwordService = new PasswordService();
+
+		connect();
+	}
+
+	/**
 	 * Obtains a liferay user by the mail and the password.
 	 * 
 	 * @param userMail

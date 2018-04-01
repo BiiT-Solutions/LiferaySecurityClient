@@ -29,6 +29,11 @@ public class BaseAuthenticationService extends AuthorizationService {
 		super();
 	}
 
+	protected BaseAuthenticationService(IAuthenticationService<Long, Long> authenticationService) {
+		super();
+		this.authenticationService = authenticationService;
+	}
+
 	public IAuthenticationService<Long, Long> getAuthenticationService() {
 		return authenticationService;
 	}
@@ -50,8 +55,7 @@ public class BaseAuthenticationService extends AuthorizationService {
 		return activities;
 	}
 
-	public boolean isUserAuthorizedInAnyOrganization(IUser<Long> user, IActivity activity)
-			throws IOException, AuthenticationRequired, UserManagementException {
+	public boolean isUserAuthorizedInAnyOrganization(IUser<Long> user, IActivity activity) throws IOException, AuthenticationRequired, UserManagementException {
 
 		// Check isUserAuthorizedActivity (own permissions)
 		if (isAuthorizedActivity(user, activity)) {
