@@ -12,13 +12,19 @@ import javax.inject.Named;
 
 import org.apache.http.client.ClientProtocolException;
 
+import com.biit.liferay.access.CompanyService;
+import com.biit.liferay.access.GroupService;
 import com.biit.liferay.access.ICompanyService;
 import com.biit.liferay.access.IGroupService;
 import com.biit.liferay.access.IOrganizationService;
 import com.biit.liferay.access.IRoleService;
 import com.biit.liferay.access.IUserGroupService;
 import com.biit.liferay.access.IUserService;
+import com.biit.liferay.access.OrganizationService;
+import com.biit.liferay.access.RoleService;
 import com.biit.liferay.access.ServiceAccess;
+import com.biit.liferay.access.UserGroupService;
+import com.biit.liferay.access.UserService;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.PortletNotInstalledException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
@@ -75,6 +81,23 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		organizationService.serverConnection();
 		companyService.serverConnection();
 		userService.serverConnection();
+	}
+
+	/**
+	 * If Spring is not available, create the required services. Be carefull, if
+	 * created on this way, each service uses its own pool and is not shared
+	 * with other different beans.
+	 */
+	@Override
+	public void createBeans() {
+		roleService = new RoleService();
+		userGroupService = new UserGroupService();
+		groupService = new GroupService();
+		organizationService = new OrganizationService();
+		companyService = new CompanyService();
+		userService = new UserService();
+
+		connect();
 	}
 
 	@Override
