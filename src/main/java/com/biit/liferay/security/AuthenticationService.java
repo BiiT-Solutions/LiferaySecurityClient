@@ -11,6 +11,11 @@ import org.apache.http.client.ClientProtocolException;
 
 import com.biit.liferay.access.CompanyService;
 import com.biit.liferay.access.ContactService;
+import com.biit.liferay.access.ICompanyService;
+import com.biit.liferay.access.IContactService;
+import com.biit.liferay.access.IPasswordService;
+import com.biit.liferay.access.IUserGroupService;
+import com.biit.liferay.access.IUserService;
 import com.biit.liferay.access.PasswordService;
 import com.biit.liferay.access.UserGroupService;
 import com.biit.liferay.access.UserService;
@@ -39,19 +44,19 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 	private IGroup<Long> company = null;
 
 	@Inject
-	private UserService userService;
+	private IUserService userService;
 
 	@Inject
-	private CompanyService companyService;
+	private ICompanyService companyService;
 
 	@Inject
-	private UserGroupService userGroupService;
+	private IUserGroupService userGroupService;
 
 	@Inject
-	private ContactService contactService;
+	private IContactService contactService;
 
 	@Inject
-	private PasswordService passwordService;
+	private IPasswordService passwordService;
 
 	@PostConstruct
 	public void connect() {
@@ -150,7 +155,7 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 		} catch (Exception ar) {
 			LiferayClientLogger.errorMessage(this.getClass().getName(), ar);
 			throw new NotConnectedToWebServiceException("Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser()
-					+ " at " + LiferayConfigurationReader.getInstance().getVirtualHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
+					+ " at " + LiferayConfigurationReader.getInstance().getHost() + ":" + LiferayConfigurationReader.getInstance().getConnectionPort()
 					+ "'.\n Check configuration at 'liferay.conf' file.");
 		}
 	}
