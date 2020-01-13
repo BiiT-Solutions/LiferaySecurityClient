@@ -719,7 +719,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		// Is it in the pool?
 		Boolean authorized = authorizationPool.isAuthorizedActivity(user, activity);
 		if (authorized != null) {
-			SecurityLogger.info(this.getClass().getName(),
+			SecurityLogger.debug(this.getClass().getName(),
 					"User  '" + user + "' authorized '" + authorized + "' for '" + activity + "'.");
 			return authorized;
 		}
@@ -745,18 +745,19 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			// Is it in the pool?
 			Boolean authorized = authorizationPool.isAuthorizedActivity(user, organization, activity);
 			if (authorized != null) {
-				SecurityLogger.info(this.getClass().getName(),
-						"User  '" + user + "' authorized '" + authorized + "' for '" + activity + "'.");
+				SecurityLogger.debug(this.getClass().getName(), "User  '" + user + "' authorized '" + authorized
+						+ "' for '" + activity + "' on organization '" + organization + "'.");
 				return authorized;
 			}
 
 			authorized = getUserActivitiesAllowed(user, organization).contains(activity);
 			authorizationPool.addUser(user, organization, activity, authorized);
-			SecurityLogger.info(this.getClass().getName(),
-					"User  '" + user + "' authorized '" + authorized + "' for '" + activity + "'.");
+			SecurityLogger.debug(this.getClass().getName(), "User  '" + user + "' authorized '" + authorized + "' for '"
+					+ activity + "' on organization '" + organization + "'.");
 			return authorized;
 		}
-		SecurityLogger.info(this.getClass().getName(), "User  '" + user + "' not authorized  for '" + activity + "'.");
+		SecurityLogger.info(this.getClass().getName(),
+				"User  '" + user + "' not authorized  for '" + activity + "' on organization '" + organization + "'.");
 		return false;
 	}
 
