@@ -726,8 +726,12 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 
 		authorized = getUserActivitiesAllowed(user).contains(activity);
 		authorizationPool.addUser(user, activity, authorized);
-		SecurityLogger.info(this.getClass().getName(),
-				"User  '" + user + "' authorized '" + authorized + "' for '" + activity + "'.");
+		if (authorized) {
+			SecurityLogger.info(this.getClass().getName(), "User  '" + user + "' authorized for '" + activity + "'.");
+		} else {
+			SecurityLogger.warning(this.getClass().getName(),
+					"User  '" + user + "' not authorized for '" + activity + "'.");
+		}
 		return authorized;
 	}
 
@@ -737,7 +741,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		if (user != null) {
 			// If user has the permission... no need to check the organization.
 			if (isAuthorizedActivity(user, activity)) {
-				SecurityLogger.info(this.getClass().getName(),
+				SecurityLogger.debug(this.getClass().getName(),
 						"User  '" + user + "' is authorized for '" + activity + "' on any organization.");
 				return true;
 			}
@@ -756,7 +760,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 					+ activity + "' on organization '" + organization + "'.");
 			return authorized;
 		}
-		SecurityLogger.info(this.getClass().getName(),
+		SecurityLogger.warning(this.getClass().getName(),
 				"User  '" + user + "' not authorized  for '" + activity + "' on organization '" + organization + "'.");
 		return false;
 	}
