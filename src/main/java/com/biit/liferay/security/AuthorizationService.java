@@ -450,6 +450,9 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	@Override
 	public Set<IGroup<Long>> getUserOrganizations(IUser<Long> user) throws UserManagementException {
 		try {
+			if (user == null) {
+				return new HashSet<IGroup<Long>>();
+			}
 			Collection<IGroup<Long>> organizationsOfUser = groupsPool.getElements("user_" + user.getUniqueId());
 			if (organizationsOfUser != null) {
 				return new HashSet<IGroup<Long>>(organizationsOfUser);
@@ -496,11 +499,16 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	@Override
 	public Set<IGroup<Long>> getUserChildrenOrganizations(IUser<Long> user, IGroup<Long> parentOrganization)
 			throws UserManagementException {
+		if (user == null) {
+			return new HashSet<IGroup<Long>>();
+		}
 		try {
-			Collection<IGroup<Long>> organizationsOfUser = groupsPool.getElements(
-					"user_" + user.getUniqueId() + "_parentOrganization_" + parentOrganization.getUniqueId());
-			if (organizationsOfUser != null) {
-				return new HashSet<IGroup<Long>>(organizationsOfUser);
+			if (parentOrganization != null) {
+				final Collection<IGroup<Long>> organizationsOfUser = groupsPool.getElements(
+						"user_" + user.getUniqueId() + "_parentOrganization_" + parentOrganization.getUniqueId());
+				if (organizationsOfUser != null) {
+					return new HashSet<IGroup<Long>>(organizationsOfUser);
+				}
 			}
 			IGroup<Long> company = companyService
 					.getCompanyByVirtualHost(LiferayConfigurationReader.getInstance().getVirtualHost());
@@ -514,8 +522,10 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			}
 			SecurityLogger.debug(this.getClass().getName(), "Children organizations for user '" + user
 					+ "' and organization '" + parentOrganization + "' are '" + organizations + "'.");
-			groupsPool.addElements(applicationOrganizations,
-					"user_" + user.getUniqueId() + "_parentOrganization_" + parentOrganization.getUniqueId());
+			if (user != null && parentOrganization != null) {
+				groupsPool.addElements(applicationOrganizations,
+						"user_" + user.getUniqueId() + "_parentOrganization_" + parentOrganization.getUniqueId());
+			}
 			return applicationOrganizations;
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
@@ -543,6 +553,9 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	@Override
 	public Set<IGroup<Long>> getUserOrganizations(IUser<Long> user, IGroup<Long> site) throws UserManagementException {
 		try {
+			if (user == null || site == null) {
+				return new HashSet<IGroup<Long>>();
+			}
 			Collection<IGroup<Long>> organizationsOfUser = groupsPool
 					.getElements("user_" + user.getUniqueId() + "_site_" + site.getUniqueId());
 			if (organizationsOfUser != null) {
