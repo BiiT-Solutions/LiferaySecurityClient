@@ -406,13 +406,13 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	public Set<IGroup<Long>> getUserGroups(IUser<Long> user) throws UserManagementException {
 		if (user != null) {
 			try {
-				Collection<IGroup<Long>> groupsOfUser = groupsPool.getElements("user_" + user.getUniqueId());
+				Collection<IGroup<Long>> groupsOfUser = getGroupsPool().getElements("user_" + user.getUniqueId());
 				if (groupsOfUser != null) {
 					return new HashSet<IGroup<Long>>(groupsOfUser);
 				}
 				final Set<IGroup<Long>> groups = new HashSet<IGroup<Long>>(userGroupService.getUserUserGroups(user));
 				SecurityLogger.debug(this.getClass().getName(), "Groups for user '" + user + "' are '" + groups + "'.");
-				groupsPool.addElements(groups, "user_" + user.getUniqueId());
+				getGroupsPool().addElements(groups, "user_" + user.getUniqueId());
 				return groups;
 			} catch (RemoteException e) {
 				LiferayClientLogger.error(AuthorizationService.class.getName(),
@@ -453,7 +453,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			if (user == null) {
 				return new HashSet<IGroup<Long>>();
 			}
-			Collection<IGroup<Long>> organizationsOfUser = groupsPool.getElements("user_" + user.getUniqueId());
+			Collection<IGroup<Long>> organizationsOfUser = getGroupsPool().getElements("user_" + user.getUniqueId());
 			if (organizationsOfUser != null) {
 				return new HashSet<IGroup<Long>>(organizationsOfUser);
 			}
@@ -466,7 +466,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			}
 			SecurityLogger.debug(this.getClass().getName(),
 					"Organizations for user '" + user + "' are '" + applicationOrganizations + "'.");
-			groupsPool.addElements(applicationOrganizations, "user_" + user.getUniqueId());
+			getGroupsPool().addElements(applicationOrganizations, "user_" + user.getUniqueId());
 			return applicationOrganizations;
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
@@ -504,7 +504,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		}
 		try {
 			if (parentOrganization != null) {
-				final Collection<IGroup<Long>> organizationsOfUser = groupsPool.getElements(
+				final Collection<IGroup<Long>> organizationsOfUser = getGroupsPool().getElements(
 						"user_" + user.getUniqueId() + "_parentOrganization_" + parentOrganization.getUniqueId());
 				if (organizationsOfUser != null) {
 					return new HashSet<IGroup<Long>>(organizationsOfUser);
@@ -523,7 +523,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			SecurityLogger.debug(this.getClass().getName(), "Children organizations for user '" + user
 					+ "' and organization '" + parentOrganization + "' are '" + organizations + "'.");
 			if (user != null && parentOrganization != null) {
-				groupsPool.addElements(applicationOrganizations,
+				getGroupsPool().addElements(applicationOrganizations,
 						"user_" + user.getUniqueId() + "_parentOrganization_" + parentOrganization.getUniqueId());
 			}
 			return applicationOrganizations;
@@ -556,7 +556,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			if (user == null || site == null) {
 				return new HashSet<IGroup<Long>>();
 			}
-			Collection<IGroup<Long>> organizationsOfUser = groupsPool
+			Collection<IGroup<Long>> organizationsOfUser = getGroupsPool()
 					.getElements("user_" + user.getUniqueId() + "_site_" + site.getUniqueId());
 			if (organizationsOfUser != null) {
 				return new HashSet<IGroup<Long>>(organizationsOfUser);
@@ -571,7 +571,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			}
 			SecurityLogger.debug(this.getClass().getName(),
 					"Organizations for user '" + user + "' for site '" + site + "' are '" + organizations + "'.");
-			groupsPool.addElements(applicationOrganizations,
+			getGroupsPool().addElements(applicationOrganizations,
 					"user_" + user.getUniqueId() + "_site_" + site.getUniqueId());
 			return applicationOrganizations;
 		} catch (NotConnectedToWebServiceException e) {
@@ -625,14 +625,14 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		if (user != null) {
 			try {
 				// Cached?
-				Collection<IRole<Long>> rolesOfUser = rolesPool.getElements("user_" + user.getUniqueId());
+				Collection<IRole<Long>> rolesOfUser = getRolesPool().getElements("user_" + user.getUniqueId());
 				if (rolesOfUser != null) {
 					return new HashSet<IRole<Long>>(rolesOfUser);
 				}
 				final Set<IRole<Long>> roles = new HashSet<IRole<Long>>(roleService.getUserRoles(user));
 				SecurityLogger.debug(this.getClass().getName(), "Roles for user '" + user + "' are '" + roles + "'.");
 				// Store on cache
-				rolesPool.addElements(roles, "user_" + user.getUniqueId());
+				getRolesPool().addElements(roles, "user_" + user.getUniqueId());
 				return roles;
 			} catch (RemoteException e) {
 				LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
@@ -664,7 +664,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		if (user != null && organization != null) {
 			try {
 				// Cached?
-				Collection<IRole<Long>> rolesOfUser = rolesPool
+				Collection<IRole<Long>> rolesOfUser = getRolesPool()
 						.getElements("user_" + user.getUniqueId() + "_organization_" + organization.getUniqueId());
 				if (rolesOfUser != null) {
 					return new HashSet<IRole<Long>>(rolesOfUser);
@@ -674,7 +674,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 				SecurityLogger.debug(this.getClass().getName(),
 						"Roles for user '" + user + "' from organization '" + organization + "' are '" + roles + "'.");
 				// Store on cache
-				rolesPool.addElements(roles,
+				getRolesPool().addElements(roles,
 						"user_" + user.getUniqueId() + "_organization_" + organization.getUniqueId());
 				return roles;
 			} catch (NotConnectedToWebServiceException e) {
@@ -706,7 +706,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	public Set<IRole<Long>> getAllRoles(IGroup<Long> organization) throws UserManagementException {
 		try {
 			// Cached?
-			Collection<IRole<Long>> rolesOfOrganization = rolesPool
+			Collection<IRole<Long>> rolesOfOrganization = getRolesPool()
 					.getElements("organization_" + organization.getUniqueId());
 			if (rolesOfOrganization != null) {
 				return new HashSet<IRole<Long>>(rolesOfOrganization);
@@ -715,7 +715,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			SecurityLogger.debug(this.getClass().getName(),
 					"Roles from organization '" + organization + "' are '" + roles + "'.");
 			// Store on cache
-			rolesPool.addElements(roles, "organization__" + organization.getUniqueId());
+			getRolesPool().addElements(roles, "organization__" + organization.getUniqueId());
 			return roles;
 		} catch (ClientProtocolException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
@@ -846,7 +846,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	public void addUserRole(IUser<Long> user, IRole<Long> role) throws UserManagementException {
 		try {
 			roleService.addUserRole(user, role);
-			rolesPool.removeElement("user_" + user.getUniqueId());
+			getRolesPool().removeElement("user_" + user.getUniqueId());
 		} catch (ClientProtocolException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException(
@@ -871,7 +871,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			throws UserManagementException {
 		try {
 			roleService.addUserOrganizationRole(user, organization, role);
-			rolesPool.removeElement("user_" + user.getUniqueId() + "_organization_" + organization.getUniqueId());
+			getRolesPool().removeElement("user_" + user.getUniqueId() + "_organization_" + organization.getUniqueId());
 		} catch (ClientProtocolException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
 			throw new UserManagementException("Error adding the role '" + role.getUniqueName() + "' for user '"
@@ -904,8 +904,8 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		companyService.reset();
 		userService.reset();
 		groupService.reset();
-		rolesPool.reset();
-		groupsPool.reset();
+		getRolesPool().reset();
+		getGroupsPool().reset();
 	}
 
 	@Override
@@ -921,6 +921,22 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	@Override
 	public void setRoleActivities(IRoleActivities roleActivities) {
 		this.roleActivities = roleActivities;
+	}
+
+	private RolesPool getRolesPool() {
+		// If Spring is not enable. Create it.
+		if (rolesPool == null) {
+			rolesPool = new RolesPool();
+		}
+		return rolesPool;
+	}
+
+	private GroupsPool getGroupsPool() {
+		// If Spring is not enable. Create it.
+		if (groupsPool == null) {
+			groupsPool = new GroupsPool();
+		}
+		return groupsPool;
 	}
 
 }
