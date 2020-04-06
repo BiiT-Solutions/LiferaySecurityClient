@@ -79,6 +79,9 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 
 	@Inject
 	private GroupsPool groupsPool;
+	
+	@Inject
+	private OrganizationsPool organizationsPool;
 
 	public AuthorizationService() {
 		authorizationPool = new AuthorizationPool<Long, Long>();
@@ -453,7 +456,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			if (user == null) {
 				return new HashSet<IGroup<Long>>();
 			}
-			Collection<IGroup<Long>> organizationsOfUser = getGroupsPool().getElements("user_" + user.getUniqueId());
+			Collection<IGroup<Long>> organizationsOfUser = getOrganizationsPool().getElements("user_" + user.getUniqueId());
 			if (organizationsOfUser != null) {
 				return new HashSet<IGroup<Long>>(organizationsOfUser);
 			}
@@ -466,7 +469,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			}
 			SecurityLogger.debug(this.getClass().getName(),
 					"Organizations for user '" + user + "' are '" + applicationOrganizations + "'.");
-			getGroupsPool().addElements(applicationOrganizations, "user_" + user.getUniqueId());
+			getOrganizationsPool().addElements(applicationOrganizations, "user_" + user.getUniqueId());
 			return applicationOrganizations;
 		} catch (NotConnectedToWebServiceException e) {
 			LiferayClientLogger.errorMessage(AuthorizationService.class.getName(), e);
@@ -504,7 +507,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		}
 		try {
 			if (parentOrganization != null) {
-				final Collection<IGroup<Long>> organizationsOfUser = getGroupsPool().getElements(
+				final Collection<IGroup<Long>> organizationsOfUser = getOrganizationsPool().getElements(
 						"user_" + user.getUniqueId() + "_parentOrganization_" + parentOrganization.getUniqueId());
 				if (organizationsOfUser != null) {
 					return new HashSet<IGroup<Long>>(organizationsOfUser);
@@ -523,7 +526,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			SecurityLogger.debug(this.getClass().getName(), "Children organizations for user '" + user
 					+ "' and organization '" + parentOrganization + "' are '" + organizations + "'.");
 			if (user != null && parentOrganization != null) {
-				getGroupsPool().addElements(applicationOrganizations,
+				getOrganizationsPool().addElements(applicationOrganizations,
 						"user_" + user.getUniqueId() + "_parentOrganization_" + parentOrganization.getUniqueId());
 			}
 			return applicationOrganizations;
@@ -556,7 +559,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			if (user == null || site == null) {
 				return new HashSet<IGroup<Long>>();
 			}
-			Collection<IGroup<Long>> organizationsOfUser = getGroupsPool()
+			Collection<IGroup<Long>> organizationsOfUser = getOrganizationsPool()
 					.getElements("user_" + user.getUniqueId() + "_site_" + site.getUniqueId());
 			if (organizationsOfUser != null) {
 				return new HashSet<IGroup<Long>>(organizationsOfUser);
@@ -571,7 +574,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 			}
 			SecurityLogger.debug(this.getClass().getName(),
 					"Organizations for user '" + user + "' for site '" + site + "' are '" + organizations + "'.");
-			getGroupsPool().addElements(applicationOrganizations,
+			getOrganizationsPool().addElements(applicationOrganizations,
 					"user_" + user.getUniqueId() + "_site_" + site.getUniqueId());
 			return applicationOrganizations;
 		} catch (NotConnectedToWebServiceException e) {
@@ -906,6 +909,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		groupService.reset();
 		getRolesPool().reset();
 		getGroupsPool().reset();
+		getOrganizationsPool().reset();
 	}
 
 	@Override
@@ -938,5 +942,14 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 		}
 		return groupsPool;
 	}
+	
+	private OrganizationsPool getOrganizationsPool() {
+		// If Spring is not enable. Create it.
+		if (organizationsPool == null) {
+			organizationsPool = new OrganizationsPool();
+		}
+		return organizationsPool;
+	}
+
 
 }
