@@ -497,8 +497,13 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	@Override
 	public Set<IGroup<Long>> getUserParentOrganizations(IUser<Long> user) throws UserManagementException {
 		return getUserChildrenOrganizations(user, null);
+	} 
+	
+	@Override
+	public void cleanUserChildrenOrganizations(IUser<Long> user, IGroup<Long> parentOrganization) {
+		getOrganizationsPool().removeElement("user_" + user.getUniqueId() + "_parentOrganization_" + parentOrganization.getUniqueId());
 	}
-
+	
 	@Override
 	public Set<IGroup<Long>> getUserChildrenOrganizations(IUser<Long> user, IGroup<Long> parentOrganization)
 			throws UserManagementException {
