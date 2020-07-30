@@ -96,15 +96,15 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	}
 
 	/**
-	 * If Spring is not available, create the required services. Be carefull, if
+	 * If Spring is not available, create the required services. Be careful, if
 	 * created on this way, each service uses its own pool and is not shared with
 	 * other different beans.
 	 */
 	@Override
 	public void createBeans() {
 		roleService = new RoleService();
-		userGroupService = new UserGroupService();
 		groupService = new GroupService();
+		userGroupService = new UserGroupService();
 		organizationService = new OrganizationService();
 		companyService = new CompanyService();
 		userService = new UserService();
