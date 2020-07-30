@@ -4,7 +4,7 @@
 	<groupId>com.biit.liferay</groupId>
 	<artifactId>liferay-authentication-client</artifactId>
 	<packaging>jar</packaging>
-	<version>0.9.56-SNAPSHOT</version>
+	<version>0.9.70-SNAPSHOT</version>
 	<name>Liferay Authentication Client with Web Services</name>
 	<description>Obtain users, groups and roles information from liferay</description>
 
@@ -12,12 +12,12 @@
 		<repository>
 			<id>central</id>
 			<name>libs-releases</name>
-			<url>https://dev.biit-solutions.com/artifactory/libs-release</url>
+			<url>https://artifactory.biit-solutions.com/artifactory/libs-release</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>
 			<name>libs-snapshot</name>
-			<url>https://dev.biit-solutions.com/artifactory/libs-snapshot</url>
+			<url>https://artifactory.biit-solutions.com/artifactory/libs-snapshot</url>
 		</snapshotRepository>
 	</distributionManagement>
 
