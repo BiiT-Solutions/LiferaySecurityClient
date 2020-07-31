@@ -762,23 +762,9 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
 			String result = getHttpResponse("role/get-user-group-roles", params);
 			if (result != null) {
 				// A Simple JSON Response Read
-				try {
-					roles = decodeListFromJson(result, Role.class);
-					rolePool.addUserRolesOfGroup(userId, groupId, roles);
-					return roles;
-				} catch (JsonMappingException wsa) {
-					if (wsa.getMessage().contains("com.liferay.portal.security.auth.PrincipalException")) {
-						// Liferay time to time launch this exception for get-user-group-roles. Try
-						// again
-						try {
-							Thread.sleep(5000);
-						} catch (InterruptedException e) {
-						}
-						return getUserRolesOfGroup(userId, groupId);
-					} else {
-						throw wsa;
-					}
-				}
+				roles = decodeListFromJson(result, Role.class);
+				rolePool.addUserRolesOfGroup(userId, groupId, roles);
+				return roles;
 			}
 
 			return null;
