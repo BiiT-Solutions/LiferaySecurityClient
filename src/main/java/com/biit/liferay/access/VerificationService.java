@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -54,12 +55,13 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 	}
 
 	@Override
-	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass) throws JsonParseException, JsonMappingException, IOException {
+	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass)
+			throws JsonParseException, JsonMappingException, IOException {
 		return null;
 	}
 
-	public void testConnection(IGroup<Long> company, String emailAddress, String password) throws ClientProtocolException, IOException,
-			NotConnectedToWebServiceException, AuthenticationRequired {
+	public void testConnection(IGroup<Long> company, String emailAddress, String password)
+			throws ClientProtocolException, IOException, NotConnectedToWebServiceException, AuthenticationRequired {
 
 		if (isNotConnected()) {
 			serverConnection();
@@ -67,11 +69,12 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 
 		// Credentials
 		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-		credentialsProvider.setCredentials(new AuthScope(getTargetHost().getHostName(), getTargetHost().getPort()), new UsernamePasswordCredentials(
-				emailAddress, password));
+		credentialsProvider.setCredentials(new AuthScope(getTargetHost().getHostName(), getTargetHost().getPort()),
+				new UsernamePasswordCredentials(emailAddress, password));
 
 		// Client
-		CloseableHttpClient httpClient = HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider).build();
+		CloseableHttpClient httpClient = HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider)
+				.build();
 
 		// Create AuthCache instance
 		AuthCache authCache = new BasicAuthCache();
@@ -90,7 +93,8 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 		// Set authentication param if defined.
 		setAuthParam(params);
 
-		HttpPost post = new HttpPost("/" + LiferayConfigurationReader.getInstance().getWebServicesPath() + "user/get-user-by-email-address");
+		HttpPost post = new HttpPost("/" + parseProxyPrefix(LiferayConfigurationReader.getInstance().getProxyPrefix())
+				+ LiferayConfigurationReader.getInstance().getWebServicesPath() + "user/get-user-by-email-address");
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
 		post.setEntity(entity);
 		HttpResponse response = httpClient.execute(getTargetHost(), post, httpContext);
@@ -102,6 +106,11 @@ public class VerificationService extends ServiceAccess<IUser<Long>, User> {
 			if (result.contains(JSON_AUTHENTICATION_REQUIRED_STRING)) {
 				closeClient(httpClient);
 				throw new AuthenticationRequired("Authenticated access required.");
+			} else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+				throw new NotConnectedToWebServiceException("Invalid request to '"
+						+ parseProxyPrefix(LiferayConfigurationReader.getInstance().getProxyPrefix())
+						+ LiferayConfigurationReader.getInstance().getWebServicesPath()
+						+ "user/get-user-by-email-address\"'.");
 			}
 			closeClient(httpClient);
 		} else {

@@ -123,6 +123,10 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 			// Get user information.
 			IUser<Long> user = null;
 			user = userService.getUserByEmailAddress(getCompany(), userMail);
+			if (user == null) {
+				SecurityLogger.info(this.getClass().getName(), "Invalid password for user '\" + userMail + \"'.");
+				throw new InvalidCredentialsException("Invalid password for user '" + userMail + "'.");
+			}
 			SecurityLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'.");
 			return user;
 		} catch (NotConnectedToWebServiceException e) {
