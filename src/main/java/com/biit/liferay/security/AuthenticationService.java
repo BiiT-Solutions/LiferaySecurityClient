@@ -114,8 +114,8 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
                 VerificationService.getInstance().testConnection(getCompany(), userMail, password);
             } catch (AuthenticationRequired ar) {
                 // The error is with the user or password.
-                SecurityLogger.info(this.getClass().getName(), "Invalid password for user '\" + userMail + \"'.");
-                throw new InvalidCredentialsException("Invalid password for user '" + userMail + "'.");
+                SecurityLogger.info(this.getClass().getName(), "Invalid password '" + password + "' for user '" + userMail + "'.");
+                throw new InvalidCredentialsException("Invalid password '" + password + "' for user '" + userMail + "'.");
             }
             // Get user information.
             IUser<Long> user = null;

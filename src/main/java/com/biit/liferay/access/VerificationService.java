@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.liferay.portal.log.SecurityLogger;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -35,92 +36,94 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.liferay.portal.model.User;
 
 public class VerificationService extends ServiceAccess<IUser<Long>, User> {
-	private final static String JSON_AUTHENTICATION_REQUIRED_STRING = "Authenticated access required";
-	private final static VerificationService instance = new VerificationService();
+    private final static String JSON_AUTHENTICATION_REQUIRED_STRING = "Authenticated access required";
+    private final static VerificationService instance = new VerificationService();
 
-	private VerificationService() {
-	}
+    private VerificationService() {
+    }
 
-	public static VerificationService getInstance() {
-		return instance;
-	}
+    public static VerificationService getInstance() {
+        return instance;
+    }
 
-	private void closeClient(CloseableHttpClient httpClient) {
-		// Close client.
-		try {
-			httpClient.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    private void closeClient(CloseableHttpClient httpClient) {
+        // Close client.
+        try {
+            httpClient.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass)
-			throws JsonParseException, JsonMappingException, IOException {
-		return null;
-	}
+    @Override
+    public Set<IUser<Long>> decodeListFromJson(String json, Class<User> objectClass) {
+        return null;
+    }
 
-	public void testConnection(IGroup<Long> company, String emailAddress, String password)
-			throws ClientProtocolException, IOException, NotConnectedToWebServiceException, AuthenticationRequired {
+    public void testConnection(IGroup<Long> company, String emailAddress, String password)
+            throws IOException, NotConnectedToWebServiceException, AuthenticationRequired {
 
-		if (isNotConnected()) {
-			serverConnection();
-		}
+        if (isNotConnected()) {
+            serverConnection();
+        }
 
-		// Credentials
-		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-		credentialsProvider.setCredentials(new AuthScope(getTargetHost().getHostName(), getTargetHost().getPort()),
-				new UsernamePasswordCredentials(emailAddress, password));
+        // Credentials
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(new AuthScope(getTargetHost().getHostName(), getTargetHost().getPort()),
+                new UsernamePasswordCredentials(emailAddress, password));
 
-		// Client
-		CloseableHttpClient httpClient = HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider)
-				.build();
+        // Client
+        CloseableHttpClient httpClient = HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider)
+                .build();
 
-		// Create AuthCache instance
-		AuthCache authCache = new BasicAuthCache();
-		// Generate BASIC scheme object and add it to the local auth cache
-		BasicScheme basicScheme = new BasicScheme();
-		authCache.put(getTargetHost(), basicScheme);
-		// Add AuthCache to the execution context
-		BasicHttpContext httpContext = new BasicHttpContext();
-		httpContext.setAttribute(HttpClientContext.AUTH_CACHE, authCache);
+        // Create AuthCache instance
+        AuthCache authCache = new BasicAuthCache();
+        // Generate BASIC scheme object and add it to the local auth cache
+        BasicScheme basicScheme = new BasicScheme();
+        authCache.put(getTargetHost(), basicScheme);
+        // Add AuthCache to the execution context
+        BasicHttpContext httpContext = new BasicHttpContext();
+        httpContext.setAttribute(HttpClientContext.AUTH_CACHE, authCache);
 
-		// Set
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("companyId", company.getUniqueId() + ""));
-		params.add(new BasicNameValuePair("emailAddress", emailAddress));
+        // Set
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("companyId", company.getUniqueId() + ""));
+        params.add(new BasicNameValuePair("emailAddress", emailAddress));
 
-		// Set authentication param if defined.
-		setAuthParam(params);
+        // Set authentication param if defined.
+        setAuthParam(params);
 
-		HttpPost post = new HttpPost("/" + parseProxyPrefix(LiferayConfigurationReader.getInstance().getProxyPrefix())
-				+ LiferayConfigurationReader.getInstance().getWebServicesPath() + "user/get-user-by-email-address");
-		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
-		post.setEntity(entity);
-		HttpResponse response = httpClient.execute(getTargetHost(), post, httpContext);
+        HttpPost post = new HttpPost("/" + parseProxyPrefix(LiferayConfigurationReader.getInstance().getProxyPrefix())
+                + LiferayConfigurationReader.getInstance().getWebServicesPath() + "user/get-user-by-email-address");
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
+        post.setEntity(entity);
+        HttpResponse response = httpClient.execute(getTargetHost(), post, httpContext);
 
-		// Process answer.
-		if (response.getEntity() != null) {
-			// A Simple JSON Response Read
-			String result = EntityUtils.toString(response.getEntity());
-			if (result.contains(JSON_AUTHENTICATION_REQUIRED_STRING)) {
-				closeClient(httpClient);
-				throw new AuthenticationRequired("Authenticated access required.");
-			} else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
-				throw new NotConnectedToWebServiceException("Invalid request to '"
-						+ parseProxyPrefix(LiferayConfigurationReader.getInstance().getProxyPrefix())
-						+ LiferayConfigurationReader.getInstance().getWebServicesPath()
-						+ "user/get-user-by-email-address\"'.");
-			}
-			closeClient(httpClient);
-		} else {
-			closeClient(httpClient);
-			throw new AuthenticationRequired("Authenticated access required.");
-		}
-	}
+        SecurityLogger.debug(this.getClass().getName(), "Liferay response for user verification '" + response + "'.");
 
-	@Override
-	public void reset() {
-	}
+        // Process answer.
+        if (response.getEntity() != null) {
+            // A Simple JSON Response Read
+            String result = EntityUtils.toString(response.getEntity());
+            if (result.contains(JSON_AUTHENTICATION_REQUIRED_STRING)) {
+                closeClient(httpClient);
+                throw new AuthenticationRequired("Authenticated access required.");
+            } else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                closeClient(httpClient);
+                throw new NotConnectedToWebServiceException("Invalid request to '"
+                        + parseProxyPrefix(LiferayConfigurationReader.getInstance().getProxyPrefix())
+                        + LiferayConfigurationReader.getInstance().getWebServicesPath()
+                        + "user/get-user-by-email-address\"'.");
+            }
+            closeClient(httpClient);
+        } else {
+            closeClient(httpClient);
+            throw new AuthenticationRequired("Authenticated access required.");
+        }
+    }
+
+    @Override
+    public void reset() {
+    }
 
 }
