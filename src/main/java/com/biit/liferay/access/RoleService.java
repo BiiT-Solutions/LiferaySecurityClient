@@ -70,7 +70,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             params.add(new BasicNameValuePair("descriptionMap", encodeMapToJson(descriptionMap)));
             params.add(new BasicNameValuePair("type", Integer.toString(type)));
 
-            String result = getHttpResponse("role/add-role", params);
+            String result = getHttpPostResponse("role/add-role", params);
             IRole<Long> role = null;
             if (result != null) {
                 // Check some errors
@@ -146,7 +146,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             params.add(new BasicNameValuePair("roleId", Long.toString(role.getUniqueId())));
             params.add(new BasicNameValuePair("groupIds", groupIds));
 
-            getHttpResponse("group/add-role-groups", params);
+            getHttpPostResponse("group/add-role-groups", params);
             LiferayClientLogger.info(this.getClass().getName(),
                     "Groups ids " + groupIds + " added to role '" + role.getUniqueName() + "'");
             for (IGroup<Long> group : userGroups) {
@@ -200,7 +200,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             params.add(new BasicNameValuePair("roleId", Long.toString(role.getUniqueId())));
             params.add(new BasicNameValuePair("groupIds", groupIds));
 
-            getHttpResponse("group/add-role-groups", params);
+            getHttpPostResponse("group/add-role-groups", params);
             LiferayClientLogger.info(this.getClass().getName(),
                     "Organizations " + organizations + " added to role '" + role + "'");
         }
@@ -250,7 +250,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             params.add(new BasicNameValuePair("roleId", Long.toString(role.getUniqueId())));
             params.add(new BasicNameValuePair("userIds", userIds));
 
-            getHttpResponse("user/add-role-users", params);
+            getHttpPostResponse("user/add-role-users", params);
 
             for (IUser<Long> user : users) {
                 rolePool.addUserRole(user, role);
@@ -324,7 +324,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             params.add(new BasicNameValuePair("groupId", groupId + ""));
             params.add(new BasicNameValuePair("roleIds", rolesIds));
 
-            getHttpResponse("usergrouprole/add-user-group-roles", params);
+            getHttpPostResponse("usergrouprole/add-user-group-roles", params);
 
             rolePool.addUserRolesOfGroup(userId, groupId, roles);
 
@@ -412,7 +412,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             params.add(new BasicNameValuePair("userId", Long.toString(user.getUniqueId())));
             params.add(new BasicNameValuePair("roleIds", rolesIds));
 
-            getHttpResponse("role/add-user-roles", params);
+            getHttpPostResponse("role/add-user-roles", params);
 
             for (IRole<Long> role : roles) {
                 rolePool.addUserRole(user, role);
@@ -488,7 +488,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("roleId", role.getUniqueId() + ""));
 
-            getHttpResponse("role/delete-role", params);
+            getHttpPostResponse("role/delete-role", params);
 
             rolePool.removeRole(role);
             LiferayClientLogger.info(this.getClass().getName(), "Role '" + role.getUniqueName() + "' deleted.");
@@ -511,7 +511,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
         params.add(new BasicNameValuePair("userId", user.getUniqueId() + ""));
         params.add(new BasicNameValuePair("roleId", role.getUniqueId() + ""));
 
-        String result = getHttpResponse("user/delete-role-user", params);
+        String result = getHttpPostResponse("user/delete-role-user", params);
 
         if (result == null || result.length() < 3) {
             rolePool.removeUserRole(user, role);
@@ -553,7 +553,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("groupId", groupId + ""));
 
-            String result = getHttpResponse("role/get-group-roles", params);
+            String result = getHttpPostResponse("role/get-group-roles", params);
 
             if (result != null) {
                 // A Simple JSON Response Read
@@ -641,7 +641,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("roleId", Long.toString(roleId)));
 
-        String result = getHttpResponse("role/get-role", params);
+        String result = getHttpPostResponse("role/get-role", params);
         IRole<Long> role = null;
         if (result != null) {
             // A Simple JSON Response Read
@@ -671,7 +671,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
         params.add(new BasicNameValuePair("companyId", Long.toString(companyId)));
         params.add(new BasicNameValuePair("name", roleName));
 
-        String result = getHttpResponse("role/get-role", params);
+        String result = getHttpPostResponse("role/get-role", params);
         IRole<Long> role = null;
         if (result != null) {
             // A Simple JSON Response Read
@@ -707,7 +707,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("userId", user.getUniqueId() + ""));
 
-            String result = getHttpResponse("role/get-user-roles", params);
+            String result = getHttpPostResponse("role/get-user-roles", params);
             if (result != null) {
                 // A Simple JSON Response Read
                 roles = decodeListFromJson(result, Role.class);
@@ -759,7 +759,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             params.add(new BasicNameValuePair("groupId", groupId + ""));
             params.add(new BasicNameValuePair("userId", userId + ""));
 
-            String result = getHttpResponse("role/get-user-group-roles", params);
+            String result = getHttpPostResponse("role/get-user-group-roles", params);
             if (result != null) {
                 // A Simple JSON Response Read
                 roles = decodeListFromJson(result, Role.class);
@@ -850,7 +850,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             params.add(new BasicNameValuePair("roleId", role.getUniqueId() + ""));
             params.add(new BasicNameValuePair("groupIds", groupIds));
 
-            getHttpResponse("group/unset-role-groups", params);
+            getHttpPostResponse("group/unset-role-groups", params);
 
             for (Group group : groups) {
                 rolePool.removeGroupRole(role, group);
@@ -892,7 +892,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             params.add(new BasicNameValuePair("roleId", role.getUniqueId() + ""));
             params.add(new BasicNameValuePair("groupIds", groupIds));
 
-            getHttpResponse("group/unset-role-groups", params);
+            getHttpPostResponse("group/unset-role-groups", params);
 
             for (IGroup<Long> organization : organizations) {
                 rolePool.removeGroupRole(role, organization);
