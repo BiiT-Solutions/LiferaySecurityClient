@@ -40,7 +40,7 @@ public interface IRoleService extends IServiceAccess {
 			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
 			WebServiceAccessError, DuplicatedLiferayElement;
 
-	IRole<Long> addRole(Role role) throws ClientProtocolException, NotConnectedToWebServiceException, IOException,
+	IRole<Long> addRole(Role role) throws NotConnectedToWebServiceException, IOException,
 			AuthenticationRequired, WebServiceAccessError, DuplicatedLiferayElement;
 
 	/**
@@ -76,7 +76,7 @@ public interface IRoleService extends IServiceAccess {
 	 * Add a role to a list of organizations. For testing only.
 	 * 
 	 * @param role
-	 * @param userGroups
+	 * @param organizations
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
 	 * @throws ClientProtocolException
@@ -132,7 +132,7 @@ public interface IRoleService extends IServiceAccess {
 	/**
 	 * Add a list of roles to a user. For testing use only.
 	 * 
-	 * @param user
+	 * @param userId
 	 * @param roles
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
@@ -198,7 +198,7 @@ public interface IRoleService extends IServiceAccess {
 	void addUserRoles(IUser<Long> user, List<IRole<Long>> roles)
 			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
 
-	void authorizedServerConnection(String address, String protocol, int port, String webservicesPath,
+	void authorizedServerConnection(String address, String protocol, int port, String proxyPrefix, String webservicesPath,
 			String authenticationToken, String loginUser, String password);
 
 	Set<IRole<Long>> decodeListFromJson(String json, Class<Role> objectClass)
@@ -245,7 +245,7 @@ public interface IRoleService extends IServiceAccess {
 	/**
 	 * Get a list of roles from an organization.
 	 * 
-	 * @param group
+	 * @param organization
 	 * @return
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
@@ -273,8 +273,7 @@ public interface IRoleService extends IServiceAccess {
 	/**
 	 * Creates a new role on Liferay. For testing use only.
 	 * 
-	 * @param name
-	 *            name of the new RoleSoap.
+	 * @param roleId
 	 * @return
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
@@ -289,7 +288,7 @@ public interface IRoleService extends IServiceAccess {
 	/**
 	 * Creates a new RoleSoap on Liferay. For testing use only.
 	 * 
-	 * @param name
+	 * @param roleName
 	 *            name of the new RoleSoap.
 	 * @return
 	 * @throws NotConnectedToWebServiceException
@@ -346,8 +345,8 @@ public interface IRoleService extends IServiceAccess {
 	/**
 	 * Gets all roles of a user for an organization. Needs the use of GroupService
 	 * 
-	 * @param userId
-	 * @param organizationId
+	 * @param user
+	 * @param organization
 	 * @return
 	 * @throws AuthenticationRequired
 	 * @throws IOException
@@ -375,7 +374,7 @@ public interface IRoleService extends IServiceAccess {
 	 * Unset a role from a group but does not deletes it.
 	 * 
 	 * @param role
-	 * @param group
+	 * @param groups
 	 * @throws AuthenticationRequired
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
@@ -388,7 +387,7 @@ public interface IRoleService extends IServiceAccess {
 	 * Unset a role from a group but does not deletes it.
 	 * 
 	 * @param role
-	 * @param group
+	 * @param organizations
 	 * @throws AuthenticationRequired
 	 * @throws NotConnectedToWebServiceException
 	 * @throws IOException
