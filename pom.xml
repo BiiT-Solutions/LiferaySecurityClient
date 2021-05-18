@@ -22,8 +22,8 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:git:git.biit-solutions.com:LiferaySecurityClient.git</connection>
-		<developerConnection>scm:git:git.biit-solutions.com:LiferaySecurityClient.git</developerConnection>
+		<connection>scm:git:git.biit-solutions.com:BiiT/LiferaySecurityClient.git</connection>
+		<connection>scm:git:git.biit-solutions.com:BiiT/LiferaySecurityClient.git</developerConnection>
 		<tag>liferay-authentication-client</tag>
 	</scm>
 
