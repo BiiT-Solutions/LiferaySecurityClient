@@ -4,10 +4,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SecurityLogger {
-	private static final Logger logger = Logger.getLogger(SecurityLogger.class);
+	private static final Logger logger = LoggerFactory.getLogger(SecurityLogger.class);
 
 	private SecurityLogger() {
 	}
@@ -42,7 +43,7 @@ public class SecurityLogger {
 	}
 
 	private static void fatal(String message) {
-		logger.fatal(message);
+		logger.error(message);
 	}
 
 	public static void fatal(String className, String message) {

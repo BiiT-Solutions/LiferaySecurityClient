@@ -4,7 +4,7 @@
 	<groupId>com.biit.liferay</groupId>
 	<artifactId>liferay-authentication-client</artifactId>
 	<packaging>jar</packaging>
-	<version>0.9.73-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>Liferay Authentication Client with Web Services</name>
 	<description>Obtain users, groups and roles information from liferay</description>
 
@@ -39,7 +39,7 @@
 		<maven-scm-provider-gitexe.version>1.9.2</maven-scm-provider-gitexe.version>
 		<project.scm.id>git</project.scm.id>
 		<!-- BiiT dependencies -->
-		<liferay-service-common.version>[0.8,0.9)</liferay-service-common.version>
+		<liferay-service-common.version>[1.0,1.1)</liferay-service-common.version>
 	</properties>
 
 	<build>
