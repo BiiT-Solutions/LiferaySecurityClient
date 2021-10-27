@@ -53,7 +53,7 @@ public class ResourcePermissionService extends ServiceAccess<String, String> {
 		params.add(new BasicNameValuePair("primKey", Long.toString(resourcePrimaryKey)));
 		params.add(new BasicNameValuePair("roleIdsToActionIds", convertToJson(roleIdsToActionIds)));
 
-		String result = getHttpResponse("resourcepermission/set-individual-resource-permissions", params);
+		String result = getHttpPostResponse("resourcepermission/set-individual-resource-permissions", params);
 		if (result != null) {
 			LiferayClientLogger.info(this.getClass().getName(),
 					"Resource permission changed for '" + resourceClass + "' with id '" + resourcePrimaryKey + "'.");

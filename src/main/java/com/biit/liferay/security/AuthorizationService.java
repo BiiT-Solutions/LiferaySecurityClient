@@ -185,7 +185,7 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	/**
 	 * Gets the organization from its name. Returns a group not an organization.
 	 * 
-	 * @param organizationId
+	 * @param organizationName
 	 * @return
 	 * @throws UserManagementException
 	 */
@@ -224,7 +224,6 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
 	/**
 	 * Gets all the organizations of a company
 	 * 
-	 * @param organizationId
 	 * @return
 	 * @throws UserManagementException
 	 */

@@ -55,7 +55,7 @@ public class PasswordService extends UserService implements IPasswordService {
 		params.add(new BasicNameValuePair("password2", plainTextPassword));
 		params.add(new BasicNameValuePair("passwordReset", "false"));
 
-		String result = getHttpResponse("user/update-password", params);
+		String result = getHttpPostResponse("user/update-password", params);
 		if (result != null) {
 			// A Simple JSON Response Read
 			IUser<Long> obtainedUser = decodeFromJson(result, User.class);
