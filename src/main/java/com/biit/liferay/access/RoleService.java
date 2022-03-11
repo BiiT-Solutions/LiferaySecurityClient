@@ -59,7 +59,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public IRole<Long> addRole(String name, int type, Map<String, String> titleMap, Map<String, String> descriptionMap)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired,
             WebServiceAccessError, DuplicatedLiferayElement {
         if (name != null && name.length() > 0) {
             checkConnection();
@@ -94,7 +94,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      * .Role)
      */
     @Override
-    public IRole<Long> addRole(Role role) throws ClientProtocolException, NotConnectedToWebServiceException,
+    public IRole<Long> addRole(Role role) throws NotConnectedToWebServiceException,
             IOException, AuthenticationRequired, WebServiceAccessError, DuplicatedLiferayElement {
         Map<String, String> titleMap = new HashMap<String, String>();
         Map<String, String> descriptionMap = new HashMap<String, String>();
@@ -111,7 +111,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addRoleGroup(IRole<Long> role, IGroup<Long> userGroup)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         List<IGroup<Long>> groups = new ArrayList<IGroup<Long>>();
         groups.add(userGroup);
         addRoleGroups(role, groups);
@@ -125,7 +125,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addRoleGroups(IRole<Long> role, List<IGroup<Long>> userGroups)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         if (userGroups != null && role != null && userGroups.size() > 0) {
             checkConnection();
             String groupIds = "";
@@ -163,7 +163,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      * .entity.IRole, com.biit.usermanager.entity.IGroup)
      */
     @Override
-    public void addRoleOrganization(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException,
+    public void addRoleOrganization(IRole<Long> role, IGroup<Long> organization) throws
             NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
         List<IGroup<Long>> organizations = new ArrayList<IGroup<Long>>();
         organizations.add(organization);
@@ -178,7 +178,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addRoleOrganizations(IRole<Long> role, List<IGroup<Long>> organizations)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired,
             WebServiceAccessError {
         if (organizations != null && role != null && organizations.size() > 0) {
             checkConnection();
@@ -214,7 +214,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addRoleUser(IUser<Long> user, IRole<Long> role)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         List<IUser<Long>> users = new ArrayList<IUser<Long>>();
         users.add(user);
         addRoleUsers(users, role);
@@ -228,7 +228,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addRoleUsers(List<IUser<Long>> users, IRole<Long> role)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         if (users != null && users.size() > 0) {
             checkConnection();
 
@@ -270,7 +270,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addUserGroupRole(IUser<Long> user, IGroup<Long> userGroup, IRole<Long> role)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
         roles.add(role);
         addUserGroupRoles(user, userGroup, roles);
@@ -285,7 +285,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addUserGroupRoles(IUser<Long> user, IGroup<Long> userGroup, Set<IRole<Long>> roles)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         if (user != null && userGroup != null && roles != null && !roles.isEmpty()) {
             addUserGroupRoles(user.getUniqueId(), userGroup.getUniqueId(), roles);
         }
@@ -299,7 +299,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addUserGroupRoles(Long userId, Long groupId, Set<IRole<Long>> roles)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         if (userId != null && groupId != null && roles != null && !roles.isEmpty()) {
             checkConnection();
 
@@ -343,7 +343,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addUserOrganizationRole(IUser<Long> user, IGroup<Long> organization, IRole<Long> role)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired,
             WebServiceAccessError {
         if (user != null && organization != null && role != null) {
             Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
@@ -360,7 +360,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addUserOrganizationRoles(IUser<Long> user, IGroup<Long> organization, Set<IRole<Long>> roles)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired,
             WebServiceAccessError {
         if (user != null && organization != null && roles != null && !roles.isEmpty()) {
             long organizationGroupId = getOrganizationGroupId(organization);
@@ -376,7 +376,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addUserRole(IUser<Long> user, IRole<Long> role)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         List<IRole<Long>> roles = new ArrayList<IRole<Long>>();
         roles.add(role);
         addUserRoles(user, roles);
@@ -390,7 +390,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void addUserRoles(IUser<Long> user, List<IRole<Long>> roles)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         if (user != null && roles != null && roles.size() > 0) {
             checkConnection();
 
@@ -464,9 +464,9 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
     public Set<IRole<Long>> decodeListFromJson(String json, Class<Role> objectClass)
             throws JsonParseException, JsonMappingException, IOException {
         try {
-            Set<IRole<Long>> myObjects = new ObjectMapper().readValue(json, new TypeReference<Set<Role>>() {
+            Set<Role> myObjects = new ObjectMapper().readValue(json, new TypeReference<Set<Role>>() {
             });
-            return myObjects;
+            return new HashSet<IRole<Long>>(myObjects);
         } catch (JsonMappingException jme) {
             LiferayClientLogger.errorMessage(this.getClass().getName(), jme);
             throw jme;
@@ -481,7 +481,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void deleteRole(IRole<Long> role)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         if (role != null) {
             checkConnection();
 
@@ -504,7 +504,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void deleteRole(IUser<Long> user, IRole<Long> role) throws NotConnectedToWebServiceException,
-            ClientProtocolException, IOException, AuthenticationRequired, RoleNotDeletedException {
+            IOException, AuthenticationRequired, RoleNotDeletedException {
         checkConnection();
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -575,7 +575,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public Set<IRole<Long>> getGroupRoles(IGroup<Long> group)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
         if (group != null) {
             return getGroupRoles(group.getUniqueId());
@@ -591,7 +591,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public Set<IRole<Long>> getOrganizationRoles(IGroup<Long> organization) throws NotConnectedToWebServiceException,
-            ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError {
+            IOException, AuthenticationRequired, WebServiceAccessError {
         Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
         if (organization != null) {
             return getGroupRoles(getOrganizationGroupId(organization));
@@ -606,7 +606,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      * usermanager.entity.IGroup)
      */
     @Override
-    public long getOrganizationGroupId(IGroup<Long> organization) throws ClientProtocolException,
+    public long getOrganizationGroupId(IGroup<Long> organization) throws
             NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
 
         if (organizationGroups.get(organization.getUniqueId()) != null) {
@@ -634,8 +634,8 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      * @see com.biit.liferay.access.IRoleService#getRole(long)
      */
     @Override
-    public IRole<Long> getRole(long roleId) throws NotConnectedToWebServiceException, ClientProtocolException,
-            IOException, AuthenticationRequired, WebServiceAccessError, RoleDoesNotExistsException {
+    public IRole<Long> getRole(long roleId) throws NotConnectedToWebServiceException, IOException, AuthenticationRequired,
+            WebServiceAccessError, RoleDoesNotExistsException {
         checkConnection();
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -663,7 +663,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public IRole<Long> getRole(String roleName, long companyId)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired,
             WebServiceAccessError, RoleDoesNotExistsException {
         checkConnection();
 
@@ -695,7 +695,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public Set<IRole<Long>> getUserRoles(IUser<Long> user)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
         if (user != null) {
             Set<IRole<Long>> userRoles = rolePool.getUserRoles(user);
@@ -729,7 +729,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public Set<IRole<Long>> getUserRolesOfGroup(IUser<Long> user, Group group)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         if (group != null && user != null) {
             return getUserRolesOfGroup(user.getUniqueId(), group.getGroupId());
         }
@@ -744,7 +744,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public Set<IRole<Long>> getUserRolesOfGroup(Long userId, Long groupId)
-            throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired {
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 
         if (groupId != null && userId != null) {
@@ -781,7 +781,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public Set<IRole<Long>> getUserRolesOfOrganization(IUser<Long> user, IGroup<Long> organization)
-            throws ClientProtocolException, NotConnectedToWebServiceException, IOException, AuthenticationRequired,
+            throws NotConnectedToWebServiceException, IOException, AuthenticationRequired,
             WebServiceAccessError {
         if (user != null && organization != null) {
             // Get the group of the organization.
@@ -799,7 +799,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      * IRole, com.biit.usermanager.entity.IGroup)
      */
     @Override
-    public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException,
+    public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws
             IOException, NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
         Set<IUser<Long>> usersOfOrganizationWithRole = new HashSet<IUser<Long>>();
         Set<IUser<Long>> usersOfOrganization = organizationService.getOrganizationUsers(organization);
@@ -828,7 +828,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void unsetRoleFromGroups(IRole<Long> role, List<Group> groups)
-            throws ClientProtocolException, IOException, NotConnectedToWebServiceException, AuthenticationRequired {
+            throws IOException, NotConnectedToWebServiceException, AuthenticationRequired {
         if (role != null && groups != null && !groups.isEmpty()) {
             checkConnection();
 
@@ -869,7 +869,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      */
     @Override
     public void unsetRoleFromOrganization(IRole<Long> role, List<IGroup<Long>> organizations)
-            throws ClientProtocolException, IOException, NotConnectedToWebServiceException, AuthenticationRequired,
+            throws IOException, NotConnectedToWebServiceException, AuthenticationRequired,
             WebServiceAccessError {
         if (role != null && organizations != null && !organizations.isEmpty()) {
             checkConnection();
