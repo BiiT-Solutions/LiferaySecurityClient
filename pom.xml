@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.biit.liferay</groupId>
 	<artifactId>liferay-authentication-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<name>Liferay Authentication Client with Web Services</name>
 	<description>Obtain users, groups and roles information from liferay</description>
 
@@ -13,7 +12,7 @@
         <groupId>com.biit</groupId>
         <artifactId>versions</artifactId>
         <version>[0.1,0.2)</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
     <distributionManagement>
@@ -32,7 +31,7 @@
     <scm>
         <connection>scm:git:git.biit-solutions.com:BiiT/LiferaySecurityClient.git</connection>
         <developerConnection>scm:git:git.biit-solutions.com:BiiT/LiferaySecurityClient.git</developerConnection>
-        <tag>liferay-authentication-client</tag>
+        <tag>liferay-authentication-client-1.0.2</tag>
     </scm>
 
     <build>
