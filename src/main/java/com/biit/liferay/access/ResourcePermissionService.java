@@ -29,7 +29,7 @@ public class ResourcePermissionService extends ServiceAccess<String, String> {
 	}
 
 	public boolean addResourcePermission(String resourceClass, long resourcePrimaryKey, long groupId, long companyId,
-			Map<Long, ActionKey[]> roleIdsToActionIds) throws ClientProtocolException, WebServiceAccessError,
+			Map<Long, ActionKey[]> roleIdsToActionIds) throws  WebServiceAccessError,
 			NotConnectedToWebServiceException, IOException, AuthenticationRequired {
 		Map<Long, String[]> translatedActions = new HashMap<Long, String[]>();
 		for (Entry<Long, ActionKey[]> actionKeysByRole : roleIdsToActionIds.entrySet()) {
@@ -44,7 +44,7 @@ public class ResourcePermissionService extends ServiceAccess<String, String> {
 
 	private boolean addResourcePermission(long groupId, long companyId, String resourceClass, long resourcePrimaryKey,
 			Map<Long, String[]> roleIdsToActionIds) throws WebServiceAccessError, NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired {
+			 IOException, AuthenticationRequired {
 		checkConnection();
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("groupId", Long.toString(groupId)));

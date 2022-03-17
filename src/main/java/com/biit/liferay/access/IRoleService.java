@@ -37,7 +37,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws DuplicatedLiferayElement
 	 */
 	IRole<Long> addRole(String name, int type, Map<String, String> titleMap, Map<String, String> descriptionMap)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired,
 			WebServiceAccessError, DuplicatedLiferayElement;
 
 	IRole<Long> addRole(Role role) throws NotConnectedToWebServiceException, IOException,
@@ -54,7 +54,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	void addRoleGroup(IRole<Long> role, IGroup<Long> userGroup)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Add a role to a list of groups. For testing only.
@@ -67,9 +67,9 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	void addRoleGroups(IRole<Long> role, List<IGroup<Long>> userGroups)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
-	void addRoleOrganization(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException,
+	void addRoleOrganization(IRole<Long> role, IGroup<Long> organization) throws
 			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError;
 
 	/**
@@ -84,11 +84,11 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws WebServiceAccessError
 	 */
 	void addRoleOrganizations(IRole<Long> role, List<IGroup<Long>> organizations)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired,
 			WebServiceAccessError;
 
 	void addRoleUser(IUser<Long> user, IRole<Long> role)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Add a list of users to a role
@@ -101,7 +101,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	void addRoleUsers(List<IUser<Long>> users, IRole<Long> role)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Add a role from a user group to a user. For testing use only.
@@ -114,7 +114,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	void addUserGroupRole(IUser<Long> user, IGroup<Long> userGroup, IRole<Long> role)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Add a list of roles from a user group to a user. For testing use only.
@@ -127,7 +127,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	void addUserGroupRoles(IUser<Long> user, IGroup<Long> userGroup, Set<IRole<Long>> roles)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Add a list of roles to a user. For testing use only.
@@ -140,7 +140,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	void addUserGroupRoles(Long userId, Long groupId, Set<IRole<Long>> roles)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Add a role from a organization to a user. For testing use only.
@@ -154,7 +154,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws WebServiceAccessError
 	 */
 	void addUserOrganizationRole(IUser<Long> user, IGroup<Long> organization, IRole<Long> role)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired,
 			WebServiceAccessError;
 
 	/**
@@ -169,7 +169,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws WebServiceAccessError
 	 */
 	void addUserOrganizationRoles(IUser<Long> user, IGroup<Long> organization, Set<IRole<Long>> roles)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired,
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired,
 			WebServiceAccessError;
 
 	/**
@@ -183,7 +183,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	void addUserRole(IUser<Long> user, IRole<Long> role)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Add a list of roles to a user. For testing use only.
@@ -196,7 +196,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	void addUserRoles(IUser<Long> user, List<IRole<Long>> roles)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	void authorizedServerConnection(String address, String protocol, int port, String proxyPrefix, String webservicesPath,
 			String authenticationToken, String loginUser, String password);
@@ -214,7 +214,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	void deleteRole(IRole<Long> role)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Removes the RoleSoap from the user. For testing use only.
@@ -227,7 +227,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	void deleteRole(IUser<Long> user, IRole<Long> role) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired, RoleNotDeletedException;
+			 IOException, AuthenticationRequired, RoleNotDeletedException;
 
 	/**
 	 * Get a list of roles of a group.
@@ -240,7 +240,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	Set<IRole<Long>> getGroupRoles(IGroup<Long> group)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Get a list of roles from an organization.
@@ -254,7 +254,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws WebServiceAccessError
 	 */
 	Set<IRole<Long>> getOrganizationRoles(IGroup<Long> organization) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError;
+			 IOException, AuthenticationRequired, WebServiceAccessError;
 
 	/**
 	 * Gets the Group Id related to an organization.
@@ -267,7 +267,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 * @throws WebServiceAccessError
 	 */
-	long getOrganizationGroupId(IGroup<Long> organization) throws ClientProtocolException,
+	long getOrganizationGroupId(IGroup<Long> organization) throws
 			NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError;
 
 	/**
@@ -282,7 +282,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws WebServiceAccessError
 	 * @throws RoleDoesNotExistsException 
 	 */
-	IRole<Long> getRole(long roleId) throws NotConnectedToWebServiceException, ClientProtocolException, IOException,
+	IRole<Long> getRole(long roleId) throws NotConnectedToWebServiceException,  IOException,
 			AuthenticationRequired, WebServiceAccessError, RoleDoesNotExistsException;
 
 	/**
@@ -299,7 +299,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws RoleDoesNotExistsException
 	 */
 	IRole<Long> getRole(String roleName, long companyId) throws NotConnectedToWebServiceException,
-			ClientProtocolException, IOException, AuthenticationRequired, WebServiceAccessError, RoleDoesNotExistsException;
+			 IOException, AuthenticationRequired, WebServiceAccessError, RoleDoesNotExistsException;
 
 	/**
 	 * Get the list of roles for a user.
@@ -312,7 +312,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	Set<IRole<Long>> getUserRoles(IUser<Long> user)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Gets the roles of a user in a group.
@@ -326,7 +326,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	Set<IRole<Long>> getUserRolesOfGroup(IUser<Long> user, Group group)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Gets the roles of a user in a group.
@@ -340,7 +340,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws AuthenticationRequired
 	 */
 	Set<IRole<Long>> getUserRolesOfGroup(Long userId, Long groupId)
-			throws NotConnectedToWebServiceException, ClientProtocolException, IOException, AuthenticationRequired;
+			throws NotConnectedToWebServiceException,  IOException, AuthenticationRequired;
 
 	/**
 	 * Gets all roles of a user for an organization. Needs the use of GroupService
@@ -355,7 +355,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws WebServiceAccessError
 	 */
 	Set<IRole<Long>> getUserRolesOfOrganization(IUser<Long> user, IGroup<Long> organization)
-			throws ClientProtocolException, NotConnectedToWebServiceException, IOException, AuthenticationRequired,
+			throws  NotConnectedToWebServiceException, IOException, AuthenticationRequired,
 			WebServiceAccessError;
 
 	/**
@@ -367,7 +367,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws ClientProtocolException, IOException,
+	Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws  IOException,
 			NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError;
 
 	/**
@@ -381,7 +381,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws ClientProtocolException
 	 */
 	void unsetRoleFromGroups(IRole<Long> role, List<Group> groups)
-			throws ClientProtocolException, IOException, NotConnectedToWebServiceException, AuthenticationRequired;
+			throws  IOException, NotConnectedToWebServiceException, AuthenticationRequired;
 
 	/**
 	 * Unset a role from a group but does not deletes it.
@@ -394,7 +394,7 @@ public interface IRoleService extends IServiceAccess {
 	 * @throws ClientProtocolException
 	 * @throws WebServiceAccessError
 	 */
-	void unsetRoleFromOrganization(IRole<Long> role, List<IGroup<Long>> organizations) throws ClientProtocolException,
+	void unsetRoleFromOrganization(IRole<Long> role, List<IGroup<Long>> organizations) throws
 			IOException, NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError;
 
 }
