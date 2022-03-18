@@ -247,6 +247,10 @@ public class AuthorizationService implements IAuthorizationService<Long, Long, L
         try {
             final IGroup<Long> organizationGroup = groupService.getGroup(companyId,
                     organizationName + ServiceAccess.LIFERAY_ORGANIZATION_GROUP_SUFIX);
+            if (organizationGroup == null) {
+                throw new UserManagementException("Error retrieving the organization '" + organizationName + "'. No organization group found for" +
+                        "company '" + companyId + "' and group name '" + organizationName + ServiceAccess.LIFERAY_ORGANIZATION_GROUP_SUFIX + "'.");
+            }
             // Id of organization is 1 less than its group.
             return organizationService.getOrganization(organizationGroup.getUniqueId() - 1);
         } catch (NotConnectedToWebServiceException | WebServiceAccessError | AuthenticationRequired | IOException e) {
