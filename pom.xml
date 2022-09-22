@@ -4,7 +4,7 @@
 	<groupId>com.biit.liferay</groupId>
 	<artifactId>liferay-authentication-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.23-SNAPSHOT</version>
+	<version>1.0.23</version>
 	<name>Liferay Authentication Client with Web Services</name>
 	<description>Obtain users, groups and roles information from liferay</description>
 
@@ -31,7 +31,7 @@
     <scm>
         <connection>scm:git:git.biit-solutions.com:BiiT/LiferaySecurityClient.git</connection>
         <developerConnection>scm:git:git.biit-solutions.com:BiiT/LiferaySecurityClient.git</developerConnection>
-        <tag>liferay-authentication-client</tag>
+        <tag>liferay-authentication-client-1.0.23</tag>
     </scm>
 
     <build>
