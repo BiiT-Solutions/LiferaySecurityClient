@@ -1,25 +1,6 @@
 package com.biit.liferay.security;
 
-import java.io.IOException;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import org.apache.http.client.ClientProtocolException;
-
-import com.biit.liferay.access.CompanyService;
-import com.biit.liferay.access.ContactService;
-import com.biit.liferay.access.ICompanyService;
-import com.biit.liferay.access.IContactService;
-import com.biit.liferay.access.IPasswordService;
-import com.biit.liferay.access.IUserGroupService;
-import com.biit.liferay.access.IUserService;
-import com.biit.liferay.access.PasswordService;
-import com.biit.liferay.access.UserGroupService;
-import com.biit.liferay.access.UserService;
-import com.biit.liferay.access.VerificationService;
+import com.biit.liferay.access.*;
 import com.biit.liferay.access.exceptions.DuplicatedLiferayElement;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
@@ -36,6 +17,13 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.liferay.portal.log.SecurityLogger;
 import com.liferay.portal.model.User;
+import org.apache.http.client.ClientProtocolException;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.io.IOException;
+import java.util.Set;
 
 /**
  * Implements Liferay service access for authentication.
@@ -229,7 +217,7 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
     }
 
     @Override
-    public IUser<Long> updatePassword(IUser<Long> user, String plainTextPassword) throws UserManagementException {
+    public IUser<Long> updatePassword(IUser<Long> user, String plainTextPassword) throws UserManagementException, InvalidCredentialsException {
         try {
             return passwordService.updatePassword(user, plainTextPassword);
         } catch (JsonParseException e) {
@@ -238,9 +226,11 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
         } catch (JsonMappingException e) {
             LiferayClientLogger.errorMessage(this.getClass().getName(), e);
             throw new UserManagementException(e.getMessage());
-        } catch (NotConnectedToWebServiceException | IOException | AuthenticationRequired | WebServiceAccessError e) {
+        } catch (NotConnectedToWebServiceException | IOException | WebServiceAccessError e) {
             LiferayClientLogger.errorMessage(this.getClass().getName(), e);
             throw new UserManagementException(e.getMessage());
+        } catch (AuthenticationRequired e) {
+            throw new InvalidCredentialsException("Invalid credentials!");
         }
     }
 
@@ -249,7 +239,8 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
         if (user instanceof User) {
             try {
                 return userService.updateUser((User) user);
-            } catch (NotConnectedToWebServiceException | IOException | AuthenticationRequired | WebServiceAccessError e) {
+            } catch (NotConnectedToWebServiceException | IOException | AuthenticationRequired |
+                     WebServiceAccessError e) {
                 LiferayClientLogger.errorMessage(this.getClass().getName(), e);
                 throw new UserManagementException(e.getMessage());
             }
