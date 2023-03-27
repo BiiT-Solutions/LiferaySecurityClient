@@ -118,7 +118,7 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
                 throw new InvalidCredentialsException("Invalid password '" + password + "' for user '" + userMail + "'.");
             }
             // Get user information.
-            IUser<Long> user = null;
+            IUser<Long> user;
             user = userService.getUserByEmailAddress(getCompany(), userMail);
             if (user == null) {
                 SecurityLogger.debug(this.getClass().getName(), "Invalid password '" + password + "' for user '" + userMail + "'.");
@@ -126,28 +126,7 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
             }
             SecurityLogger.info(this.getClass().getName(), "Access granted to user '" + userMail + "'.");
             return user;
-        } catch (NotConnectedToWebServiceException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(
-                    "Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser()
-                            + " at " + LiferayConfigurationReader.getInstance().getHost() + ":"
-                            + LiferayConfigurationReader.getInstance().getConnectionPort()
-                            + "'. Check configuration at 'liferay.conf' file.");
-        } catch (WebServiceAccessError e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(
-                    "Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser()
-                            + " at " + LiferayConfigurationReader.getInstance().getHost() + ":"
-                            + LiferayConfigurationReader.getInstance().getConnectionPort()
-                            + "'. Check configuration at 'liferay.conf' file.");
-        } catch (ClientProtocolException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(
-                    "Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser()
-                            + " at " + LiferayConfigurationReader.getInstance().getHost() + ":"
-                            + LiferayConfigurationReader.getInstance().getConnectionPort()
-                            + "'. Check configuration at 'liferay.conf' file.");
-        } catch (IOException e) {
+        } catch (NotConnectedToWebServiceException | WebServiceAccessError | IOException e) {
             LiferayClientLogger.errorMessage(this.getClass().getName(), e);
             throw new UserManagementException(
                     "Error connecting to Liferay service with '" + LiferayConfigurationReader.getInstance().getUser()
@@ -189,16 +168,7 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
             Set<IGroup<Long>> userGroups;
             try {
                 userGroups = userGroupService.getUserUserGroups(user);
-            } catch (ClientProtocolException e) {
-                LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-                throw new UserManagementException(e.getMessage());
-            } catch (NotConnectedToWebServiceException e) {
-                LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-                throw new UserManagementException(e.getMessage());
-            } catch (IOException e) {
-                LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-                throw new UserManagementException(e.getMessage());
-            } catch (AuthenticationRequired e) {
+            } catch (NotConnectedToWebServiceException | IOException | AuthenticationRequired e) {
                 LiferayClientLogger.errorMessage(this.getClass().getName(), e);
                 throw new UserManagementException(e.getMessage());
             }
@@ -213,44 +183,18 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
     public IUser<Long> getUserByEmail(String userEmail) throws UserManagementException, UserDoesNotExistException {
         try {
             return userService.getUserByEmailAddress(getCompany(), userEmail);
-        } catch (ClientProtocolException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (NotConnectedToWebServiceException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (IOException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (AuthenticationRequired e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (WebServiceAccessError e) {
+        } catch (NotConnectedToWebServiceException | AuthenticationRequired | WebServiceAccessError | IOException e) {
             LiferayClientLogger.errorMessage(this.getClass().getName(), e);
             throw new UserManagementException(e.getMessage());
         }
     }
 
     @Override
-    public IUser<Long> getUserById(long userId) throws UserManagementException {
+    public IUser<Long> getUserById(long userId) throws UserManagementException, UserDoesNotExistException {
         try {
             return userService.getUserById(userId);
-        } catch (ClientProtocolException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (NotConnectedToWebServiceException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (UserDoesNotExistException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (IOException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (AuthenticationRequired e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (WebServiceAccessError e) {
+        } catch (NotConnectedToWebServiceException | IOException | AuthenticationRequired |
+                 WebServiceAccessError e) {
             LiferayClientLogger.errorMessage(this.getClass().getName(), e);
             throw new UserManagementException(e.getMessage());
         }
@@ -262,16 +206,7 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
             Set<IGroup<Long>> userGroups;
             try {
                 userGroups = userGroupService.getUserUserGroups(user);
-            } catch (ClientProtocolException e) {
-                LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-                throw new UserManagementException(e.getMessage());
-            } catch (NotConnectedToWebServiceException e) {
-                LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-                throw new UserManagementException(e.getMessage());
-            } catch (IOException e) {
-                LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-                throw new UserManagementException(e.getMessage());
-            } catch (AuthenticationRequired e) {
+            } catch (NotConnectedToWebServiceException | AuthenticationRequired | IOException e) {
                 LiferayClientLogger.errorMessage(this.getClass().getName(), e);
                 throw new UserManagementException(e.getMessage());
             }
@@ -303,16 +238,7 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
         } catch (JsonMappingException e) {
             LiferayClientLogger.errorMessage(this.getClass().getName(), e);
             throw new UserManagementException(e.getMessage());
-        } catch (NotConnectedToWebServiceException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (IOException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (AuthenticationRequired e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException(e.getMessage());
-        } catch (WebServiceAccessError e) {
+        } catch (NotConnectedToWebServiceException | IOException | AuthenticationRequired | WebServiceAccessError e) {
             LiferayClientLogger.errorMessage(this.getClass().getName(), e);
             throw new UserManagementException(e.getMessage());
         }
@@ -323,19 +249,7 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
         if (user instanceof User) {
             try {
                 return userService.updateUser((User) user);
-            } catch (ClientProtocolException e) {
-                LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-                throw new UserManagementException(e.getMessage());
-            } catch (NotConnectedToWebServiceException e) {
-                LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-                throw new UserManagementException(e.getMessage());
-            } catch (IOException e) {
-                LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-                throw new UserManagementException(e.getMessage());
-            } catch (AuthenticationRequired e) {
-                LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-                throw new UserManagementException(e.getMessage());
-            } catch (WebServiceAccessError e) {
+            } catch (NotConnectedToWebServiceException | IOException | AuthenticationRequired | WebServiceAccessError e) {
                 LiferayClientLogger.errorMessage(this.getClass().getName(), e);
                 throw new UserManagementException(e.getMessage());
             }
@@ -349,26 +263,12 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
                                String locale, String firstName, String middleName, String lastName) throws UserManagementException {
 
         try {
-            return userService.addUser(company, password, screenName, emailAddress, 0l, "", locale, firstName,
+            return userService.addUser(company, password, screenName, emailAddress, 0L, "", locale, firstName,
                     middleName, lastName, 0, 0, true, 1, 1, 1970, "", new long[0], new long[0], new long[0],
                     new long[0], false);
 
-        } catch (ClientProtocolException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException("User '" + emailAddress + "' not added correctly.");
-        } catch (NotConnectedToWebServiceException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException("User '" + emailAddress + "' not added correctly.");
-        } catch (IOException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException("User '" + emailAddress + "' not added correctly.");
-        } catch (AuthenticationRequired e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException("User '" + emailAddress + "' not added correctly.");
-        } catch (WebServiceAccessError e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException("User '" + emailAddress + "' not added correctly.");
-        } catch (DuplicatedLiferayElement e) {
+        } catch (NotConnectedToWebServiceException | IOException | AuthenticationRequired | WebServiceAccessError |
+                 DuplicatedLiferayElement e) {
             LiferayClientLogger.errorMessage(this.getClass().getName(), e);
             throw new UserManagementException("User '" + emailAddress + "' not added correctly.");
         }
@@ -380,16 +280,7 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
         try {
             userService.deleteUser(user);
             SecurityLogger.info(this.getClass().getName(), "User  '" + user + "' deleted.");
-        } catch (ClientProtocolException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException("User '" + user.getEmailAddress() + "' not removed correctly.");
-        } catch (NotConnectedToWebServiceException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException("User '" + user.getEmailAddress() + "' not removed correctly.");
-        } catch (IOException e) {
-            LiferayClientLogger.errorMessage(this.getClass().getName(), e);
-            throw new UserManagementException("User '" + user.getEmailAddress() + "' not removed correctly.");
-        } catch (AuthenticationRequired e) {
+        } catch (NotConnectedToWebServiceException | IOException | AuthenticationRequired e) {
             LiferayClientLogger.errorMessage(this.getClass().getName(), e);
             throw new UserManagementException("User '" + user.getEmailAddress() + "' not removed correctly.");
         }
