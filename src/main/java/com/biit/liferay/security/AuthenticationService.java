@@ -268,12 +268,18 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 
 
     @Override
-    public IUser<Long> addUser(User user) throws UserManagementException, InvalidCredentialsException {
+    public IUser<Long> addUser(IUser<Long> user) throws UserManagementException, InvalidCredentialsException {
         if (user != null) {
-            return addUser(null, user.getPassword(), user.getScreenName(), user.getEmailAddress(),
-                    user.getFacebookId(), user.getOpenId(), user.getTimeZoneId(), user.getFirstName(),
-                    user.getMiddleName(), user.getLastName(), 0, 0, true, 1, 1, 1900, user.getJobTitle(), new long[0],
-                    new long[0], new long[0], new long[0], false);
+            try {
+                return userService.addUser(null, user.getPassword(), user.getUniqueName(), user.getEmailAddress(),
+                        0L, "", user.getLocale().toString(), user.getFirstName(),
+                        null, user.getLastName(), 0, 0, true, 1, 1, 1970, "", new long[0], new long[0], new long[0],
+                        new long[0], false);
+            } catch (NotConnectedToWebServiceException | IOException | AuthenticationRequired | WebServiceAccessError |
+                     DuplicatedLiferayElement e) {
+                LiferayClientLogger.errorMessage(this.getClass().getName(), e);
+                throw new UserManagementException("User '" + user.getEmailAddress() + "' not added correctly.");
+            }
         }
         return null;
     }
