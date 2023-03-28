@@ -266,6 +266,18 @@ public class AuthenticationService implements IAuthenticationService<Long, Long>
 
     }
 
+
+    @Override
+    public IUser<Long> addUser(User user) throws UserManagementException, InvalidCredentialsException {
+        if (user != null) {
+            return addUser(null, user.getPassword(), user.getScreenName(), user.getEmailAddress(),
+                    user.getFacebookId(), user.getOpenId(), user.getTimeZoneId(), user.getFirstName(),
+                    user.getMiddleName(), user.getLastName(), 0, 0, true, 1, 1, 1900, user.getJobTitle(), new long[0],
+                    new long[0], new long[0], new long[0], false);
+        }
+        return null;
+    }
+
     @Override
     public void deleteUser(IUser<Long> user) throws UserManagementException {
         try {
