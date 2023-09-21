@@ -47,7 +47,7 @@ public class BaseAuthenticationService extends AuthorizationService {
     }
 
     public Set<IActivity> getActivitiesOfRoles(List<Role> roles) {
-        Set<IActivity> activities = new HashSet<>();
+        final Set<IActivity> activities = new HashSet<>();
         for (Role role : roles) {
             activities.addAll(getRoleActivities(role));
         }
@@ -61,7 +61,7 @@ public class BaseAuthenticationService extends AuthorizationService {
             return true;
         }
         // Get all organizations of user
-        Set<IGroup<Long>> organizations = getUserOrganizations(user);
+        final Set<IGroup<Long>> organizations = getUserOrganizations(user);
         for (IGroup<Long> organization : organizations) {
             if (isAuthorizedActivity(user, organization, activity)) {
                 return true;
@@ -74,7 +74,7 @@ public class BaseAuthenticationService extends AuthorizationService {
         if (organizationId == null) {
             return false;
         }
-        IGroup<Long> organization = getOrganization(user, organizationId);
+        final IGroup<Long> organization = getOrganization(user, organizationId);
         if (organization == null) {
             return false;
         }
@@ -89,7 +89,7 @@ public class BaseAuthenticationService extends AuthorizationService {
 
     private IGroup<Long> getOrganization(IUser<Long> user, Long organizationId) {
         try {
-            Set<IGroup<Long>> organizations = getUserOrganizations(user);
+            final Set<IGroup<Long>> organizations = getUserOrganizations(user);
             for (IGroup<Long> organization : organizations) {
                 if (organization.getUniqueId().equals(organizationId)) {
                     return organization;
@@ -106,9 +106,9 @@ public class BaseAuthenticationService extends AuthorizationService {
         Set<IGroup<Long>> organizations = new HashSet<>();
         try {
             organizations = getUserOrganizations(user);
-            Iterator<IGroup<Long>> itr = organizations.iterator();
+            final Iterator<IGroup<Long>> itr = organizations.iterator();
             while (itr.hasNext()) {
-                IGroup<Long> organization = itr.next();
+                final IGroup<Long> organization = itr.next();
                 if (!isAuthorizedActivity(user, organization, activity)) {
                     itr.remove();
                 }

@@ -1,22 +1,6 @@
 package com.biit.liferay.access;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.inject.Named;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.message.BasicNameValuePair;
-
 import com.biit.liferay.access.exceptions.DuplicatedLiferayElement;
-import com.biit.liferay.access.exceptions.DuplicatedUserEmailAddressException;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.RoleNotDeletedException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
@@ -34,6 +18,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Role;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import javax.inject.Named;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class allows to manage roles from Liferay portal.
@@ -64,14 +60,14 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
         if (name != null && name.length() > 0) {
             checkConnection();
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("name", name));
             params.add(new BasicNameValuePair("titleMap", encodeMapToJson(titleMap)));
             params.add(new BasicNameValuePair("descriptionMap", encodeMapToJson(descriptionMap)));
             params.add(new BasicNameValuePair("type", Integer.toString(type)));
 
-            String result = getHttpPostResponse("role/add-role", params);
-            IRole<Long> role = null;
+            final String result = getHttpPostResponse("role/add-role", params);
+            final IRole<Long> role;
             if (result != null) {
                 // Check some errors
                 if (result.contains("DuplicateRoleException")) {
@@ -96,8 +92,8 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
     @Override
     public IRole<Long> addRole(Role role) throws NotConnectedToWebServiceException,
             IOException, AuthenticationRequired, WebServiceAccessError, DuplicatedLiferayElement {
-        Map<String, String> titleMap = new HashMap<String, String>();
-        Map<String, String> descriptionMap = new HashMap<String, String>();
+        final Map<String, String> titleMap = new HashMap<String, String>();
+        final Map<String, String> descriptionMap = new HashMap<String, String>();
         titleMap.put("en", role.getTitle());
         descriptionMap.put("en", role.getDescription());
         return addRole(role.getName(), role.getType(), titleMap, descriptionMap);
@@ -112,7 +108,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
     @Override
     public void addRoleGroup(IRole<Long> role, IGroup<Long> userGroup)
             throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
-        List<IGroup<Long>> groups = new ArrayList<IGroup<Long>>();
+        final List<IGroup<Long>> groups = new ArrayList<IGroup<Long>>();
         groups.add(userGroup);
         addRoleGroups(role, groups);
     }
@@ -142,7 +138,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
                 groupIds += "]";
             }
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("roleId", Long.toString(role.getUniqueId())));
             params.add(new BasicNameValuePair("groupIds", groupIds));
 
@@ -165,7 +161,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
     @Override
     public void addRoleOrganization(IRole<Long> role, IGroup<Long> organization) throws
             NotConnectedToWebServiceException, IOException, AuthenticationRequired, WebServiceAccessError {
-        List<IGroup<Long>> organizations = new ArrayList<IGroup<Long>>();
+        final List<IGroup<Long>> organizations = new ArrayList<IGroup<Long>>();
         organizations.add(organization);
         addRoleOrganizations(role, organizations);
     }
@@ -196,7 +192,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
                 groupIds += "]";
             }
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("roleId", Long.toString(role.getUniqueId())));
             params.add(new BasicNameValuePair("groupIds", groupIds));
 
@@ -215,7 +211,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
     @Override
     public void addRoleUser(IUser<Long> user, IRole<Long> role)
             throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
-        List<IUser<Long>> users = new ArrayList<IUser<Long>>();
+        final List<IUser<Long>> users = new ArrayList<IUser<Long>>();
         users.add(user);
         addRoleUsers(users, role);
     }
@@ -246,7 +242,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
                 userIds += "]";
             }
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("roleId", Long.toString(role.getUniqueId())));
             params.add(new BasicNameValuePair("userIds", userIds));
 
@@ -271,7 +267,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
     @Override
     public void addUserGroupRole(IUser<Long> user, IGroup<Long> userGroup, IRole<Long> role)
             throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
-        Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
+        final Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
         roles.add(role);
         addUserGroupRoles(user, userGroup, roles);
     }
@@ -307,7 +303,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             if (roles.size() > 0) {
                 rolesIds = "[";
             }
-            Iterator<IRole<Long>> iterator = roles.iterator();
+            final Iterator<IRole<Long>> iterator = roles.iterator();
             while (iterator != null && iterator.hasNext()) {
                 rolesIds += iterator.next().getUniqueId();
                 if (iterator.hasNext()) {
@@ -319,7 +315,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
                 rolesIds += "]";
             }
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("userId", userId + ""));
             params.add(new BasicNameValuePair("groupId", groupId + ""));
             params.add(new BasicNameValuePair("roleIds", rolesIds));
@@ -346,7 +342,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             throws NotConnectedToWebServiceException, IOException, AuthenticationRequired,
             WebServiceAccessError {
         if (user != null && organization != null && role != null) {
-            Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
+            final Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
             roles.add(role);
             addUserOrganizationRoles(user, organization, roles);
         }
@@ -363,7 +359,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             throws NotConnectedToWebServiceException, IOException, AuthenticationRequired,
             WebServiceAccessError {
         if (user != null && organization != null && roles != null && !roles.isEmpty()) {
-            long organizationGroupId = getOrganizationGroupId(organization);
+            final long organizationGroupId = getOrganizationGroupId(organization);
             addUserGroupRoles(user.getUniqueId(), organizationGroupId, roles);
         }
     }
@@ -377,7 +373,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
     @Override
     public void addUserRole(IUser<Long> user, IRole<Long> role)
             throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
-        List<IRole<Long>> roles = new ArrayList<IRole<Long>>();
+        final List<IRole<Long>> roles = new ArrayList<IRole<Long>>();
         roles.add(role);
         addUserRoles(user, roles);
     }
@@ -408,7 +404,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
                 rolesIds += "]";
             }
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("userId", Long.toString(user.getUniqueId())));
             params.add(new BasicNameValuePair("roleIds", rolesIds));
 
@@ -464,7 +460,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
     public Set<IRole<Long>> decodeListFromJson(String json, Class<Role> objectClass)
             throws JsonParseException, JsonMappingException, IOException {
         try {
-            Set<Role> myObjects = new ObjectMapper().readValue(json, new TypeReference<Set<Role>>() {
+            final Set<Role> myObjects = new ObjectMapper().readValue(json, new TypeReference<Set<Role>>() {
             });
             return new HashSet<IRole<Long>>(myObjects);
         } catch (JsonMappingException jme) {
@@ -485,7 +481,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
         if (role != null) {
             checkConnection();
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("roleId", role.getUniqueId() + ""));
 
             getHttpPostResponse("role/delete-role", params);
@@ -507,13 +503,13 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             IOException, AuthenticationRequired, RoleNotDeletedException {
         checkConnection();
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        final List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("userId", user.getUniqueId() + ""));
         params.add(new BasicNameValuePair("roleId", role.getUniqueId() + ""));
 
-        String result = getHttpPostResponse("user/delete-role-user", params);
+        final String result = getHttpPostResponse("user/delete-role-user", params);
 
-        if (result == null || result.length() < 3) {
+        if (result == null || result.length() <= 2) {
             rolePool.removeUserRole(user, role);
             LiferayClientLogger.info(this.getClass().getName(),
                     "Role '" + role.getUniqueName() + "' of user '" + user.getUniqueName() + "' deleted.");
@@ -537,23 +533,22 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
      * @return
      * @throws NotConnectedToWebServiceException
      * @throws IOException
-     * @throws ClientProtocolException
      * @throws AuthenticationRequired
      */
     private Set<IRole<Long>> getGroupRoles(Long groupId)
             throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
         if (groupId != null) {
-            Set<IRole<Long>> groupRoles = rolePool.getGroupRoles(groupId);
+            final Set<IRole<Long>> groupRoles = rolePool.getGroupRoles(groupId);
             if (groupRoles != null) {
                 return groupRoles;
             }
             checkConnection();
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("groupId", groupId + ""));
 
-            String result = getHttpPostResponse("role/get-group-roles", params);
+            final String result = getHttpPostResponse("role/get-group-roles", params);
 
             if (result != null) {
                 // A Simple JSON Response Read
@@ -576,7 +571,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
     @Override
     public Set<IRole<Long>> getGroupRoles(IGroup<Long> group)
             throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
-        Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
+        final Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
         if (group != null) {
             return getGroupRoles(group.getUniqueId());
         }
@@ -592,7 +587,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
     @Override
     public Set<IRole<Long>> getOrganizationRoles(IGroup<Long> organization) throws NotConnectedToWebServiceException,
             IOException, AuthenticationRequired, WebServiceAccessError {
-        Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
+        final Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
         if (organization != null) {
             return getGroupRoles(getOrganizationGroupId(organization));
         }
@@ -614,7 +609,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
         }
 
         try {
-            IGroup<Long> group = groupService.getGroup(((Organization) organization).getCompanyId(),
+            final IGroup<Long> group = groupService.getGroup(((Organization) organization).getCompanyId(),
                     organization.getUniqueName() + LIFERAY_ORGANIZATION_GROUP_SUFIX);
             if (group != null) {
                 organizationGroups.put(organization.getUniqueId(), group.getUniqueId());
@@ -638,10 +633,10 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             WebServiceAccessError, RoleDoesNotExistsException {
         checkConnection();
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        final List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("roleId", Long.toString(roleId)));
 
-        String result = getHttpPostResponse("role/get-role", params);
+        final String result = getHttpPostResponse("role/get-role", params);
         IRole<Long> role = null;
         if (result != null) {
             // A Simple JSON Response Read
@@ -667,11 +662,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             WebServiceAccessError, RoleDoesNotExistsException {
         checkConnection();
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        final List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("companyId", Long.toString(companyId)));
         params.add(new BasicNameValuePair("name", roleName));
 
-        String result = getHttpPostResponse("role/get-role", params);
+        final String result = getHttpPostResponse("role/get-role", params);
         IRole<Long> role = null;
         if (result != null) {
             // A Simple JSON Response Read
@@ -698,16 +693,16 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             throws NotConnectedToWebServiceException, IOException, AuthenticationRequired {
         Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
         if (user != null) {
-            Set<IRole<Long>> userRoles = rolePool.getUserRoles(user);
+            final Set<IRole<Long>> userRoles = rolePool.getUserRoles(user);
             if (userRoles != null) {
                 return userRoles;
             }
             checkConnection();
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("userId", user.getUniqueId() + ""));
 
-            String result = getHttpPostResponse("role/get-user-roles", params);
+            final String result = getHttpPostResponse("role/get-user-roles", params);
             if (result != null) {
                 // A Simple JSON Response Read
                 roles = decodeListFromJson(result, Role.class);
@@ -748,18 +743,18 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
         Set<IRole<Long>> roles = new HashSet<IRole<Long>>();
 
         if (groupId != null && userId != null) {
-            Set<IRole<Long>> groupRoles = rolePool.getUserRolesOfGroup(userId, groupId);
+            final Set<IRole<Long>> groupRoles = rolePool.getUserRolesOfGroup(userId, groupId);
 
             if (groupRoles != null) {
                 return groupRoles;
             }
             checkConnection();
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("groupId", groupId + ""));
             params.add(new BasicNameValuePair("userId", userId + ""));
 
-            String result = getHttpPostResponse("role/get-user-group-roles", params);
+            final String result = getHttpPostResponse("role/get-user-group-roles", params);
             if (result != null) {
                 // A Simple JSON Response Read
                 roles = decodeListFromJson(result, Role.class);
@@ -785,7 +780,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             WebServiceAccessError {
         if (user != null && organization != null) {
             // Get the group of the organization.
-            Long groupId = getOrganizationGroupId(organization);
+            final Long groupId = getOrganizationGroupId(organization);
             return getUserRolesOfGroup(user.getUniqueId(), groupId);
         }
         return new HashSet<IRole<Long>>();
@@ -801,11 +796,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
     @Override
     public Set<IUser<Long>> getUsers(IRole<Long> role, IGroup<Long> organization) throws
             IOException, NotConnectedToWebServiceException, AuthenticationRequired, WebServiceAccessError {
-        Set<IUser<Long>> usersOfOrganizationWithRole = new HashSet<IUser<Long>>();
-        Set<IUser<Long>> usersOfOrganization = organizationService.getOrganizationUsers(organization);
+        final Set<IUser<Long>> usersOfOrganizationWithRole = new HashSet<IUser<Long>>();
+        final Set<IUser<Long>> usersOfOrganization = organizationService.getOrganizationUsers(organization);
 
         for (IUser<Long> user : usersOfOrganization) {
-            Set<IRole<Long>> roles = getUserRolesOfOrganization(user, organization);
+            final Set<IRole<Long>> roles = getUserRolesOfOrganization(user, organization);
             if (roles.contains(role)) {
                 usersOfOrganizationWithRole.add(user);
             }
@@ -846,7 +841,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
                 groupIds += "]";
             }
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("roleId", role.getUniqueId() + ""));
             params.add(new BasicNameValuePair("groupIds", groupIds));
 
@@ -875,7 +870,7 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
             checkConnection();
 
             String groupIds = "";
-            if (organizations.size() > 0) {
+            if (!organizations.isEmpty()) {
                 groupIds = "[";
             }
             for (int i = 0; i < organizations.size(); i++) {
@@ -884,11 +879,11 @@ public class RoleService extends ServiceAccess<IRole<Long>, Role> implements IRo
                     groupIds += ",";
                 }
             }
-            if (groupIds.length() > 0) {
+            if (!groupIds.isEmpty()) {
                 groupIds += "]";
             }
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            final List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("roleId", role.getUniqueId() + ""));
             params.add(new BasicNameValuePair("groupIds", groupIds));
 
