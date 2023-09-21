@@ -4,14 +4,14 @@
 	<groupId>com.biit.liferay</groupId>
 	<artifactId>liferay-authentication-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.46-SNAPSHOT</version>
+	<version>1.1.1-SNAPSHOT</version>
 	<name>Liferay Authentication Client with Web Services</name>
 	<description>Obtain users, groups and roles information from liferay</description>
 
     <parent>
         <groupId>com.biit</groupId>
         <artifactId>versions</artifactId>
-        <version>[0.1,0.2)</version>
+        <version>[1.0,1.1)</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
@@ -29,8 +29,8 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:git:git.biit-solutions.com:BiiT/LiferaySecurityClient.git</connection>
-        <developerConnection>scm:git:git.biit-solutions.com:BiiT/LiferaySecurityClient.git</developerConnection>
+        <connection>scm:git:git.biit-solutions.com:Java/LiferaySecurityClient.git</connection>
+        <developerConnection>scm:git:git.biit-solutions.com:Java/LiferaySecurityClient.git</developerConnection>
         <tag>liferay-authentication-client</tag>
     </scm>
 
@@ -41,8 +41,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>${java.jdk.version}</source>
-                    <target>${java.jdk.version}</target>
+                    <source>${java-latest.jdk.version}</source>
+                    <target>${java-latest.jdk.version}</target>
                 </configuration>
             </plugin>
             <plugin>
