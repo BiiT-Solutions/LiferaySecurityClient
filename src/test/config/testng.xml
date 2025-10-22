@@ -4,17 +4,18 @@
 	<test name="AppfoundationTest" enabled="true" preserve-order="true">
 		<groups>
 			<run>
-				<include name="connection" />
-				<include name="companyAccess" />
-				<include name="siteAccess" />
-				<include name="userAccess" />
-				<include name="basicSecurityMethodTest" />
-				<include name="roleAccess" />
-				<include name="groupAccess" />
-				<include name="contactAccess" />
-				<include name="organizationAccess" />
-				<include name="pool" />
-				<include name="clearData" />
+				<!-- Disabled as they need a Liferay instance running -->
+				<exclude name="connection" />
+				<exclude name="companyAccess" />
+				<exclude name="siteAccess" />
+				<exclude name="userAccess" />
+				<exclude name="basicSecurityMethodTest" />
+				<exclude name="roleAccess" />
+				<exclude name="groupAccess" />
+				<exclude name="contactAccess" />
+				<exclude name="organizationAccess" />
+				<exclude name="pool" />
+				<exclude name="clearData" />
 			</run>
 		</groups>
 		<classes>
