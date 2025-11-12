@@ -21,31 +21,28 @@ package com.biit.liferay.access;
  * #L%
  */
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import com.biit.liferay.security.AuthorizationService;
-import com.biit.usermanager.security.exceptions.UserManagementException;
-import org.apache.http.client.ClientProtocolException;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.Test;
-
 import com.biit.liferay.access.exceptions.DuplicatedLiferayElement;
 import com.biit.liferay.access.exceptions.NotConnectedToWebServiceException;
 import com.biit.liferay.access.exceptions.OrganizationNotDeletedException;
 import com.biit.liferay.access.exceptions.RoleNotDeletedException;
 import com.biit.liferay.access.exceptions.WebServiceAccessError;
+import com.biit.liferay.security.AuthorizationService;
 import com.biit.usermanager.entity.IGroup;
 import com.biit.usermanager.entity.IRole;
 import com.biit.usermanager.entity.IUser;
 import com.biit.usermanager.security.exceptions.AuthenticationRequired;
 import com.biit.usermanager.security.exceptions.RoleDoesNotExistsException;
 import com.biit.usermanager.security.exceptions.UserDoesNotExistException;
-import com.liferay.portal.model.Company;
+import com.biit.usermanager.security.exceptions.UserManagementException;
 import com.liferay.portal.model.RoleType;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class AccessTest {
     private static final String LOGIN_USER = "webservices@test.com";
