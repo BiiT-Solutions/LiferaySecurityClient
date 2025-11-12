@@ -4,7 +4,7 @@
     <groupId>com.biit-solutions.liferay</groupId>
     <artifactId>liferay-authentication-client</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.56</version>
+    <version>1.0.57-SNAPSHOT</version>
     <name>Liferay Authentication Client with Web Services</name>
     <description>Obtain users, groups and roles information from liferay</description>
     <url>https://github.com/BiiT-Solutions</url>
@@ -47,7 +47,7 @@
         <connection>scm:git:ssh://git@github.com/BiiT-Solutions/LiferaySecurityClient.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/BiiT-Solutions/LiferaySecurityClient.git</developerConnection>
         <url>https://github.com/BiiT-Solutions/LiferaySecurityClient.git</url>
-        <tag>liferay-authentication-client-1.0.56</tag>
+        <tag>liferay-authentication-client</tag>
     </scm>
 
     <build>
